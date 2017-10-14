@@ -9,6 +9,9 @@ public class CameraMovement_script : MonoBehaviour {
 	public bool inverted = false;
 
 	private Vector3 lastMouse = new Vector3(225,225,225);
+	private Vector3 cam1;
+	private Vector3 angle1;
+
 
 
 	// Use this for initialization
@@ -18,8 +21,10 @@ public class CameraMovement_script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		
 		//Turning with mouse
+		if (!Input.GetMouseButton (0))
+			lastMouse = Input.mousePosition;
 		if (Input.GetMouseButton(0)) {
 			lastMouse = Input.mousePosition - lastMouse;
 			if (!inverted)
@@ -44,15 +49,37 @@ public class CameraMovement_script : MonoBehaviour {
 			direction.x += 1.0f;
 		
 
-		//if (Input.GetKey (KeyCode.Keypad1)){
-		//	direction.x = -17.0f;
-		//	direction.y = 16.0f;
-		//	direction.z = -6.0f;
-		//	lastMouse.x = 34.0f;
-		//	lastMouse.x = 72.0f;
-		//	lastMouse.x = 0.0f;
-		//}
-		
+		if (Input.GetKey (KeyCode.Keypad1)){
+			cam1 = new Vector3(30.0f,33.0f,100.0f);
+			angle1 = new Vector3(12.5f,-181.0f,0.0f);
+			transform.eulerAngles = angle1;
+			transform.position = cam1;
+
+		}
+
+		if (Input.GetKey (KeyCode.Keypad2)){
+			cam1 = new Vector3(89.0f,28.5f,31.0f);
+			angle1 = new Vector3(11.0f,-86.75f,0.0f);
+			transform.eulerAngles = angle1;
+			transform.position = cam1;
+
+		}
+
+		if (Input.GetKey (KeyCode.Keypad3)){
+			cam1 = new Vector3(30.4f,28.0f,-20.0f);
+			angle1 = new Vector3(11.0f,-0.25f,0.0f);
+			transform.eulerAngles = angle1;
+			transform.position = cam1;
+
+		}
+
+		if (Input.GetKey (KeyCode.Keypad4)){
+			cam1 = new Vector3(-23.0f,27.0f,25.6f);
+			angle1 = new Vector3(9.0f,-271.0f,0.0f);
+			transform.eulerAngles = angle1;
+			transform.position = cam1;
+
+		}
 		
 		direction.Normalize ();
 
