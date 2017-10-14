@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CameraMovement_script : MonoBehaviour {
 
-	public float speed = 30.0f; 		//speed of camera
-	public float mouse_sensitivity = 0.25f;
-	public bool inverted = false;
+	public float speed = 30.0f; 			//speed of camera
+	public float mouse_sensitivity = 0.25f; // Sensitivity when using mouse to turn
+	public bool inverted = false;			// Doesn't invert the mouse
 
-	private Vector3 lastMouse = new Vector3(225,225,225);
-	private Vector3 cam1;
-	private Vector3 angle1;
+	private Vector3 lastMouse = new Vector3(225,225,225);	//Vector used to keep track of mouse movements 
+	private Vector3 cam1;					// Variable for preset camera position	
+	private Vector3 angle1;					// Variable for preset camera angles
 
 
 
@@ -48,7 +48,7 @@ public class CameraMovement_script : MonoBehaviour {
 		if (Input.GetKey (KeyCode.D))
 			direction.x += 1.0f;
 		
-
+		//Bow View of ship
 		if (Input.GetKey (KeyCode.Keypad1)){
 			cam1 = new Vector3(30.0f,33.0f,100.0f);
 			angle1 = new Vector3(12.5f,-181.0f,0.0f);
@@ -57,6 +57,7 @@ public class CameraMovement_script : MonoBehaviour {
 
 		}
 
+		//Starboard Side view of ship
 		if (Input.GetKey (KeyCode.Keypad2)){
 			cam1 = new Vector3(89.0f,28.5f,31.0f);
 			angle1 = new Vector3(11.0f,-86.75f,0.0f);
@@ -65,6 +66,7 @@ public class CameraMovement_script : MonoBehaviour {
 
 		}
 
+		//Stern side view of ship
 		if (Input.GetKey (KeyCode.Keypad3)){
 			cam1 = new Vector3(30.4f,28.0f,-20.0f);
 			angle1 = new Vector3(11.0f,-0.25f,0.0f);
@@ -73,6 +75,7 @@ public class CameraMovement_script : MonoBehaviour {
 
 		}
 
+		//Port side view of ship
 		if (Input.GetKey (KeyCode.Keypad4)){
 			cam1 = new Vector3(-23.0f,27.0f,25.6f);
 			angle1 = new Vector3(9.0f,-271.0f,0.0f);
@@ -84,5 +87,9 @@ public class CameraMovement_script : MonoBehaviour {
 		direction.Normalize ();
 
 		transform.Translate (direction * speed * Time.deltaTime);
+
+		//Sets the max and min positions for the x,y, and z axis
+		transform.position = new Vector3 (Mathf.Clamp (transform.position.x, -1000, 1000), 
+			Mathf.Clamp (transform.position.y, 6, 500), Mathf.Clamp (transform.position.z, -1000, 1000));
 	}
 }
