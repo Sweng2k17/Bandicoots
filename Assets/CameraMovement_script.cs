@@ -47,9 +47,10 @@ public class CameraMovement_script : MonoBehaviour {
 			direction.x -= 1.0f;
 		if (Input.GetKey (KeyCode.D))
 			direction.x += 1.0f;
-			direction.y += 1.0f;
-		if (Input.GetKey (KeyCode.Space))
+		if (Input.GetKey (KeyCode.LeftControl) || Input.GetKey ( KeyCode.RightControl))
 			direction.y -= 1.0f;
+		if (Input.GetKey (KeyCode.Space))
+			direction.y += 1.0f;
 		
 		//Bow View of ship
 		if (Input.GetKey (KeyCode.Keypad1) || Input.GetKey ( KeyCode.Alpha1)){
