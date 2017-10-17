@@ -174,4 +174,7 @@ QualitySettings:
     asyncUploadBufferSize: 4
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms: []
+<<<<<<< HEAD
   m_PerPlatformDefaultQuality: {}
+=======
+>>>>>>> 08267c0744359f931600bc05805b040b512b6058
