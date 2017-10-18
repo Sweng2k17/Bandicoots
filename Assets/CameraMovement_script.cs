@@ -54,8 +54,8 @@ public class CameraMovement_script : MonoBehaviour {
 		
 		//Bow View of ship
 		if (Input.GetKey (KeyCode.Keypad1) || Input.GetKey ( KeyCode.Alpha1)){
-			cam1 = new Vector3(30.0f,33.0f,100.0f);
-			angle1 = new Vector3(12.5f,-181.0f,0.0f);
+			cam1 = new Vector3(1.8f,28.5f,64.5f);
+			angle1 = new Vector3(15.5f,-176.25f,0.0f);
 			transform.eulerAngles = angle1;
 			transform.position = cam1;
 
@@ -63,8 +63,8 @@ public class CameraMovement_script : MonoBehaviour {
 
 		//Starboard Side view of ship
 		if (Input.GetKey (KeyCode.Keypad2) || Input.GetKey ( KeyCode.Alpha2)){
-			cam1 = new Vector3(89.0f,28.5f,31.0f);
-			angle1 = new Vector3(11.0f,-86.75f,0.0f);
+			cam1 = new Vector3(52.8f,32.8f,-4.7f);
+			angle1 = new Vector3(19.5f,-86.0f,0.0f);
 			transform.eulerAngles = angle1;
 			transform.position = cam1;
 
@@ -72,8 +72,8 @@ public class CameraMovement_script : MonoBehaviour {
 
 		//Stern side view of ship
 		if (Input.GetKey (KeyCode.Keypad3) || Input.GetKey ( KeyCode.Alpha3)){
-			cam1 = new Vector3(30.4f,28.0f,-20.0f);
-			angle1 = new Vector3(11.0f,-0.25f,0.0f);
+			cam1 = new Vector3(-0.5f,29.5f,-53.8f);
+			angle1 = new Vector3(15.75f,-0.5f,0.0f);
 			transform.eulerAngles = angle1;
 			transform.position = cam1;
 
@@ -81,8 +81,8 @@ public class CameraMovement_script : MonoBehaviour {
 
 		//Port side view of ship
 		if (Input.GetKey (KeyCode.Keypad4) || Input.GetKey ( KeyCode.Alpha4)){
-			cam1 = new Vector3(-23.0f,27.0f,25.6f);
-			angle1 = new Vector3(9.0f,-271.0f,0.0f);
+			cam1 = new Vector3(-48.0f,23.3f,-1.8f);
+			angle1 = new Vector3(6.75f,-272.25f,0.0f);
 			transform.eulerAngles = angle1;
 			transform.position = cam1;
 
