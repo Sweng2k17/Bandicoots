@@ -14,9 +14,14 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 
+/// <summary>
+/// Reads a CSV file and outputs into a string.
+/// </summary>
 public class CSVReader : MonoBehaviour
 {
     public TextAsset csvFile;
+
+	//run when script is initialized.
     public void Start()
     {
         string path = "Assests/Resources/Book1.csv";
@@ -29,6 +34,7 @@ public class CSVReader : MonoBehaviour
     }
 
     // outputs the content of a 2D array, useful for checking the importer
+	/// <param name="grid">Used to get text from csv file.</param>
     static public void DebugOutputGrid(string[,] grid)
     {
         string textOutput = "";
@@ -46,6 +52,8 @@ public class CSVReader : MonoBehaviour
     }
 
     // splits a CSV file into a 2D string array
+	/// <param name="csvText">The text file contaning information.</param>
+	/// <returns>Returns the contents of a CSV file in a string</returns>
     public string[,] SplitCsvGrid(string csvText)
     {
         string[] lines = csvText.Split("\n"[0]);
@@ -77,6 +85,8 @@ public class CSVReader : MonoBehaviour
     }
 
     // splits a CSV row 
+	/// <param name="line">A line from a CSV file.</param>
+	/// <returns>Returns the row from a CSV separated</returns>
     public string[] SplitCsvLine(string line)
     {
         return (from System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(line,
