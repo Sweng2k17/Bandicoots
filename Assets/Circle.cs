@@ -15,8 +15,8 @@ public class Circle : MonoBehaviour
 
 
     int segments = 64;
-     float xradius = 20;
-     float yradius = 20;
+     float xRadius = 20;
+     float yRadius = 20;
      LineRenderer[] line = new LineRenderer[100];
      GameObject[] games = new GameObject[100];
      int count = 0;
@@ -39,8 +39,8 @@ public class Circle : MonoBehaviour
             line[count].material.color = Color.white;
 
             CreatePoints();
-            xradius = 20 * count;
-            yradius = 20 * count;
+            xRadius = 20 * count;
+            yRadius = 20 * count;
             count++;
         }
     }
@@ -56,8 +56,8 @@ public class Circle : MonoBehaviour
 
         for (int i = 0; i < (segments + 1); i++)
         {
-            x = Mathf.Sin(Mathf.Deg2Rad * angle) * xradius;
-            y = Mathf.Cos(Mathf.Deg2Rad * angle) * yradius;
+            x = Mathf.Sin(Mathf.Deg2Rad * angle) * xRadius;
+            y = Mathf.Cos(Mathf.Deg2Rad * angle) * yRadius;
 
             line[count].SetPosition(i, new Vector3(x, 2, y));
 

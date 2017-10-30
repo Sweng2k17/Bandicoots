@@ -31,12 +31,12 @@ public class CameraMovement_script : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		moveCamera ();
+		MoveCamera ();
 	}
 
 	//records keystrokes and mouse movement
 	//and uses those to move the camera.
-	void moveCamera()
+	void MoveCamera()
 	{
 		//Turning with mouse
 		if (!Input.GetMouseButton (0)) {
