@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 /// <summary>
 /// This script is used to make the camera move
 /// around the 3D world. You can use W/S/A/D,
