@@ -9,13 +9,27 @@ public class Circle : MonoBehaviour
     public Toggle toggle;
 
 
+<<<<<<< HEAD
      int segments = 64;
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> c60dbac554b812d25651ccd721b55873138afb82
+>>>>>>> f237e0aa75259abb66abb2cc009651c45976649b
      float xradius = 20;
      float yradius = 20;
      LineRenderer[] line = new LineRenderer[100];
      GameObject[] games = new GameObject[100];
      int count = 0;
+<<<<<<< HEAD
     
+=======
+<<<<<<< HEAD
+    
+=======
+    bool t = true;
+>>>>>>> c60dbac554b812d25651ccd721b55873138afb82
+>>>>>>> f237e0aa75259abb66abb2cc009651c45976649b
     
 
     void Start()
