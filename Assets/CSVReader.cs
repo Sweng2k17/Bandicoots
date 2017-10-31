@@ -13,23 +13,28 @@
 using UnityEngine;
 using System.Collections;
 using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.Experimental.UIElements;
+using System.IO;
 
 public class CSVReader : MonoBehaviour
 {
     public TextAsset csvFile;
+    public InputField filePath;
+    public Text testing;
+
+    public string[,] data;
+
     public void Start()
     {
-        string path = "Assests/Resources/Book1.csv";
-
-
-        string[,] grid = SplitCsvGrid(csvFile.text);
-        Debug.Log("size = " + (1 + grid.GetUpperBound(0)) + "," + (1 + grid.GetUpperBound(1)));
-
-        DebugOutputGrid(grid);
+        
+        
+        //used for debugging
+        //uitext.text =  DebugOutputGrid(grid);
     }
 
     // outputs the content of a 2D array, useful for checking the importer
-    static public void DebugOutputGrid(string[,] grid)
+    static public string DebugOutputGrid(string[,] grid)
     {
         string textOutput = "";
         for (int y = 0; y < grid.GetUpperBound(1); y++)
@@ -42,7 +47,10 @@ public class CSVReader : MonoBehaviour
             }
             textOutput += "\n";
         }
+
+       
         Debug.Log(textOutput);
+        return textOutput;
     }
 
     // splits a CSV file into a 2D string array
@@ -83,5 +91,31 @@ public class CSVReader : MonoBehaviour
         @"(((?<x>(?=[,\r\n]+))|""(?<x>([^""]|"""")+)""|(?<x>[^,\r\n]+)),?)",
         System.Text.RegularExpressions.RegexOptions.ExplicitCapture)
                 select m.Groups[1].Value).ToArray();
+    }
+
+
+    public void ReadCSV()
+    {
+        string path = filePath.text;
+        string fileText = "";
+        string line;
+        //path = "C:\\Users\\Brian\\Documents\\GitHub\\Bandicoots\\Assets\\Book1.csv";
+        StreamReader reader = new StreamReader(path);
+
+        try
+        {
+            
+            fileText += reader.ReadToEnd();
+           
+            reader.Close();
+        }
+        catch(FileNotFoundException e)
+        {
+            Debug.Log("Error in file read " + path);
+        }
+
+        data = SplitCsvGrid(fileText);
+        testing.text = DebugOutputGrid(data);
+        Debug.Log("size = " + (1 + data.GetUpperBound(0)) + "," + (1 + data.GetUpperBound(1)));
     }
 }
