@@ -2,6 +2,12 @@
 using System.Collections;
 using UnityEngine.UI;
 
+
+/// <summary>
+/// This script creates circles that are evenly
+/// spaced. The circles represent distance from
+/// the ship.
+/// </summary>
 public class Circle : MonoBehaviour
 {
 
@@ -10,18 +16,15 @@ public class Circle : MonoBehaviour
 
 
 
-     int segments = 64;
-
-     float xradius = 20;
-     float yradius = 20;
+    int segments = 64;
+     float xRadius = 20;
+     float yRadius = 20;
      LineRenderer[] line = new LineRenderer[100];
      GameObject[] games = new GameObject[100];
      int count = 0;
     
-
-
     
-
+	//run when script is initialized
     void Start()
     {
 
@@ -40,11 +43,13 @@ public class Circle : MonoBehaviour
             CreatePoints();
             xradius = 20 * count;
             yradius = 20 * count;
+
             count++;
         }
     }
 
 
+	//sets the point of each circle for the gridlines
     void CreatePoints()
     {
         float x;
@@ -55,8 +60,10 @@ public class Circle : MonoBehaviour
 
         for (int i = 0; i < (segments + 1); i++)
         {
-            x = Mathf.Sin(Mathf.Deg2Rad * angle) * xradius;
-            y = Mathf.Cos(Mathf.Deg2Rad * angle) * yradius;
+
+            x = Mathf.Sin(Mathf.Deg2Rad * angle) * xRadius;
+            y = Mathf.Cos(Mathf.Deg2Rad * angle) * yRadius;
+
 
             line[count].SetPosition(i, new Vector3(x, 2, y));
 
@@ -64,6 +71,8 @@ public class Circle : MonoBehaviour
         }
     }
 
+
+	//turns off the gridlines
     public void ToggleGridline()
     {
         Debug.Log("Toggle works");
