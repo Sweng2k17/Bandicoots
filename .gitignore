@@ -38,3 +38,16 @@ sysinfo.txt
 OS junk files
 [Tt]humbs.db
 *.DS_Store
+ProjectSettings/QualitySettings.asset
+<<<<<<< HEAD
+Assets/CameraMovement_script.cs
+Assets/CameraMovement_script.cs
+Assets/CameraMovement_script.cs
+
+=======
+<<<<<<< HEAD
+Assets/CameraMovement_script.cs
+
+=======
+>>>>>>> c60dbac554b812d25651ccd721b55873138afb82
+>>>>>>> f237e0aa75259abb66abb2cc009651c45976649b
