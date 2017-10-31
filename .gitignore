@@ -39,5 +39,8 @@ OS junk files
 [Tt]humbs.db
 *.DS_Store
 ProjectSettings/QualitySettings.asset
+<<<<<<< HEAD
 Assets/CameraMovement_script.cs
 
+=======
+>>>>>>> c60dbac554b812d25651ccd721b55873138afb82

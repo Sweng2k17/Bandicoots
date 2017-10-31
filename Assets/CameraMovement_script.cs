@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+<<<<<<< HEAD
 public class CameraMovement_script : MonoBehaviour
 {
 
@@ -104,4 +105,5 @@ public class CameraMovement_script : MonoBehaviour
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -1000, 1000),
             Mathf.Clamp(transform.position.y, 6, 500), Mathf.Clamp(transform.position.z, -1000, 1000));
     }
+>>>>>>> c60dbac554b812d25651ccd721b55873138afb82
 }
