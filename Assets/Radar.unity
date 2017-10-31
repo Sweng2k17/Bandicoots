@@ -235,7 +235,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680062c6c39164b4aa069a8c1a6fd513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: aa06795caaf787c4b9889dd290271a8f, type: 3}
   filePath: {fileID: 642085520}
   testing: {fileID: 22820238}
 --- !u!114 &25166679
@@ -276,7 +275,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 25166680}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 25166678}
+        m_MethodName: ReadCSV
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &25166680
@@ -435,7 +445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680062c6c39164b4aa069a8c1a6fd513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: aa06795caaf787c4b9889dd290271a8f, type: 3}
   filePath: {fileID: 1610471279}
   testing: {fileID: 22820238}
 --- !u!114 &191753837
@@ -476,7 +485,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 191753838}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 191753836}
+        m_MethodName: ReadCSV
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &191753838
@@ -1687,7 +1707,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 680062c6c39164b4aa069a8c1a6fd513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  csvFile: {fileID: 4900000, guid: aa06795caaf787c4b9889dd290271a8f, type: 3}
   filePath: {fileID: 1704319711}
   testing: {fileID: 22820238}
 --- !u!1 &849862223

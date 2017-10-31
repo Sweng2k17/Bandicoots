@@ -19,7 +19,6 @@ using System.IO;
 
 public class CSVReader : MonoBehaviour
 {
-    public TextAsset csvFile;
     public InputField filePath;
     public Text testing;
 
