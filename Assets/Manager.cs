@@ -2,10 +2,6 @@
 using System.Collections;
 using UnityEngine.UI; //Need this for calling UI scripts
 
-/// <summary>
-/// Manages the User Interface. Listens for 
-/// different keystrokes.
-/// </summary>
 public class Manager : MonoBehaviour
 {
 
@@ -22,7 +18,6 @@ public class Manager : MonoBehaviour
     public double time;
     double interval = .1;
 
-	//run when script is initialized.
     void Start()
     {
         UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
@@ -31,7 +26,6 @@ public class Manager : MonoBehaviour
         timeText.text = time.ToString();
     }
 
-	//called once per frame
     void Update()
     {
 
@@ -53,29 +47,24 @@ public class Manager : MonoBehaviour
            
     }
 
-	//called when esc key is pressed.
-	//pauses game and opens UI menu
     public void Pause()
     {
         isPaused = true;
         UIPanel.gameObject.SetActive(true); //turn on the pause menu
     }
 
-	//called when esc key is pressed
-	//again. Closes UI menu and continues game. 
     public void UnPause()
     {
         isPaused = false;
         UIPanel.gameObject.SetActive(false); //turn off pause menu
     }
 
-	//quits program.
     public void ExitProgram()
     {
         Application.Quit();
     }
 
-    public void Fastforward()
+    public void FastForward()
     {
         interval = .2;
     }
@@ -85,15 +74,14 @@ public class Manager : MonoBehaviour
         interval = -.2;
     }
 
-    public void play()
+    public void Play()
     {
         interval = .1;
 
     }
 
-    public void pauseTime()
+    public void PauseTime()
     {
         interval = 0;
     }
-
 }
