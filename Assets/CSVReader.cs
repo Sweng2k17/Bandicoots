@@ -20,14 +20,14 @@ using System.IO;
 public class CSVReader : MonoBehaviour
 {
     public InputField filePath;
-    public Text testing;
+    //public Text testing;
 
     public string[,] data;
 
     public void Start()
     {
-        
-        
+
+
         //used for debugging
         //uitext.text =  DebugOutputGrid(grid);
     }
@@ -47,7 +47,7 @@ public class CSVReader : MonoBehaviour
             textOutput += "\n";
         }
 
-       
+
         Debug.Log(textOutput);
         return textOutput;
     }
@@ -103,18 +103,18 @@ public class CSVReader : MonoBehaviour
 
         try
         {
-            
+
             fileText += reader.ReadToEnd();
-           
+
             reader.Close();
         }
-        catch(FileNotFoundException e)
+        catch (FileNotFoundException e)
         {
             Debug.Log("Error in file read " + path);
         }
 
         data = SplitCsvGrid(fileText);
-        testing.text = DebugOutputGrid(data);
+        //testing.text = DebugOutputGrid(data);
         Debug.Log("size = " + (1 + data.GetUpperBound(0)) + "," + (1 + data.GetUpperBound(1)));
     }
 }
