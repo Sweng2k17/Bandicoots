@@ -16,13 +16,15 @@ public class Manager : MonoBehaviour
     MeshRenderer beam;
     [SerializeField]
     Button readButton;
+	[SerializeField]
+	MeshRenderer missle;
 
     bool isPaused; //Used to determine paused state
     public double time;
     private double speed;
     double interval;
     private CSVReader instance;
-
+	int numTarget = 1;
 
     void Start()
     {
@@ -30,6 +32,7 @@ public class Manager : MonoBehaviour
         isPaused = false; //make sure isPaused is always false when our scene opens
         time = 0;
         timeText.text = time.ToString();
+	
 
         //adjust speed here
         speed = 3;
@@ -37,8 +40,37 @@ public class Manager : MonoBehaviour
 
     }
 
+
+	/*
+	 * unsure about logic for numTarget to start new target after one finishes
+	 */
     void Update()
     {
+		if(readTargetCSV())
+		{
+			if (readButton.GetComponent<CSVReader> ().data != null) {
+				//numTarget++;
+
+				string[,] data = readButton.GetComponent<CSVReader> ().data;
+
+				float startX = float.Parse(data[0, numTarget]);
+				Debug.Log("The value of X is " + data[0, numTarget]);
+				float startY = float.Parse(data[1, numTarget]);
+				Debug.Log("The value of Y is " + data[1, numTarget]);
+				float startZ = float.Parse(data[2, numTarget]);
+				Debug.Log("The value of Z is " + data[2, numTarget]);
+
+				Vector3 startV = new Vector3 ();
+				startV.x = startX;
+				startV.y = startY;
+				startV.z = startZ;
+
+				missle.transform.position = startV;
+
+				return;
+			}
+
+		}
 
         if (readButton.GetComponent<CSVReader>().data != null)
         {
@@ -103,6 +135,13 @@ public class Manager : MonoBehaviour
         timeText.text = ((int)time).ToString();
 
     }
+
+
+	public bool readTargetCSV()
+	{
+
+		return true;
+	}
 
     public void Pause()
     {
