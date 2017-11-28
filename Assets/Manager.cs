@@ -18,6 +18,8 @@ public class Manager : MonoBehaviour
     Button readButton;
 	[SerializeField]
 	MeshRenderer missle;
+	[SerializeField]
+	Toggle targetData;
 
     bool isPaused; //Used to determine paused state
     public double time;
@@ -139,8 +141,9 @@ public class Manager : MonoBehaviour
 
 	public bool readTargetCSV()
 	{
-
-		return true;
+		if(targetData.isOn = true)
+			return true;
+		return false;
 	}
 
     public void Pause()
