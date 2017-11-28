@@ -49,7 +49,6 @@ public class Circle : MonoBehaviour
     {
         float x;
         float y;
-        float z = 0f;
 
         float angle = 20f;
 

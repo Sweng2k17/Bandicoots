@@ -97,8 +97,9 @@ public class CSVReader : MonoBehaviour
     {
         string path = filePath.text;
         string fileText = "";
-        string line;
-        //path = "C:\\Users\\Brian\\Documents\\GitHub\\Bandicoots\\Assets\\Book1.csv";
+        
+
+        //path = "C:\\Users\\Brian\\Documents\\GitHub\\StartSheet.csv";
         StreamReader reader = new StreamReader(path);
 
         try

@@ -16,13 +16,20 @@ public class Manager : MonoBehaviour
     MeshRenderer beam;
     [SerializeField]
     Button readButton;
+    [SerializeField]
+    Slider slider;
+    [SerializeField]
+    Camera camera;
 
     bool isPaused; //Used to determine paused state
     public double time;
     private double speed;
     double interval;
     private CSVReader instance;
-
+    private int position = 1;
+    private float difference =-1;
+    private int maxPosition;
+    private string[,] data;
 
     void Start()
     {
@@ -32,7 +39,7 @@ public class Manager : MonoBehaviour
         timeText.text = time.ToString();
 
         //adjust speed here
-        speed = 3;
+        speed = 1;
         interval = speed;
 
     }
@@ -44,47 +51,93 @@ public class Manager : MonoBehaviour
         {
 
 
+            data = readButton.GetComponent<CSVReader>().data;
 
-            string[,] data = readButton.GetComponent<CSVReader>().data;
-
-            Debug.Log("The value of distance is " + data[2, (int)time]);
-
-            float distance = float.Parse(data[2, (int)time]);
-            float degreesRotation = float.Parse(data[6, (int)time]);
-            Debug.Log("The value of rotation is " + data[6, (int)time]);
-            float degreesElevation = float.Parse(data[7, (int)time]);
-            Debug.Log("The value of elevation is is " + data[7, (int)time]);
-
-            if (data[3, (int)time].Equals("1"))
+            if (difference < 0)
             {
-                beam.material.color = Color.red;
+                difference = float.Parse(data[0, 2]);
+            }
+
+            //number of milliseconds per step
+            //double difference = float.Parse(data[2, 0]);
+
+
+
+            //number of lines in csv file
+            maxPosition = data.GetLength(1);
+            Debug.Log("The value of maaxPosition is " + data.GetLength(1));
+
+
+            
+
+
+                float distance = float.Parse(data[2, position]);
+                Debug.Log("The value of distance is " + data[2, position]);
+
+                //works accross both distances as the speed is light based
+                difference = .0107364f * distance;
+                Debug.Log("The value of difference is " + difference);
+            if (position < maxPosition)
+            {
+                position = (int)(time / 60 / difference * 1000);
+                Debug.Log("The value of position is " + position);
+
+
+                float degreesRotation = float.Parse(data[6, position]);
+                Debug.Log("The value of rotation is " + data[6, position]);
+                float degreesElevation = float.Parse(data[7, position]);
+                Debug.Log("The value of elevation is is " + data[7, position]);
+
+                if (data[3, position].Equals("1"))
+                {
+                    //high powered
+                    beam.material.color = Color.red;
+                }
+                else
+                {
+                    //low powered
+                    beam.material.color = Color.cyan;
+                }
+
+
+
+
+                //move slider bar with time
+                //slider.value = (float)position / (float)maxPosition;
+
+
+
+
+                Vector3 scale = new Vector3();
+                scale.x = 1;
+                scale.y = 1;
+                scale.z = distance / 100;
+
+                //nextPos.Scale(scale);
+
+                Vector3 rotation = new Vector3();
+                rotation.x = degreesElevation;
+                rotation.y = degreesRotation;
+                rotation.z = 0;
+
+
+
+                beam.transform.transform.rotation = Quaternion.Euler(degreesElevation, degreesRotation, 0);
+                beam.transform.transform.localScale = scale;
+
             }
             else
             {
-                beam.material.color = Color.cyan;
-            }
-
-         
-
-            Vector3 scale = new Vector3();
-            scale.x = 1;
-            scale.y = 1;
-            scale.z = distance / 100;
-
-            //nextPos.Scale(scale);
-
-            Vector3 rotation = new Vector3();
-            rotation.x = degreesElevation;
-            rotation.y = degreesRotation;
-            rotation.z = 0;
-
-
-
-            beam.transform.transform.rotation = Quaternion.Euler(degreesElevation, degreesRotation, 0);
-            beam.transform.transform.localScale = scale;
+                //file is done reading
+                
+            }   
 
             //update postion of beam 8 lines of data per column
             //time, start range, end range, high power, number of pulses, width, azimuth degrees, Elvation degrees
+        }
+        else
+        {
+            position = 1;
         }
 
         //If player presses escape and game is not paused. Pause game. If game is paused and player presses escape, unpause.
@@ -109,12 +162,16 @@ public class Manager : MonoBehaviour
         isPaused = true;
         pauseTime();
         UIPanel.gameObject.SetActive(true); //turn on the pause menu
+        camera.GetComponent<CameraMovement_script>().isPaused = false;
+
     }
 
     public void UnPause()
     {
         isPaused = false;
         UIPanel.gameObject.SetActive(false); //turn off pause menu
+        camera.GetComponent<CameraMovement_script>().isPaused = true;
+
         play();
     }
 
@@ -142,5 +199,15 @@ public class Manager : MonoBehaviour
     public void pauseTime()
     {
         interval = 0;
+    }
+
+    //called from slider object
+    public void setTime()
+    {
+
+
+        double sliderPosition = slider.value;
+        position = (int)(sliderPosition * maxPosition);
+        time = position * 60 / 1000 * difference;
     }
 }
