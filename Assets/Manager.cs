@@ -18,6 +18,8 @@ public class Manager : MonoBehaviour
     Button readButton;
     [SerializeField]
     Slider slider;
+    [SerializeField]
+    Camera camera;
 
     bool isPaused; //Used to determine paused state
     public double time;
@@ -160,12 +162,16 @@ public class Manager : MonoBehaviour
         isPaused = true;
         pauseTime();
         UIPanel.gameObject.SetActive(true); //turn on the pause menu
+        camera.GetComponent<CameraMovement_script>().isPaused = false;
+
     }
 
     public void UnPause()
     {
         isPaused = false;
         UIPanel.gameObject.SetActive(false); //turn off pause menu
+        camera.GetComponent<CameraMovement_script>().isPaused = true;
+
         play();
     }
 

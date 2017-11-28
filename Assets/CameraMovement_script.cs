@@ -8,7 +8,7 @@ public class CameraMovement_script : MonoBehaviour
     public float speed = 30.0f;             //speed of camera
     public float mouseSensitivity = 0.25f; // Sensitivity when using mouse to turn
     public bool inverted = false;           // Doesn't invert the mouse
-	private bool isPaused = false;			//tells if the game is paused
+	public bool isPaused = false;			//tells if the game is paused
 
     private Vector3 lastMouse = new Vector3(225, 225, 225); //Vector used to keep track of mouse movements 
     private Vector3 cam1;                   // Variable for preset camera position	
