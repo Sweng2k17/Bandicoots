@@ -20,6 +20,12 @@ public class Manager : MonoBehaviour
     Slider slider;
     [SerializeField]
     Camera camera;
+	[SerializeField]
+	MeshRenderer missle;
+	[SerializeField]
+	Toggle targetData;
+
+
 
     bool isPaused; //Used to determine paused state
     public double time;
@@ -30,7 +36,7 @@ public class Manager : MonoBehaviour
     private float difference =-1;
     private int maxPosition;
     private string[,] data;
-
+	int numTarget = 1;
     void Start()
     {
         UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
@@ -47,7 +53,31 @@ public class Manager : MonoBehaviour
     void Update()
     {
 
-        if (readButton.GetComponent<CSVReader>().data != null)
+		if(readTargetCSV() && readButton.GetComponent<CSVReader> ().data != null)
+		{
+			
+				//numTarget++;
+
+				string[,] data = readButton.GetComponent<CSVReader> ().data;
+
+				float startX = float.Parse(data[0, numTarget]);
+				Debug.Log("The value of X is " + data[0, numTarget]);
+				float startY = float.Parse(data[1, numTarget]);
+				Debug.Log("The value of Y is " + data[1, numTarget]);
+				float startZ = float.Parse(data[2, numTarget]);
+				Debug.Log("The value of Z is " + data[2, numTarget]);
+
+				Vector3 startV = new Vector3 ();
+				startV.x = startX;
+				startV.y = startY;
+				startV.z = startZ;
+
+				missle.transform.position = startV;
+	
+		}
+
+
+		if (!readTargetCSV() && readButton.GetComponent<CSVReader>().data != null)
         {
 
 
@@ -156,6 +186,16 @@ public class Manager : MonoBehaviour
         timeText.text = ((int)time).ToString();
 
     }
+
+
+
+	public bool readTargetCSV()
+	{
+		if(targetData.isOn != true)
+			return false;
+		return true;
+	}
+
 
     public void Pause()
     {
