@@ -15,15 +15,15 @@ public class Manager : MonoBehaviour
     [SerializeField]
     MeshRenderer beam;
     [SerializeField]
-    Button readButton;
+    Button readRadarButton;
     [SerializeField]
     Slider slider;
     [SerializeField]
     Camera camera;
 	[SerializeField]
 	MeshRenderer missle;
-	[SerializeField]
-	Toggle targetData;
+    [SerializeField]
+    Button readTargetButton;
 
 
 
@@ -36,7 +36,92 @@ public class Manager : MonoBehaviour
     private float difference =-1;
     private int maxPosition;
     private string[,] data;
+    private string[,] targetData;
 	int numTarget = 1;
+
+    double[] targetPosX;
+    double[] targetPosY;
+    double[] targetPosZ;
+    int[] targetLeg;
+    int[] targetLegPosition;
+    double[] targetVelocityX;
+    double[] targetVelocityY;
+    double[] targetVelocityZ;
+    MeshRenderer[] missles;
+
+    public void initTarget()
+    {
+        if(readRadarButton.GetComponent<CSVReader>().data != null)
+        {
+
+            targetData = readRadarButton.GetComponent<CSVReader>().data;
+
+            //init all targets ignore descriptons line
+            for(int x = 0; x < targetData.GetLength(1)-1; x++)
+            {
+                targetPosX[x] = double.Parse(targetData[0, x+1]);
+                targetPosY[x] = double.Parse(targetData[1, x+1]);
+                targetPosZ[x] = double.Parse(targetData[2, x+1]);
+                targetLeg[x] = int.Parse(targetData[6, x+1]);
+                targetLegPosition[x] = 0;
+                targetVelocityX[x] = 0;
+                targetVelocityY[x] = 0;
+                targetVelocityZ[x] = 0;
+
+                //TODO missles[x] = new createMissleObjectHere
+            }
+            
+        }
+    }
+
+    private void updateTargetData()
+    {
+        if (readRadarButton.GetComponent<CSVReader>().data != null)
+        {
+            targetData = readRadarButton.GetComponent<CSVReader>().data;
+
+            for (int x = 0; x < targetData.GetLength(1); x++)
+            {
+
+                //if time greater than leg, increase le counter by one 
+                if(time / 60 < targetLeg[targetLegPosition[x]])
+                {
+                    targetLegPosition[x]++;
+                }
+
+
+                //please work
+                int accelX = int.Parse(targetData[(targetLegPosition[x] * 4 + 3), x + 1]);
+                int accelY = int.Parse(targetData[(targetLegPosition[x] * 4 + 4), x + 1]);
+                int accelZ = int.Parse(targetData[(targetLegPosition[x] * 4 + 5), x + 1]);
+
+                //update position data on targets
+
+                //time = 1/60 of a second
+
+                //update velocity = previous velocity + accel * time
+                targetVelocityX[x] = targetVelocityX[x] + accelX / 60;
+                targetVelocityY[x] = targetVelocityY[x] + accelY / 60;
+                targetVelocityZ[x] = targetVelocityZ[x] + accelZ / 60;
+
+                //distance = intial velocity *t + 1/2 * accel * time * time
+                targetPosX[x] = targetVelocityX[x] / 60 + accelX / 60 / 60 / 2;
+                targetPosY[x] = targetVelocityY[x] / 60 + accelY / 60 / 60 / 2;
+                targetPosZ[x] = targetVelocityY[x] / 60 + accelZ / 60 / 60 / 2;
+
+                //assign target locations to Object missle
+                //TODO programatically create Missles equal to X
+
+                
+            }
+
+
+        }
+    }
+
+
+
+
     void Start()
     {
         UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
@@ -50,63 +135,29 @@ public class Manager : MonoBehaviour
 
     }
 
-    void Update()
+    private void updateRadarBeam()
     {
-
-		if(readTargetCSV() && readButton.GetComponent<CSVReader> ().data != null)
-		{
-			
-				//numTarget++;
-
-				string[,] data = readButton.GetComponent<CSVReader> ().data;
-
-				float startX = float.Parse(data[0, numTarget]);
-				Debug.Log("The value of X is " + data[0, numTarget]);
-				float startY = float.Parse(data[1, numTarget]);
-				Debug.Log("The value of Y is " + data[1, numTarget]);
-				float startZ = float.Parse(data[2, numTarget]);
-				Debug.Log("The value of Z is " + data[2, numTarget]);
-
-				Vector3 startV = new Vector3 ();
-				startV.x = startX;
-				startV.y = startY;
-				startV.z = startZ;
-
-				missle.transform.position = startV;
-	
-		}
-
-
-		if (!readTargetCSV() && readButton.GetComponent<CSVReader>().data != null)
+        if(readRadarButton.GetComponent<CSVReader>().data != null)
         {
 
 
-            data = readButton.GetComponent<CSVReader>().data;
+            data = readRadarButton.GetComponent<CSVReader>().data;
 
             if (difference < 0)
             {
                 difference = float.Parse(data[0, 2]);
             }
 
-            //number of milliseconds per step
-            //double difference = float.Parse(data[2, 0]);
-
-
-
             //number of lines in csv file
             maxPosition = data.GetLength(1);
             Debug.Log("The value of maaxPosition is " + data.GetLength(1));
 
+            float distance = float.Parse(data[2, position]);
+            Debug.Log("The value of distance is " + data[2, position]);
 
-            
-
-
-                float distance = float.Parse(data[2, position]);
-                Debug.Log("The value of distance is " + data[2, position]);
-
-                //works accross both distances as the speed is light based
-                difference = .0107364f * distance;
-                Debug.Log("The value of difference is " + difference);
+            //works accross both distances as the speed is light based
+            difference = .0107364f * distance;
+            Debug.Log("The value of difference is " + difference);
             if (position < maxPosition)
             {
                 position = (int)(time / 60 / difference * 1000);
@@ -159,8 +210,8 @@ public class Manager : MonoBehaviour
             else
             {
                 //file is done reading
-                
-            }   
+
+            }
 
             //update postion of beam 8 lines of data per column
             //time, start range, end range, high power, number of pulses, width, azimuth degrees, Elvation degrees
@@ -169,6 +220,16 @@ public class Manager : MonoBehaviour
         {
             position = 1;
         }
+    }
+
+    void Update()
+    {
+
+        updateRadarBeam();
+
+
+
+		
 
         //If player presses escape and game is not paused. Pause game. If game is paused and player presses escape, unpause.
         if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
