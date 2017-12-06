@@ -26,7 +26,7 @@ public class Manager : MonoBehaviour
     Button readTargetButton;
 
 
-
+	public GameObject oldCube;
     bool isPaused; //Used to determine paused state
     public double time;
     private double speed;
@@ -155,6 +155,11 @@ public class Manager : MonoBehaviour
 				newPos.x = (float)targetPosX [0];
 				newPos.y = (float)targetPosY [0];
 				newPos.z = (float)targetPosZ [0];
+
+				//Create old position marker
+				Vector3 oldPosition = missle.transform.position;
+				Quaternion oldRotation = missle.transform.rotation;
+				Instantiate (oldCube, oldPosition, oldRotation);
 
 				missle.transform.position = newPos;
                 

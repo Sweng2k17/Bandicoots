@@ -55,6 +55,7 @@
      <Compile Include="Assets\Circle.cs" />
      <Compile Include="Assets\CSVReader.cs" />
      <Compile Include="Assets\Manager.cs" />
+     <Compile Include="Assets\OldPositionBehavior.cs" />
      <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CannonBehavior.cs" />
      <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CreateSinShapedLineStrip.cs" />
      <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\ShotBehavior.cs" />
