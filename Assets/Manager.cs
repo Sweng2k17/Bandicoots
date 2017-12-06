@@ -51,13 +51,34 @@ public class Manager : MonoBehaviour
 
     public void initTarget()
     {
-        if(readRadarButton.GetComponent<CSVReader>().data != null)
+		Debug.Log ("Button pressed");
+        if(readTargetButton.GetComponent<CSVReader>().data != null)
         {
 
-            targetData = readRadarButton.GetComponent<CSVReader>().data;
+            targetData = readTargetButton.GetComponent<CSVReader>().data;
+			int fileLength = targetData.GetLength (1);
+
+			Debug.Log("Target data init file length " + fileLength);
+
+
+			targetPosX = new double[fileLength];
+			targetPosY = new double[fileLength];
+			targetPosZ = new double[fileLength];
+			targetVelocityX = new double[fileLength];
+			targetVelocityY = new double[fileLength];
+			targetVelocityZ = new double[fileLength];
+			targetLeg = new int[targetData.GetLength (0)];
+			//quick fix
+			//TODO calculate real length
+			targetLegPosition = new int[6];
+
+
+			//so its works but it travels in that direction for 90 seconds not sure if it swtiches to next leg correctly
+
+
 
             //init all targets ignore descriptons line
-            for(int x = 0; x < targetData.GetLength(1)-1; x++)
+            for(int x = 0; x < 6-1; x++)
             {
                 targetPosX[x] = double.Parse(targetData[0, x+1]);
                 targetPosY[x] = double.Parse(targetData[1, x+1]);
@@ -70,48 +91,72 @@ public class Manager : MonoBehaviour
 
                 //TODO missles[x] = new createMissleObjectHere
             }
+
+			Vector3 newPos = new Vector3 ();
+			newPos.x = (float)targetPosX [0];
+			newPos.y = (float)targetPosY [0];
+			newPos.z = (float)targetPosZ [0];
+
+			missle.transform.position = newPos;
             
         }
     }
 
+	private int accelX;
+	private int accelY;
+	private int accelZ;
+
     private void updateTargetData()
     {
-        if (readRadarButton.GetComponent<CSVReader>().data != null)
+        if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
-            targetData = readRadarButton.GetComponent<CSVReader>().data;
+            targetData = readTargetButton.GetComponent<CSVReader>().data;
+			Debug.Log("The target data has been run");
 
-            for (int x = 0; x < targetData.GetLength(1); x++)
+            for (int x = 0; x < 6-1; x++)
             {
 
                 //if time greater than leg, increase le counter by one 
-                if(time / 60 < targetLeg[targetLegPosition[x]])
+                if(time / 60 > targetLeg[targetLegPosition[x]])
                 {
                     targetLegPosition[x]++;
                 }
 
 
-                //please work
-                int accelX = int.Parse(targetData[(targetLegPosition[x] * 4 + 3), x + 1]);
-                int accelY = int.Parse(targetData[(targetLegPosition[x] * 4 + 4), x + 1]);
-                int accelZ = int.Parse(targetData[(targetLegPosition[x] * 4 + 5), x + 1]);
+				accelX = int.Parse(targetData[ x + 1, (targetLegPosition[x] * 4 + 3)])*20;
+				accelY = int.Parse(targetData[x+1,(targetLegPosition[x] * 4 + 4)])*20;
+				accelZ = int.Parse(targetData[x+1,(targetLegPosition[x] * 4 + 5)])*20;
 
+
+				Debug.Log ("Accel " + accelX);
                 //update position data on targets
 
                 //time = 1/60 of a second
+
 
                 //update velocity = previous velocity + accel * time
                 targetVelocityX[x] = targetVelocityX[x] + accelX / 60;
                 targetVelocityY[x] = targetVelocityY[x] + accelY / 60;
                 targetVelocityZ[x] = targetVelocityZ[x] + accelZ / 60;
 
+				Debug.Log ("velocity " + targetVelocityX[0]);
+
                 //distance = intial velocity *t + 1/2 * accel * time * time
                 targetPosX[x] = targetVelocityX[x] / 60 + accelX / 60 / 60 / 2;
                 targetPosY[x] = targetVelocityY[x] / 60 + accelY / 60 / 60 / 2;
                 targetPosZ[x] = targetVelocityY[x] / 60 + accelZ / 60 / 60 / 2;
 
+				Debug.Log ("Target X pos = " + targetPosX [0]);
                 //assign target locations to Object missle
                 //TODO programatically create Missles equal to X
 
+
+				Vector3 newPos = new Vector3 ();
+				newPos.x = (float)targetPosX [0];
+				newPos.y = (float)targetPosY [0];
+				newPos.z = (float)targetPosZ [0];
+
+				missle.transform.position = newPos;
                 
             }
 
@@ -225,9 +270,11 @@ public class Manager : MonoBehaviour
     void Update()
     {
 
-        updateRadarBeam();
-
-
+		if (!isPaused)
+		{
+			updateRadarBeam();
+			updateTargetData ();
+		}
 
 		
 
@@ -250,12 +297,7 @@ public class Manager : MonoBehaviour
 
 
 
-	public bool readTargetCSV()
-	{
-		if(targetData.isOn != true)
-			return false;
-		return true;
-	}
+
 
 
     public void Pause()
