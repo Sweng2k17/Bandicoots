@@ -240,9 +240,10 @@ public class Manager : MonoBehaviour
 
 
                 Vector3 scale = new Vector3();
-                scale.x = 1;
-                scale.y = 1;
-                scale.z = distance / 100;
+                scale.x = 2;
+                scale.y = 2;
+                //scale.z = distance / 100;
+				scale.z = 464;
 
                 //nextPos.Scale(scale);
 
