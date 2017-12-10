@@ -375,6 +375,8 @@ public class Manager : MonoBehaviour
 	{
 		
 		if (showWindow==true) {
+			windowRect.width = 200;
+			windowRect.height = 50;
 			windowRect.x = 0;
 			windowRect.y = 0;
 			windowRect = GUI.Window (0, windowRect, DoMyWindow, "VR Search Visualization");
@@ -385,7 +387,7 @@ public class Manager : MonoBehaviour
 
 
 	void DoMyWindow(int windowID) {
-		if (GUI.Button (new Rect (10, 20, 100, 20), "Version: 0.1"))
+		if (GUI.Button (new Rect (10, 20, 180, 20), "Version: 0.1"))
 			print ("got a click");
 	}
 		
