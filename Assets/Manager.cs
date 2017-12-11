@@ -62,8 +62,15 @@ public class Manager : MonoBehaviour
     //This is the number of ingame units per mile or measuremeant used Currently it is set to 20 units per mile
     private int scalingFactor = 2;
 
+
+    public void resetTime()
+    {
+        time = 0;
+    }
+
     public void initTarget()
     {
+        time = 0;
         Debug.Log("Button pressed");
         if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
@@ -81,12 +88,10 @@ public class Manager : MonoBehaviour
             for (int x = 0; x < fileLength-1; x++)
             {
                 missileObjects[x].AddComponent<MeshRenderer>();
-                //ClickScript holder = missle.GetComponent<ClickScript>();
-                //missileObjects[x].AddComponent<ClickScript>();
+                missileObjects[x].AddComponent<MeshCollider>();
                 missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
                 missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
-                //missiles[x].transform.localScale = missle.transform.localScale;
-
+                missiles[x].GetComponent<ClickScript>().setNumber(x);
                 Vector3 scale = new Vector3();
                 scale.x = .1f;
                 scale.y = .1f;
@@ -154,6 +159,7 @@ public class Manager : MonoBehaviour
 
     public double[] getVelocity(int number)
     {
+        
         double[] holder = new double[3];
         holder[0] = targetVelocityX[number];
         holder[1] = targetVelocityY[number];
@@ -163,9 +169,9 @@ public class Manager : MonoBehaviour
 
     public double[] getAcceleration(int number)
     {
-        accelX[number] = int.Parse(targetData[number + 1, (targetLegPosition[number] * 4 + 3)]) * scalingFactor;
-        accelY[number] = int.Parse(targetData[number + 1, (targetLegPosition[number] * 4 + 4)]) * scalingFactor;
-        accelZ[number] = int.Parse(targetData[number + 1, (targetLegPosition[number] * 4 + 5)]) * scalingFactor;
+        accelX[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 3), number + 1]) * scalingFactor ;
+        accelY[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 4), number+1]) * scalingFactor ;
+        accelZ[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 5), number+1]) * scalingFactor ;
         double[] holder = new double[3];
         holder[0] = accelX[number];
         holder[1] = accelY[number];
@@ -178,6 +184,10 @@ public class Manager : MonoBehaviour
     private void disableObjectInfo()
     {
         objectInfo.gameObject.SetActive(false);
+        for(int x = 0; x< fileLength-1; x++)
+        {
+            missiles[x].GetComponent<ClickScript>().setActive(false);
+        }
     }
 
     public void enableObjectInfo()
@@ -196,7 +206,7 @@ public class Manager : MonoBehaviour
         if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
             //targetData = readTargetButton.GetComponent<CSVReader>().data;
-            Debug.Log("The target data has been run");
+            //Debug.Log("The target data has been run");
 
 
 
@@ -206,7 +216,7 @@ public class Manager : MonoBehaviour
                 //if time greater than leg, increase le counter by one 
                 if (time / 60 > targetLeg[targetLegPosition[x]])
                 {
-                    Debug.Log("Target Number " + " Leg Possition Increased to " + targetLegPosition[x]+1);
+                    //Debug.Log("Target Number " + " Leg Possition Increased to " + targetLegPosition[x]+1);
                     targetLegPosition[x]++;
                 }
 
@@ -215,7 +225,7 @@ public class Manager : MonoBehaviour
                 accelX[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 3), x + 1])*scalingFactor/60;
                 accelY[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 4), x + 1])*scalingFactor/60;
                 accelZ[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 5), x + 1])*scalingFactor/60;
-                Debug.Log("Target Leg Position " + targetLegPosition[x] + "  x " + x);
+               // Debug.Log("Target Leg Position " + targetLegPosition[x] + "  x " + x);
 
                 //update position data on targets
 
@@ -232,7 +242,7 @@ public class Manager : MonoBehaviour
                 targetPosX[x] += targetVelocityX[x] / 60 + accelX[x] / 60 / 60 / 2;
                 targetPosY[x] += targetVelocityY[x] / 60 + accelY[x] / 60 / 60 / 2;
                 targetPosZ[x] += targetVelocityY[x] / 60 + accelZ[x] / 60 / 60 / 2;
-                Debug.Log("Target change in position " + targetPosX[x] + "  " + targetPosY[x] + "    " + targetPosZ[x]);
+               // Debug.Log("Target change in position " + targetPosX[x] + "  " + targetPosY[x] + "    " + targetPosZ[x]);
                 
 
 
@@ -243,8 +253,8 @@ public class Manager : MonoBehaviour
 
 
 
-                Debug.Log("Target " + x + " Vel " + targetVelocityX[x] + " Y " + targetVelocityY[x] + "  Z " + targetVelocityZ[x] + " Accel " + accelX[x] + "  " + accelY[x] + "   " + accelZ[x] + "   position" +
-                    newPos.ToString());
+                //Debug.Log("Target " + x + " Vel " + targetVelocityX[x] + " Y " + targetVelocityY[x] + "  Z " + targetVelocityZ[x] + " Accel " + accelX[x] + "  " + accelY[x] + "   " + accelZ[x] + "   position" +
+                 //   newPos.ToString());
                 missiles[x].transform.position = newPos;
 
                 //missle.transform.position = newPos;
@@ -288,24 +298,24 @@ public class Manager : MonoBehaviour
 
             //number of lines in csv file
             maxPosition = data.GetLength(1);
-            Debug.Log("The value of maaxPosition is " + data.GetLength(1));
+            //Debug.Log("The value of maaxPosition is " + data.GetLength(1));
 
             float distance = float.Parse(data[2, position]);
-            Debug.Log("The value of distance is " + data[2, position]);
+            //Debug.Log("The value of distance is " + data[2, position]);
 
             //works accross both distances as the speed is light based
             difference = .0107364f * distance;
-            Debug.Log("The value of difference is " + difference);
+            //Debug.Log("The value of difference is " + difference);
             if (position < maxPosition)
             {
                 position = (int)(time / 60 / difference * 1000);
-                Debug.Log("The value of position is " + position);
+                //Debug.Log("The value of position is " + position);
 
 
                 float degreesRotation = float.Parse(data[6, position]);
-                Debug.Log("The value of rotation is " + data[6, position]);
+                //Debug.Log("The value of rotation is " + data[6, position]);
                 float degreesElevation = float.Parse(data[7, position]);
-                Debug.Log("The value of elevation is is " + data[7, position]);
+                //Debug.Log("The value of elevation is is " + data[7, position]);
 
                 if (data[3, position].Equals("1"))
                 {
@@ -364,15 +374,21 @@ public class Manager : MonoBehaviour
     void Update()
     {
 
+        if(time < 0)
+        {
+            time = 0;
+        }
+
 		if (!isPaused)
 		{
 			updateRadarBeam();
 			updateTargetData ();
+            
 		}
 
        
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             if(fileLength > 0)
             {
@@ -390,6 +406,7 @@ public class Manager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
         {
             Pause();
+            
         }
         else
         {
