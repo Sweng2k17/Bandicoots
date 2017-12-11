@@ -66,7 +66,7 @@ public class CSVReader : MonoBehaviour
         }
 
         // creates new 2D string grid to output to
-        string[,] outputGrid = new string[width + 1, lines.Length + 1];
+        string[,] outputGrid = new string[width , lines.Length ];
         for (int y = 0; y < lines.Length; y++)
         {
             string[] row = SplitCsvLine(lines[y]);
