@@ -66,7 +66,7 @@ public class CSVReader : MonoBehaviour
         }
 
         // creates new 2D string grid to output to
-        string[,] outputGrid = new string[width , lines.Length ];
+        string[,] outputGrid = new string[width + 1, lines.Length + 1];
         for (int y = 0; y < lines.Length; y++)
         {
             string[] row = SplitCsvLine(lines[y]);
@@ -97,29 +97,25 @@ public class CSVReader : MonoBehaviour
     {
         string path = filePath.text;
         string fileText = "";
-        try
-        {
-            //path = "C:\\Users\\Brian\\Documents\\GitHub\\StartSheet.csv";
-            StreamReader reader = new StreamReader(path);
-
-            try
-            {
-
-                fileText += reader.ReadToEnd();
-
-                reader.Close();
-            }
-            catch (FileNotFoundException e)
-            {
-                Debug.Log("Error in file read " + path);
-            }
-        }
-        catch(System.Exception e)
-        {
-            Debug.Log("Button pressed with incorrect file path");
-        }
-
         
 
+        //path = "C:\\Users\\Brian\\Documents\\GitHub\\StartSheet.csv";
+        StreamReader reader = new StreamReader(path);
+
+        try
+        {
+
+            fileText += reader.ReadToEnd();
+
+            reader.Close();
+        }
+        catch (FileNotFoundException e)
+        {
+            Debug.Log("Error in file read " + path);
+        }
+
+        data = SplitCsvGrid(fileText);
+        //testing.text = DebugOutputGrid(data);
+        Debug.Log("size = " + (1 + data.GetUpperBound(0)) + "," + (1 + data.GetUpperBound(1)));
     }
 }
