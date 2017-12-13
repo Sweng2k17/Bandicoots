@@ -24,8 +24,13 @@ public class Manager : MonoBehaviour
 	MeshRenderer missle;
     [SerializeField]
     Button readTargetButton;
+<<<<<<< HEAD
 	[SerializeField]
 	Button aboutButton;
+=======
+    [SerializeField]
+    Transform objectInfo;
+>>>>>>> origin/master
 
 
 	public GameObject oldCube;
@@ -42,11 +47,17 @@ public class Manager : MonoBehaviour
 	int numTarget = 1;
 	int counter=0;
 
+
+
+    private double[] accelX;
+    private double[] accelY;
+    private double[] accelZ;
     double[] targetPosX;
     double[] targetPosY;
     double[] targetPosZ;
     int[] targetLeg;
     int[] targetLegPosition;
+<<<<<<< HEAD
     double[] targetVelocityX;
     double[] targetVelocityY;
     double[] targetVelocityZ;
@@ -54,121 +65,216 @@ public class Manager : MonoBehaviour
 	Rect windowRect = new Rect(20,20,120,50);
 	Rect newRect;
 	bool showWindow = false;
+=======
+    public double[] targetVelocityX;
+    public double[] targetVelocityY;
+    public double[] targetVelocityZ;
+    GameObject[] missileObjects;
+    MeshRenderer[] missiles;
+
+    private int fileLength = 0;
+
+    //This is the number of ingame units per mile or measuremeant used Currently it is set to 20 units per mile
+    private int scalingFactor = 2;
+
+
+    public void resetTime()
+    {
+        time = 0;
+    }
+>>>>>>> origin/master
 
     public void initTarget()
     {
-		Debug.Log ("Button pressed");
-        if(readTargetButton.GetComponent<CSVReader>().data != null)
+        time = 0;
+        Debug.Log("Button pressed");
+        if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
 
             targetData = readTargetButton.GetComponent<CSVReader>().data;
-			int fileLength = targetData.GetLength (1);
+            fileLength = targetData.GetLength(1)-1;
 
-			Debug.Log("Target data init file length " + fileLength);
+            missileObjects = new GameObject[fileLength];
+            missiles = new MeshRenderer[fileLength];
+            for (int x = 0; x < missileObjects.Length - 1; x++)
+            {
+                missileObjects[x] = new GameObject();
+            }
 
+            for (int x = 0; x < fileLength-1; x++)
+            {
+                missileObjects[x].AddComponent<MeshRenderer>();
+                missileObjects[x].AddComponent<MeshCollider>();
+                missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
+                missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
+                missiles[x].GetComponent<ClickScript>().setNumber(x);
+                Vector3 scale = new Vector3();
+                scale.x = .1f;
+                scale.y = .1f;
+                scale.z = .1f;
+                missiles[x].transform.localScale = scale;
+            }
 
-			targetPosX = new double[fileLength];
-			targetPosY = new double[fileLength];
-			targetPosZ = new double[fileLength];
-			targetVelocityX = new double[fileLength];
-			targetVelocityY = new double[fileLength];
-			targetVelocityZ = new double[fileLength];
-			targetLeg = new int[targetData.GetLength (0)];
-			//quick fix
-			//TODO calculate real length
-			targetLegPosition = new int[6];
+            //can tasks be marked as X percent complete
+            Debug.Log("Target data init file length " + fileLength);
 
+            fileLength--;
+            targetPosX = new double[fileLength];
+            targetPosY = new double[fileLength];
+            targetPosZ = new double[fileLength];
+            targetVelocityX = new double[fileLength];
+            targetVelocityY = new double[fileLength];
+            targetVelocityZ = new double[fileLength];
+            targetLeg = new int[targetData.GetLength(0)];
+            accelX = new double[fileLength];
+            accelY = new double[fileLength];
+            accelZ = new double[fileLength];
 
-			//so its works but it travels in that direction for 90 seconds not sure if it swtiches to next leg correctly
-
-
+            targetLegPosition = new int[fileLength];
+            fileLength++;
 
             //init all targets ignore descriptons line
-            for(int x = 0; x < 6-1; x++)
+            for (int x = 0; x < fileLength-1 ; x++)
             {
-                targetPosX[x] = double.Parse(targetData[0, x+1]);
-                targetPosY[x] = double.Parse(targetData[1, x+1]);
-                targetPosZ[x] = double.Parse(targetData[2, x+1]);
-                targetLeg[x] = int.Parse(targetData[6, x+1]);
+                targetPosX[x] = double.Parse(targetData[0, x + 1])*scalingFactor;
+                targetPosY[x] = double.Parse(targetData[1, x + 1])*scalingFactor;
+                targetPosZ[x] = double.Parse(targetData[2, x + 1])*scalingFactor;
+                targetLeg[x] = int.Parse(targetData[6, x + 1]);
+
+                Debug.Log("Target Position Init " + targetPosX[x]/20 + " " + targetPosY[x]/20 + "  " + targetPosZ[x]/20 + " X = " + x);
+
                 targetLegPosition[x] = 0;
+
                 targetVelocityX[x] = 0;
                 targetVelocityY[x] = 0;
                 targetVelocityZ[x] = 0;
 
-                //TODO missles[x] = new createMissleObjectHere
+                Vector3 newPos = new Vector3();
+                newPos.x = (float)targetPosX[x];
+                newPos.y = (float)targetPosY[x];
+                newPos.z = (float)targetPosZ[x];
+
+                missiles[x].transform.position = newPos;
+
             }
 
-			Vector3 newPos = new Vector3 ();
-			newPos.x = (float)targetPosX [0];
-			newPos.y = (float)targetPosY [0];
-			newPos.z = (float)targetPosZ [0];
 
-			missle.transform.position = newPos;
-            
+
         }
     }
 
-	private int accelX;
-	private int accelY;
-	private int accelZ;
+    public Vector3 getPosition(int number)
+    {
+        Vector3 newPos = new Vector3();
+        newPos.x = (float)targetPosX[number];
+        newPos.y = (float)targetPosY[number];
+        newPos.z = (float)targetPosZ[number];
+
+        return newPos;
+    }
+
+    public double[] getVelocity(int number)
+    {
+        
+        double[] holder = new double[3];
+        holder[0] = targetVelocityX[number];
+        holder[1] = targetVelocityY[number];
+        holder[2] = targetVelocityZ[number];
+        return holder;
+    }
+
+    public double[] getAcceleration(int number)
+    {
+        accelX[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 3), number + 1]) * scalingFactor ;
+        accelY[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 4), number+1]) * scalingFactor ;
+        accelZ[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 5), number+1]) * scalingFactor ;
+        double[] holder = new double[3];
+        holder[0] = accelX[number];
+        holder[1] = accelY[number];
+        holder[2] = accelZ[number];
+
+        return holder;
+    }
+
+
+    private void disableObjectInfo()
+    {
+        objectInfo.gameObject.SetActive(false);
+        for(int x = 0; x< fileLength-1; x++)
+        {
+            missiles[x].GetComponent<ClickScript>().setActive(false);
+        }
+    }
+
+    public void enableObjectInfo()
+    {
+        objectInfo.gameObject.SetActive(true);
+
+    }
+
+
+
+
+    
 
     private void updateTargetData()
     {
         if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
-            targetData = readTargetButton.GetComponent<CSVReader>().data;
-			Debug.Log("The target data has been run");
+            //targetData = readTargetButton.GetComponent<CSVReader>().data;
+            //Debug.Log("The target data has been run");
 
-            for (int x = 0; x < 6-1; x++)
+
+
+            for (int x = 0; x < fileLength-1; x++)
             {
 
                 //if time greater than leg, increase le counter by one 
-                if(time / 60 > targetLeg[targetLegPosition[x]])
+                if (time / 60 > targetLeg[targetLegPosition[x]])
                 {
+                    //Debug.Log("Target Number " + " Leg Possition Increased to " + targetLegPosition[x]+1);
                     targetLegPosition[x]++;
                 }
 
 
-				accelX = int.Parse(targetData[ x + 1, (targetLegPosition[x] * 4 + 3)])*20;
-				accelY = int.Parse(targetData[x+1,(targetLegPosition[x] * 4 + 4)])*20;
-				accelZ = int.Parse(targetData[x+1,(targetLegPosition[x] * 4 + 5)])*20;
+                //TODO convert mph to seconds
+                accelX[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 3), x + 1])*scalingFactor/60;
+                accelY[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 4), x + 1])*scalingFactor/60;
+                accelZ[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 5), x + 1])*scalingFactor/60;
+               // Debug.Log("Target Leg Position " + targetLegPosition[x] + "  x " + x);
 
-
-				Debug.Log ("Accel " + accelX);
                 //update position data on targets
 
                 //time = 1/60 of a second
 
 
                 //update velocity = previous velocity + accel * time
-                targetVelocityX[x] = targetVelocityX[x] + accelX / 60;
-                targetVelocityY[x] = targetVelocityY[x] + accelY / 60;
-                targetVelocityZ[x] = targetVelocityZ[x] + accelZ / 60;
+                targetVelocityX[x] = targetVelocityX[x] + accelX[x] / 60;
+                targetVelocityY[x] = targetVelocityY[x] + accelY[x] / 60;
+                targetVelocityZ[x] = targetVelocityZ[x] + accelZ[x] / 60;
 
-				Debug.Log ("velocity " + targetVelocityX[0]);
 
                 //distance = intial velocity *t + 1/2 * accel * time * time
-                targetPosX[x] = targetVelocityX[x] / 60 + accelX / 60 / 60 / 2;
-                targetPosY[x] = targetVelocityY[x] / 60 + accelY / 60 / 60 / 2;
-                targetPosZ[x] = targetVelocityY[x] / 60 + accelZ / 60 / 60 / 2;
-
-				Debug.Log ("Target X pos = " + targetPosX [0]);
-                //assign target locations to Object missle
-                //TODO programatically create Missles equal to X
-
-
-				Vector3 newPos = new Vector3 ();
-				newPos.x = (float)targetPosX [0];
-				newPos.y = (float)targetPosY [0];
-				newPos.z = (float)targetPosZ [0];
-
-				//Create old position marker
-				Vector3 oldPosition = missle.transform.position;
-				Quaternion oldRotation = missle.transform.rotation;
-				Instantiate (oldCube, oldPosition, oldRotation);
-
-				missle.transform.position = newPos;
+                targetPosX[x] += targetVelocityX[x] / 60 + accelX[x] / 60 / 60 / 2;
+                targetPosY[x] += targetVelocityY[x] / 60 + accelY[x] / 60 / 60 / 2;
+                targetPosZ[x] += targetVelocityY[x] / 60 + accelZ[x] / 60 / 60 / 2;
+               // Debug.Log("Target change in position " + targetPosX[x] + "  " + targetPosY[x] + "    " + targetPosZ[x]);
                 
+
+
+                Vector3 newPos = new Vector3();
+                newPos.x = (float)targetPosX[x];
+                newPos.y = (float)targetPosY[x];
+                newPos.z = (float)targetPosZ[x];
+
+
+
+                //Debug.Log("Target " + x + " Vel " + targetVelocityX[x] + " Y " + targetVelocityY[x] + "  Z " + targetVelocityZ[x] + " Accel " + accelX[x] + "  " + accelY[x] + "   " + accelZ[x] + "   position" +
+                 //   newPos.ToString());
+                missiles[x].transform.position = newPos;
+
+                //missle.transform.position = newPos;
+
             }
 
 
@@ -181,6 +287,8 @@ public class Manager : MonoBehaviour
     void Start()
     {
         UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
+        objectInfo.gameObject.SetActive(false);
+
         isPaused = false; //make sure isPaused is always false when our scene opens
         time = 0;
         timeText.text = time.ToString();
@@ -208,24 +316,24 @@ public class Manager : MonoBehaviour
 
             //number of lines in csv file
             maxPosition = data.GetLength(1);
-            Debug.Log("The value of maaxPosition is " + data.GetLength(1));
+            //Debug.Log("The value of maaxPosition is " + data.GetLength(1));
 
             float distance = float.Parse(data[2, position]);
-            Debug.Log("The value of distance is " + data[2, position]);
+            //Debug.Log("The value of distance is " + data[2, position]);
 
             //works accross both distances as the speed is light based
             difference = .0107364f * distance;
-            Debug.Log("The value of difference is " + difference);
+            //Debug.Log("The value of difference is " + difference);
             if (position < maxPosition)
             {
                 position = (int)(time / 60 / difference * 1000);
-                Debug.Log("The value of position is " + position);
+                //Debug.Log("The value of position is " + position);
 
 
                 float degreesRotation = float.Parse(data[6, position]);
-                Debug.Log("The value of rotation is " + data[6, position]);
+                //Debug.Log("The value of rotation is " + data[6, position]);
                 float degreesElevation = float.Parse(data[7, position]);
-                Debug.Log("The value of elevation is is " + data[7, position]);
+                //Debug.Log("The value of elevation is is " + data[7, position]);
 
                 if (data[3, position].Equals("1"))
                 {
@@ -248,9 +356,10 @@ public class Manager : MonoBehaviour
 
 
                 Vector3 scale = new Vector3();
-                scale.x = 1;
-                scale.y = 1;
-                scale.z = distance / 100;
+                scale.x = 2;
+                scale.y = 2;
+                //scale.z = distance / 100;
+				scale.z = 464;
 
                 //nextPos.Scale(scale);
 
@@ -283,18 +392,39 @@ public class Manager : MonoBehaviour
     void Update()
     {
 
+        if(time < 0)
+        {
+            time = 0;
+        }
+
 		if (!isPaused)
 		{
 			updateRadarBeam();
 			updateTargetData ();
+            
 		}
 
-		
+       
 
-        //If player presses escape and game is not paused. Pause game. If game is paused and player presses escape, unpause.
-        if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
+        if (Input.GetMouseButtonDown(1))
+        {
+            if(fileLength > 0)
+            {
+                for (int x = 0; x < fileLength-2; x++)
+                {
+                    missiles[x].GetComponent<ClickScript>().setActive(false);
+                }
+            }
+            disableObjectInfo();
+            
+        }
+
+
+            //If player presses escape and game is not paused. Pause game. If game is paused and player presses escape, unpause.
+            if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
         {
             Pause();
+            
         }
         else
         {
@@ -319,6 +449,7 @@ public class Manager : MonoBehaviour
         pauseTime();
         UIPanel.gameObject.SetActive(true); //turn on the pause menu
         camera.GetComponent<CameraMovement_script>().isPaused = false;
+        objectInfo.gameObject.SetActive(false);
 
     }
 
