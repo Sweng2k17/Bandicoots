@@ -25,8 +25,13 @@ public class Manager : MonoBehaviour
     [SerializeField]
     Button readTargetButton;
 <<<<<<< HEAD
+<<<<<<< HEAD
     [SerializeField]
     Transform objectInfo;
+=======
+	[SerializeField]
+	Button aboutButton;
+>>>>>>> parent of 40771f3... force mergeMerge remote-tracking branch 'origin/master' into jeff_aboutButton
 =======
 	[SerializeField]
 	Button aboutButton;
@@ -45,12 +50,17 @@ public class Manager : MonoBehaviour
     private string[,] data;
     private string[,] targetData;
 	int numTarget = 1;
+<<<<<<< HEAD
+=======
+	int counter=0;
+>>>>>>> parent of 40771f3... force mergeMerge remote-tracking branch 'origin/master' into jeff_aboutButton
 
     double[] targetPosX;
     double[] targetPosY;
     double[] targetPosZ;
     int[] targetLeg;
     int[] targetLegPosition;
+<<<<<<< HEAD
 <<<<<<< HEAD
     public double[] targetVelocityX;
     public double[] targetVelocityY;
@@ -69,6 +79,8 @@ public class Manager : MonoBehaviour
         time = 0;
     }
 =======
+=======
+>>>>>>> parent of 40771f3... force mergeMerge remote-tracking branch 'origin/master' into jeff_aboutButton
     double[] targetVelocityX;
     double[] targetVelocityY;
     double[] targetVelocityZ;
@@ -76,6 +88,9 @@ public class Manager : MonoBehaviour
 	Rect windowRect = new Rect(20,20,120,50);
 	Rect newRect;
 	bool showWindow = false;
+<<<<<<< HEAD
+>>>>>>> parent of 40771f3... force mergeMerge remote-tracking branch 'origin/master' into jeff_aboutButton
+=======
 >>>>>>> parent of 40771f3... force mergeMerge remote-tracking branch 'origin/master' into jeff_aboutButton
 
     public void initTarget()
@@ -155,8 +170,13 @@ public class Manager : MonoBehaviour
 				accelX = int.Parse(targetData[ x + 1, (targetLegPosition[x] * 4 + 3)])*20;
 				accelY = int.Parse(targetData[x+1,(targetLegPosition[x] * 4 + 4)])*20;
 				accelZ = int.Parse(targetData[x+1,(targetLegPosition[x] * 4 + 5)])*20;
+<<<<<<< HEAD
 
 
+=======
+
+
+>>>>>>> parent of 40771f3... force mergeMerge remote-tracking branch 'origin/master' into jeff_aboutButton
 				Debug.Log ("Accel " + accelX);
                 //update position data on targets
 
