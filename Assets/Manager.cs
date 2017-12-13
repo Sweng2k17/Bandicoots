@@ -24,13 +24,8 @@ public class Manager : MonoBehaviour
 	MeshRenderer missle;
     [SerializeField]
     Button readTargetButton;
-<<<<<<< HEAD
-	[SerializeField]
-	Button aboutButton;
-=======
     [SerializeField]
     Transform objectInfo;
->>>>>>> origin/master
 
 
 	public GameObject oldCube;
@@ -45,7 +40,6 @@ public class Manager : MonoBehaviour
     private string[,] data;
     private string[,] targetData;
 	int numTarget = 1;
-	int counter=0;
 
 
 
@@ -57,15 +51,6 @@ public class Manager : MonoBehaviour
     double[] targetPosZ;
     int[] targetLeg;
     int[] targetLegPosition;
-<<<<<<< HEAD
-    double[] targetVelocityX;
-    double[] targetVelocityY;
-    double[] targetVelocityZ;
-    MeshRenderer[] missles;
-	Rect windowRect = new Rect(20,20,120,50);
-	Rect newRect;
-	bool showWindow = false;
-=======
     public double[] targetVelocityX;
     public double[] targetVelocityY;
     public double[] targetVelocityZ;
@@ -82,7 +67,6 @@ public class Manager : MonoBehaviour
     {
         time = 0;
     }
->>>>>>> origin/master
 
     public void initTarget()
     {
@@ -296,8 +280,6 @@ public class Manager : MonoBehaviour
         //adjust speed here
         speed = 1;
         interval = speed;
-		//aboutButton = aboutButton.GetComponent<Button> ();
-		aboutButton.onClick.AddListener (TaskOnClick);
 
     }
 
@@ -497,47 +479,4 @@ public class Manager : MonoBehaviour
         position = (int)(sliderPosition * maxPosition);
         time = position * 60 / 1000 * difference;
     }
-
-
-
-
-
-	void OnGUI()
-	{
-		
-		if (showWindow==true) {
-			windowRect.width = 200;
-			windowRect.height = 50;
-			windowRect.x = 0;
-			windowRect.y = 0;
-			windowRect = GUI.Window (0, windowRect, DoMyWindow, "VR Search Visualization");
-		}
-
-
-	}
-
-
-	void DoMyWindow(int windowID) {
-		if (GUI.Button (new Rect (10, 20, 180, 20), "Version: 0.1"))
-			print ("got a click");
-	}
-		
-
-
-
-
-	void TaskOnClick()
-	{
-		if (showWindow) {
-			showWindow = false;
-		} else {
-			showWindow = true;
-		}
-
-		Debug.Log ("show window is: " + showWindow);
-	}
-
-
-
-
 }
