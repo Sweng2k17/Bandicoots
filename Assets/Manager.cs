@@ -39,7 +39,7 @@ public class Manager : MonoBehaviour
     private int maxPosition;
     private string[,] data;
     private string[,] targetData;
-    int numTarget = 1;
+    
 
 
 
@@ -49,7 +49,9 @@ public class Manager : MonoBehaviour
     double[] targetPosX;
     double[] targetPosY;
     double[] targetPosZ;
+    //The time until the lef is done read from file
     int[] targetLeg;
+    //The location of the Leg in the file
     int[] targetLegPosition;
     public double[] targetVelocityX;
     public double[] targetVelocityY;
@@ -74,7 +76,7 @@ public class Manager : MonoBehaviour
         Debug.Log("Button pressed");
         if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
-
+            Debug.Log("Read target csv reader not null");
             targetData = readTargetButton.GetComponent<CSVReader>().data;
             fileLength = targetData.GetLength(1) - 1;
 
@@ -89,7 +91,7 @@ public class Manager : MonoBehaviour
             {
                 missileObjects[x].AddComponent<MeshRenderer>();
                 missileObjects[x].AddComponent<MeshCollider>();
-                //missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
+                missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
                 missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
                 missiles[x].GetComponent<ClickScript>().setNumber(x);
                 Vector3 scale = new Vector3();
@@ -123,11 +125,11 @@ public class Manager : MonoBehaviour
                 targetPosX[x] = double.Parse(targetData[0, x + 1]) * scalingFactor;
                 targetPosY[x] = double.Parse(targetData[1, x + 1]) * scalingFactor;
                 targetPosZ[x] = double.Parse(targetData[2, x + 1]) * scalingFactor;
-                targetLeg[x] = int.Parse(targetData[6, x + 1]);
+                targetLegPosition[x] = 6;
+                targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]);
 
                 Debug.Log("Target Position Init " + targetPosX[x] / 20 + " " + targetPosY[x] / 20 + "  " + targetPosZ[x] / 20 + " X = " + x);
 
-                targetLegPosition[x] = 0;
 
                 targetVelocityX[x] = 0;
                 targetVelocityY[x] = 0;
@@ -145,6 +147,7 @@ public class Manager : MonoBehaviour
 
 
         }
+        Debug.Log("Init Done");
     }
 
     public Vector3 getPosition(int number)
@@ -169,9 +172,9 @@ public class Manager : MonoBehaviour
 
     public double[] getAcceleration(int number)
     {
-        accelX[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 3), number + 1]) * scalingFactor;
-        accelY[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 4), number + 1]) * scalingFactor;
-        accelZ[number] = double.Parse(targetData[(targetLegPosition[number] * 4 + 5), number + 1]) * scalingFactor;
+        accelX[number] = double.Parse(targetData[(targetLegPosition[number] -3), number + 1]) * scalingFactor;
+        accelY[number] = double.Parse(targetData[(targetLegPosition[number] -2), number + 1]) * scalingFactor;
+        accelZ[number] = double.Parse(targetData[(targetLegPosition[number] -1), number + 1]) * scalingFactor;
         double[] holder = new double[3];
         holder[0] = accelX[number];
         holder[1] = accelY[number];
@@ -214,17 +217,19 @@ public class Manager : MonoBehaviour
             {
 
                 //if time greater than leg, increase le counter by one 
-                if (time / 60 > targetLeg[targetLegPosition[x]])
+                if (time / 60 > targetLeg[x])
                 {
-                    //Debug.Log("Target Number " + " Leg Possition Increased to " + targetLegPosition[x]+1);
-                    targetLegPosition[x]++;
+                    targetLegPosition[x] += 4;
+                    targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]) + targetLeg[x];
+                    Debug.Log("Target Number " + x + " Leg Possition Increased to " + targetLegPosition[x]);
+                    
                 }
 
 
                 //TODO convert mph to seconds
-                accelX[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 3), x + 1]) * scalingFactor / 60;
-                accelY[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 4), x + 1]) * scalingFactor / 60;
-                accelZ[x] = double.Parse(targetData[(targetLegPosition[x] * 4 + 5), x + 1]) * scalingFactor / 60;
+                accelX[x] = double.Parse(targetData[(targetLegPosition[x] - 3), x + 1]) * scalingFactor / 60;
+                accelY[x] = double.Parse(targetData[(targetLegPosition[x] - 2), x + 1]) * scalingFactor / 60;
+                accelZ[x] = double.Parse(targetData[(targetLegPosition[x] - 1), x + 1]) * scalingFactor / 60;
                 // Debug.Log("Target Leg Position " + targetLegPosition[x] + "  x " + x);
 
                 //update position data on targets

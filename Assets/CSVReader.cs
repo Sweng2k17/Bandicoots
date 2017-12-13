@@ -97,29 +97,25 @@ public class CSVReader : MonoBehaviour
     {
         string path = filePath.text;
         string fileText = "";
+
+
+        
+
         try
         {
             //path = "C:\\Users\\Brian\\Documents\\GitHub\\StartSheet.csv";
             StreamReader reader = new StreamReader(path);
-
-            try
-            {
-
-                fileText += reader.ReadToEnd();
-
-                reader.Close();
-            }
-            catch (FileNotFoundException e)
-            {
-                Debug.Log("Error in file read " + path);
-            }
+            fileText += reader.ReadToEnd();
+            data = SplitCsvGrid(fileText);
+            //testing.text = DebugOutputGrid(data);
+            //Debug.Log("size = " + (1 + data.GetUpperBound(0)) + "," + (1 + data.GetUpperBound(1)));
+            reader.Close();
         }
-        catch (System.Exception e)
+        catch (FileNotFoundException e)
         {
-            Debug.Log("Button pressed with incorrect file path");
+            Debug.Log("Error in file read " + path);
         }
 
-
-
+        
     }
 }

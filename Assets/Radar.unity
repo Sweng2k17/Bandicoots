@@ -196,8 +196,8 @@ GameObject:
   - component: {fileID: 25166677}
   - component: {fileID: 25166681}
   - component: {fileID: 25166680}
-  - component: {fileID: 25166679}
   - component: {fileID: 25166678}
+  - component: {fileID: 25166679}
   m_Layer: 5
   m_Name: ReadButton2
   m_TagString: Untagged
@@ -296,7 +296,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &25166680
@@ -526,7 +526,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 5311afa115791b64cba3e297837eac07, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -92.8
+      value: -193
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 5311afa115791b64cba3e297837eac07, type: 3}
       propertyPath: m_LocalPosition.z
@@ -579,7 +579,7 @@ Prefab:
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 5311afa115791b64cba3e297837eac07, type: 3}
   m_PrefabInternal: {fileID: 271765770}
---- !u!114 &271765773
+--- !u!114 &271765772
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -587,16 +587,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 271765771}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50251f329a69f3f418c7a63d81a86cc6, type: 3}
+  m_Script: {fileID: 11500000, guid: 41a7b81a6260ec04bb2cbdb52e6d74df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderer: {fileID: 895200873}
-  meshCollider: {fileID: 271765775}
-  gm: {fileID: 681363184}
-  objectTitleText: {fileID: 1967008496}
-  velocityText: {fileID: 558474248}
-  accelerationText: {fileID: 217740431}
-  distanceText: {fileID: 917057}
 --- !u!64 &271765775
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1422,6 +1415,7 @@ GameObject:
   m_Component:
   - component: {fileID: 681363185}
   - component: {fileID: 681363186}
+  - component: {fileID: 681363187}
   m_Layer: 0
   m_Name: _GM
   m_TagString: GM
@@ -1467,6 +1461,24 @@ MonoBehaviour:
   targetVelocityX: []
   targetVelocityY: []
   targetVelocityZ: []
+--- !u!114 &681363187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 681363184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50251f329a69f3f418c7a63d81a86cc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderer: {fileID: 895200873}
+  meshCollider: {fileID: 0}
+  gm: {fileID: 681363184}
+  objectTitleText: {fileID: 1967008496}
+  velocityText: {fileID: 558474248}
+  accelerationText: {fileID: 217740431}
+  distanceText: {fileID: 917057}
 --- !u!1 &703368164
 GameObject:
   m_ObjectHideFlags: 0
@@ -2088,7 +2100,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &842788250
