@@ -13,7 +13,9 @@ public class Manager : MonoBehaviour
     [SerializeField]
     Text timeText;
     [SerializeField]
-    MeshRenderer beam;
+    GameObject beam;
+    [SerializeField]
+    MeshRenderer beamMaterial;
     [SerializeField]
     Button readRadarButton;
     [SerializeField]
@@ -95,6 +97,7 @@ public class Manager : MonoBehaviour
             {
                 missileObjects[x].AddComponent<MeshRenderer>();
                 missileObjects[x].AddComponent<MeshCollider>();
+                missileObjects[x].AddComponent<ClickScript>();
                 missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
                 missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
                 missiles[x].GetComponent<ClickScript>().setNumber(x);
@@ -308,34 +311,30 @@ public class Manager : MonoBehaviour
 
             //number of lines in csv file
             maxPosition = data.GetLength(1);
-            //Debug.Log("The value of maaxPosition is " + data.GetLength(1));
 
             float distance = float.Parse(data[2, position]);
-            //Debug.Log("The value of distance is " + data[2, position]);
 
             //works accross both distances as the speed is light based
             difference = .0107364f * distance;
-            //Debug.Log("The value of difference is " + difference);
             if (position < maxPosition)
             {
-                position = (int)(time / 60 / difference * 1000);
+                //TODO multiple by 10 time is artificially slowed so that you can see the beam
+                position = (int)(time / 60 / difference * 100);
                 //Debug.Log("The value of position is " + position);
 
 
                 float degreesRotation = float.Parse(data[6, position]);
-                //Debug.Log("The value of rotation is " + data[6, position]);
                 float degreesElevation = float.Parse(data[7, position]);
-                //Debug.Log("The value of elevation is is " + data[7, position]);
 
                 if (data[3, position].Equals("1"))
                 {
                     //high powered
-                    beam.material.color = Color.red;
+                    beamMaterial.material.color = Color.red;
                 }
                 else
                 {
                     //low powered
-                    beam.material.color = Color.cyan;
+                    beamMaterial.material.color = Color.cyan;
                 }
 
 
@@ -349,9 +348,9 @@ public class Manager : MonoBehaviour
 
                 Vector3 scale = new Vector3();
                 scale.x = 2;
-                scale.y = 2;
-                //scale.z = distance / 100;
-                scale.z = 464;
+                //scale.y = 2;
+                scale.y = distance / 10;
+                scale.z = 2;
 
                 //nextPos.Scale(scale);
 

@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Radar.unity
+    guid: a0a970384275e4a74b55fbf797b6e3d1

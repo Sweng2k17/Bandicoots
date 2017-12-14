@@ -6,7 +6,6 @@ using UnityEngine.UI; //Need this for calling UI scripts
 public class ClickScript : MonoBehaviour
 {
 
-    private MeshCollider meshCollider;
 
 
     private ReferenceScript reference;
@@ -22,7 +21,7 @@ public class ClickScript : MonoBehaviour
     private double acceleration;
     private double distance;
     private bool active = false;
-    private MeshCollider test = new MeshCollider();
+    private MeshCollider meshCollider = new MeshCollider();
     private int missileNumber = 0;
 
     // Use this for initialization
@@ -47,12 +46,12 @@ public class ClickScript : MonoBehaviour
 
         if (active)
         {
+            Debug.Log("Active");
             try
             {
                 manager.enableObjectInfo();
                 Vector3 posHolder = manager.getPosition(missileNumber);
 
-                //TODO set text to values
                 velocityText.text = "Velocity: \n X = " + (int)manager.getVelocity(missileNumber)[0] + "mph  Y = " + (int)manager.getVelocity(missileNumber)[1] + "mph  Z = " + (int)manager.getVelocity(missileNumber)[2] + " mpg";
                 accelerationText.text = "Acceleration:\n X = " + manager.getAcceleration(missileNumber)[0] + "  Y = " + manager.getAcceleration(missileNumber)[1] + "  Z = " + manager.getAcceleration(missileNumber)[2] + " mph";
 
@@ -88,7 +87,7 @@ public class ClickScript : MonoBehaviour
 
     void OnMouseOver()
     {
-        //Debug.Log("Mouse over missile");
+        Debug.Log("Mouse over missile");
         //print("Mouse is now over missile");
         if (Input.GetMouseButtonDown(0))
         {

@@ -115,6 +115,14 @@ public class CSVReader : MonoBehaviour
         {
             Debug.Log("Error in file read " + path);
         }
+        catch(IOException e)
+        {
+            Debug.Log("The file is open in another program");
+        }
+        catch(System.ArgumentException e)
+        {
+            Debug.Log("Empty Path Not Allowed");
+        }
 
         
     }
