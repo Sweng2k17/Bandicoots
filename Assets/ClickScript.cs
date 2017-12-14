@@ -52,7 +52,7 @@ public class ClickScript : MonoBehaviour
                 manager.enableObjectInfo();
                 Vector3 posHolder = manager.getPosition(missileNumber);
 
-                velocityText.text = "Velocity: \n X = " + (int)manager.getVelocity(missileNumber)[0] + "mph  Y = " + (int)manager.getVelocity(missileNumber)[1] + "mph  Z = " + (int)manager.getVelocity(missileNumber)[2] + " mpg";
+                velocityText.text = "Velocity: \n X = " + (int)manager.getVelocity(missileNumber)[0] + "mph  Y = " + (int)manager.getVelocity(missileNumber)[1] + "mph  Z = " + (int)manager.getVelocity(missileNumber)[2] + " mph";
                 accelerationText.text = "Acceleration:\n X = " + manager.getAcceleration(missileNumber)[0] + "  Y = " + manager.getAcceleration(missileNumber)[1] + "  Z = " + manager.getAcceleration(missileNumber)[2] + " mph";
 
                 Vector3.Distance(posHolder, new Vector3(0, 0, 0));

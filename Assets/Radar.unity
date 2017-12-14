@@ -662,11 +662,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5311afa115791b64cba3e297837eac07, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3147
+      value: 4510
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5311afa115791b64cba3e297837eac07, type: 3}
       propertyPath: m_LocalPosition.z
       value: -543
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 5311afa115791b64cba3e297837eac07, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 582
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5311afa115791b64cba3e297837eac07, type: 3}

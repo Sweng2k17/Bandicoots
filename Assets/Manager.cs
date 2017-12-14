@@ -73,12 +73,26 @@ public class Manager : MonoBehaviour
 
     public void resetTime()
     {
-        time = 0;
+        time = 1;
+        difference = -1;
+        position = 1;
+        data = readRadarButton.GetComponent<CSVReader>().data;
+
     }
 
     public void initTarget()
     {
-        time = 0;
+
+        if(missileObjects != null)
+        {
+            for(int x = 0; x<missileObjects.Length; x++)
+            {
+                DestroyObject(missileObjects[x]);
+                Destroy(missiles[x]);
+            }
+        }
+
+        time = 1;
         Debug.Log("Button pressed");
         if (readTargetButton.GetComponent<CSVReader>().data != null)
         {
@@ -298,11 +312,10 @@ public class Manager : MonoBehaviour
 
     private void updateRadarBeam()
     {
-        if (readRadarButton.GetComponent<CSVReader>().data != null)
+        if (data != null)
         {
 
 
-            data = readRadarButton.GetComponent<CSVReader>().data;
 
             if (difference < 0)
             {
@@ -320,7 +333,7 @@ public class Manager : MonoBehaviour
             {
                 //TODO multiple by 10 time is artificially slowed so that you can see the beam
                 position = (int)(time / 60 / difference * 100);
-                //Debug.Log("The value of position is " + position);
+                Debug.Log("The value of position is " + position);
 
 
                 float degreesRotation = float.Parse(data[6, position]);
@@ -507,7 +520,11 @@ public class Manager : MonoBehaviour
 
 	void DoMyWindow(int windowID) {
 		if (GUI.Button (new Rect (10, 20, 180, 20), "Version: 0.1"))
+        {
+            showWindow = false;
+        }
 			print ("got a click");
+
 	}
 
 
