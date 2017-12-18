@@ -237,14 +237,18 @@ public class Manager : MonoBehaviour
             for (int x = 0; x < fileLength - 1; x++)
             {
 
-                //if time greater than leg, increase le counter by one 
-                if (time / 60 > targetLeg[x])
+                try
                 {
-                    targetLegPosition[x] += 4;
-                    targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]) + targetLeg[x];
-                    Debug.Log("Target Number " + x + " Leg Possition Increased to " + targetLegPosition[x]);
-                    
-                }
+                    //if time greater than leg, increase le counter by one 
+                    if (time / 60 > targetLeg[x])
+                    {
+                        targetLegPosition[x] += 4;
+                        targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]) + targetLeg[x];
+                        Debug.Log("Target Number " + x + " Leg Possition Increased to " + targetLegPosition[x]);
+
+                    }
+               
+               
 
 
                 //TODO convert mph to seconds
@@ -283,8 +287,12 @@ public class Manager : MonoBehaviour
                 //   newPos.ToString());
                 missiles[x].transform.position = newPos;
 
-                //missle.transform.position = newPos;
-
+                    //missle.transform.position = newPos;
+                }
+                catch (System.Exception e)
+                {
+                    Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
+                }
             }
 
 
@@ -395,7 +403,7 @@ public class Manager : MonoBehaviour
 
     void Update()
     {
-
+        try { 
         if (time < 0)
         {
             time = 0;
@@ -439,6 +447,12 @@ public class Manager : MonoBehaviour
         }
         time += interval;
         timeText.text = ((int)time).ToString();
+
+        }
+        catch(System.IndexOutOfRangeException e)
+        {
+            Debug.Log("Error in data file");
+        }
 
     }
 
