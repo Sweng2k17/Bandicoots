@@ -5,25 +5,41 @@ using UnityEngine;
 /// <summary>
 /// Class used to store target information.
 /// </summary>
-public class Target : MonoBehaviour {
+public class Target {
 
     private Vector3 position;
     private Vector3 velocity;
     private Vector3 acceleration;
 
-
-    // Use this for initialization
-    // Target has position, velocity, and acceleration initially set to 0, 0, 0.
-    void Start () {
-        position = new Vector3(0, 0, 0);
-        velocity = new Vector3(0, 0, 0);
+    /// <summary>
+    /// Default constructor.
+    /// Target has position, velocity, and acceleration initially set to 0, 0, 0.
+    /// </summary>
+    public Target()
+    {
+        position = new Vector3(0,0,0);
+        velocity = new Vector3(0,0,0);
         acceleration = new Vector3(0, 0, 0);
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    /// <summary>
+    /// Constructor to use if position, velocity, and acceleration are known in x, y, and z.
+    /// </summary>
+    /// <param name="posX">Position in x.</param>
+    /// <param name="posY">Position in y.</param>
+    /// <param name="posZ">Position in z.</param>
+    /// <param name="velX">Velocity in x.</param>
+    /// <param name="velY">Velocity in y.</param>
+    /// <param name="velZ">Velocity in z.</param>
+    /// <param name="accX">Acceleration in x.</param>
+    /// <param name="accY">Acceleration in y.</param>
+    /// <param name="accZ">Acceleration in z.</param>
+    public Target(float posX, float posY, float posZ, float velX, float velY, float velZ, float accX, float accY, float accZ)
+    {
+        position = new Vector3(posX, posY, posZ);
+        velocity = new Vector3(velX, velY, velZ);
+        acceleration = new Vector3(accX, accY, accZ);
+    }
 
     /// <summary>
     /// Returns a Vector3 object storing the target's acceleration.
