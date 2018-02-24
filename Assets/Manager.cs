@@ -460,8 +460,6 @@ public class Manager : MonoBehaviour
             updateRadarBeam();
             updateTargetData();
 
-                //update target objects here? - store info about each target in a data structure
-
         }
 
 
