@@ -64,6 +64,8 @@ public class Manager : MonoBehaviour
     public double[] targetVelocityZ;
     GameObject[] missileObjects;
     MeshRenderer[] missiles;
+    // Alpha decrement to make the targets slowly go transparent
+    float alphaDec = 0.0035f;
 
     private int fileLength = 0;
 
@@ -288,19 +290,63 @@ public class Manager : MonoBehaviour
                 missiles[x].transform.position = newPos;
 
                     //missle.transform.position = newPos;
+               // Adjust missile's alpha value:
+                    decAlpha(missiles[x]);
+                    //if((time % 400) == 0) { resetAlpha(missiles[x]); }
+                    
+                    
                 }
                 catch (System.Exception e)
                 {
-                    Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
-                }
-            }
-
-
+	 		Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
+		}
+	}
         }
     }
 
+    /**
+     *  decAlpha(MeshRenderer target)
+     * 
+     *  PRE: Takes in a target's mesh renderer data
+     *  
+     *  POST: decrements the target's alpha value, making it slowly go transparent. 
+     *  when the alpha is 0, the mesh rendering is disabled making the target no longer visible.
+     *  (Pat M. 02.21.2018)
+     **/
+    private void decAlpha(MeshRenderer target)
+    {
+        Color colour = target.material.color;
 
+        // If the alpha value is 0 or less for the target, disable its rendering 
+        if (colour.a <= 0)
+        {
+            target.enabled = false;
+        }
+        // Otherwise, continue making the target transparent
+        else
+        {
+            colour.a -= alphaDec;
+            target.material.color = colour;
+        }
+    }
 
+    /**
+     *  resetAlpha(MeshRenderer target)
+     *  
+     *  PRE: takes in a target's mesh renderer data
+     *  
+     *  POST: sets the alpha value back to 1 and re-enables target's rendering
+     *  (Pat M. 02.21.2018)
+     **/
+    private void resetAlpha(MeshRenderer target)
+    {
+        // set alpha back to 1
+        Color colour = target.material.color;
+        colour.a = 1;
+        target.material.color = colour;
+        // enable rendering
+        target.enabled = true;
+    }
 
     void Start()
     {

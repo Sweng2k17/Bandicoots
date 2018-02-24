@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1634,8 +1634,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 703368164}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 502.5, y: 302, z: 0}
-  m_LocalScale: {x: 0.59821427, y: 0.59821427, z: 0.59821427}
+  m_LocalPosition: {x: 628.5, y: 198.5, z: 0}
+  m_LocalScale: {x: 0.7482143, y: 0.7482143, z: 0.7482143}
   m_Children:
   - {fileID: 2073121202}
   - {fileID: 439209585}
@@ -2068,7 +2068,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: Enter text (Beam)...
 --- !u!222 &799366017
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2521,7 +2521,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter text...
+  m_Text: Enter text (Target)...
 --- !u!222 &910422642
 CanvasRenderer:
   m_ObjectHideFlags: 0
