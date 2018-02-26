@@ -41,7 +41,7 @@ public class Target
     {
         data = new TargetData(posX, posY, posZ, velX, velY, velZ, accX, accY, accZ, time);
         prevData = new Queue();
-        InsertTargetData(data);
+        InsertNewTargetData(data);
     }
 
     /// <summary>
