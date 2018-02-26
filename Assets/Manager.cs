@@ -117,6 +117,12 @@ public class Manager : MonoBehaviour
                 missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
                 missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
                 missiles[x].GetComponent<ClickScript>().setNumber(x);
+
+                //changes here
+                //changes here
+                //changes here
+                missiles[x].enabled = false;
+
                 Vector3 scale = new Vector3();
                 scale.x = .1f;
                 scale.y = .1f;
@@ -290,8 +296,11 @@ public class Manager : MonoBehaviour
                 missiles[x].transform.position = newPos;
 
                     //missle.transform.position = newPos;
-               // Adjust missile's alpha value:
-                    decAlpha(missiles[x]);
+                    // Adjust missile's alpha value:
+                    if (missiles[x].enabled == true)
+                    {
+                        decAlpha(missiles[x]);
+                    }
                     //if((time % 400) == 0) { resetAlpha(missiles[x]); }
                     
                     
