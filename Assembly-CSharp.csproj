@@ -59,6 +59,7 @@
      <Compile Include="Assets\OldPositionBehavior.cs" />
      <Compile Include="Assets\ReferenceScript.cs" />
      <Compile Include="Assets\Target.cs" />
+     <Compile Include="Assets\TargetData.cs" />
      <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CannonBehavior.cs" />
      <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\CreateSinShapedLineStrip.cs" />
      <Compile Include="Assets\VolumetricLines\ExampleScenes\ExampleScripts\ShotBehavior.cs" />

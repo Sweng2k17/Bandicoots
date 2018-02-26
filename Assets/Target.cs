@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Author: Justin Davis
-// Revisions 2/25/18: Daniel (Brad) Wallace
-// Version: 2/25/18
+// Version: 2/26/18
 
 /// <summary>
 /// Class used to store target information.
@@ -37,19 +36,49 @@ public class Target
     /// <param name="accX">Acceleration in x.</param>
     /// <param name="accY">Acceleration in y.</param>
     /// <param name="accZ">Acceleration in z.</param>
-    /// <param name="time">Acceleration in z.</param>
+    /// <param name="time">time increment this data was received.</param>
     public Target(float posX, float posY, float posZ, float velX, float velY, float velZ, float accX, float accY, float accZ, float time)
     {
         data = new TargetData(posX, posY, posZ, velX, velY, velZ, accX, accY, accZ, time);
         prevData = new Queue();
+        InsertTargetData(data);
+    }
 
+    /// <summary>
+    ///  Method to insert newly received target data into the queue
+    /// </summary>
+    /// <param name="targetData">target data object that contains newly received position, velocity, and acceleration and the time increment this data was received</param>
+    public void InsertNewTargetData(TargetData targetData)
+    {
         //dequeues least recently received data from this target
         if(prevData.Count >= 10)
         {
             prevData.Dequeue();
         }
         //adds newly recorded target data to the queue
-        prevData.Enqueue(data);
+        prevData.Enqueue(targetData);
+    }
+
+    /// <summary>
+    /// updates the target data object to reflect newly received target position, velocity, acceleration, and the time increment this data was received.
+    /// </summary>
+    /// <param name="posX">New Position in x.</param>
+    /// <param name="posY">New Position in y.</param>
+    /// <param name="posZ">New Position in z.</param>
+    /// <param name="velX">New Velocity in x.</param>
+    /// <param name="velY">New Velocity in y.</param>
+    /// <param name="velZ">New Velocity in z.</param>
+    /// <param name="accX">New Acceleration in x.</param>
+    /// <param name="accY">New Acceleration in y.</param>
+    /// <param name="accZ">New Acceleration in z.</param>
+    /// <param name="time">time increment this data was received.</param>
+    public void NewTargetData(float posX, float posY, float posZ, float velX, float velY, float velZ, float accX, float accY, float accZ, float time)
+    {
+        data.SetPosition(posX, posY, posZ);
+        data.SetVelocity(velX, velY, velZ);
+        data.SetAcceleration(accX, accY, accZ);
+        data.SetTime(time);
+        InsertNewTargetData(data);
     }
 
     /// <summary>

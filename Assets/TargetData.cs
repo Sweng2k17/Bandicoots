@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Author: Daniel (Brad) Wallace
-// Version: 2/25/18
+// Version: 2/26/18
 
 /// <summary>
 /// Class used to store target data information.
@@ -41,7 +41,7 @@ public class TargetData
     /// <param name="accX">Acceleration in x.</param>
     /// <param name="accY">Acceleration in y.</param>
     /// <param name="accZ">Acceleration in z.</param>
-    /// <param name="time">Acceleration in z.</param>
+    /// <param name="time">time increment this data was received.</param>
     public TargetData(float posX, float posY, float posZ, float velX, float velY, float velZ, float accX, float accY, float accZ, float time)
     {
         position = new Vector3(posX, posY, posZ);
