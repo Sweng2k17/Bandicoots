@@ -5,17 +5,15 @@ using UnityEngine;
 public class CollisionDetected : MonoBehaviour
 {
 
-    float alphaDec = 0.0035f;
-
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("BEAM HAS DETECTED A TARGET:" + collision.collider.name);
 
-        //reset alpha
-        resetAlpha(collision.collider.GetComponent<MeshRenderer>());
+        // enable rendering
+        collision.gameObject.GetComponent<MeshRenderer>().enabled = true;
 
-        //makes target visible if hit by beam
-        collision.collider.GetComponent<MeshRenderer>().enabled = true;
+        //reset alpha
+        resetAlpha(collision.gameObject.GetComponent<MeshRenderer>());
         
     }
 
@@ -43,8 +41,6 @@ public class CollisionDetected : MonoBehaviour
         Color colour = target.material.color;
         colour.a = 1;
         target.material.color = colour;
-        // enable rendering
-        target.enabled = true;
     }
 
 }

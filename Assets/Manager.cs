@@ -295,21 +295,24 @@ public class Manager : MonoBehaviour
                 //   newPos.ToString());
                 missiles[x].transform.position = newPos;
 
-                    //missle.transform.position = newPos;
-                    // Adjust missile's alpha value:
-                    if (missiles[x].enabled == true)
-                    {
-                        decAlpha(missiles[x]);
-                    }
-                    //if((time % 400) == 0) { resetAlpha(missiles[x]); }
-                    
+                    //missle.transform.position = newPos;                   
                     
                 }
                 catch (System.Exception e)
                 {
-	 		Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
-		}
-	}
+            //COMMENTED OUT THIS DEBUG
+	 		//Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
+		        }
+
+                // Adjust missile's alpha value:
+                if (missiles[x].enabled == true)
+                {
+                    Debug.Log("decAlpha being called");
+                    decAlpha(missiles[x]);
+                }
+                //if((time % 400) == 0) { resetAlpha(missiles[x]); }
+
+            }
         }
     }
 
@@ -337,24 +340,6 @@ public class Manager : MonoBehaviour
             colour.a -= alphaDec;
             target.material.color = colour;
         }
-    }
-
-    /**
-     *  resetAlpha(MeshRenderer target)
-     *  
-     *  PRE: takes in a target's mesh renderer data
-     *  
-     *  POST: sets the alpha value back to 1 and re-enables target's rendering
-     *  (Pat M. 02.21.2018)
-     **/
-    private void resetAlpha(MeshRenderer target)
-    {
-        // set alpha back to 1
-        Color colour = target.material.color;
-        colour.a = 1;
-        target.material.color = colour;
-        // enable rendering
-        target.enabled = true;
     }
 
     void Start()
@@ -396,7 +381,9 @@ public class Manager : MonoBehaviour
             {
                 //TODO multiple by 10 time is artificially slowed so that you can see the beam
                 position = (int)(time / 60 / difference * 100);
-                Debug.Log("The value of position is " + position);
+
+                //COMMENTED OUT THE DEBUG
+                //Debug.Log("The value of position is " + position);
 
 
                 float degreesRotation = float.Parse(data[6, position]);
