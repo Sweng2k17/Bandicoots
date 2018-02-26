@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Author: Justin Davis
-// Version: 2/24/18
+// Revisions 2/25/18: Daniel (Brad) Wallace
+// Version: 2/25/18
 
 /// <summary>
 /// Class used to store target information.
@@ -11,9 +12,8 @@ using UnityEngine;
 public class Target
 {
 
-    private Vector3 position;
-    private Vector3 velocity;
-    private Vector3 acceleration;
+    private TargetData data;
+    private Queue prevData;
 
     /// <summary>
     /// Default constructor.
@@ -21,9 +21,8 @@ public class Target
     /// </summary>
     public Target()
     {
-        position = new Vector3(0, 0, 0);
-        velocity = new Vector3(0, 0, 0);
-        acceleration = new Vector3(0, 0, 0);
+        data = new TargetData();
+        prevData = new Queue();
     }
 
     /// <summary>
@@ -38,48 +37,67 @@ public class Target
     /// <param name="accX">Acceleration in x.</param>
     /// <param name="accY">Acceleration in y.</param>
     /// <param name="accZ">Acceleration in z.</param>
-    public Target(float posX, float posY, float posZ, float velX, float velY, float velZ, float accX, float accY, float accZ)
+    /// <param name="time">Acceleration in z.</param>
+    public Target(float posX, float posY, float posZ, float velX, float velY, float velZ, float accX, float accY, float accZ, float time)
     {
-        position = new Vector3(posX, posY, posZ);
-        velocity = new Vector3(velX, velY, velZ);
-        acceleration = new Vector3(accX, accY, accZ);
+        data = new TargetData(posX, posY, posZ, velX, velY, velZ, accX, accY, accZ, time);
+        prevData = new Queue();
+
+        //dequeues least recently received data from this target
+        if(prevData.Count >= 10)
+        {
+            prevData.Dequeue();
+        }
+        //adds newly recorded target data to the queue
+        prevData.Enqueue(data);
     }
 
     /// <summary>
-    /// Returns a Vector3 object storing the target's acceleration.
+    /// Returns a Vector3 object storing the target's currentacceleration.
     /// </summary>
     /// <returns>
-    /// A Vector3 object that stores the target's x, y, and z acceleration.
+    /// A Vector3 object that stores the target's current x, y, and z acceleration.
     /// </returns>
     public Vector3 GetAcceleration()
     {
-        return acceleration;
+        return data.GetAcceleration();
     }
 
     /// <summary>
-    /// Returns a Vector3 object storing the target's velocity.
+    /// Returns a Vector3 object storing the target's current velocity.
     /// </summary>
     /// <returns>
-    /// A Vector3 object that stores the target's x, y, and z velocity.
+    /// A Vector3 object that stores the target's current x, y, and z velocity.
     /// </returns>
     public Vector3 GetVelocity()
     {
-        return velocity;
+        return data.GetVelocity();
     }
 
     /// <summary>
-    /// Returns a Vector3 object storing the target's coordinates.
+    /// Returns a Vector3 object storing the target's current coordinates.
     /// </summary>
     /// <returns>
-    /// A Vector3 object that stores the target's x, y, and z coordinates.
+    /// A Vector3 object that stores the target's current x, y, and z coordinates.
     /// </returns>
     public Vector3 GetPosition()
     {
-        return position;
+        return data.GetPosition();
     }
 
     /// <summary>
-    /// Sets the target's acceleration to new values.
+    /// Returns a float storing the time the target was detected.
+    /// </summary>
+    /// <returns>
+    /// A float that stores the target's time of detection.
+    /// </returns>
+    public float GetTime()
+    {
+        return data.GetTime();
+    }
+
+    /// <summary>
+    /// Sets the target's current acceleration to new values.
     /// </summary>
     /// <param name="newAccX">
     /// The new acceleration in x.</param>
@@ -89,11 +107,11 @@ public class Target
     /// The new acceleration in z.</param>
     public void ChangeAcceleration(float newAccX, float newAccY, float newAccZ)
     {
-        acceleration.Set(newAccX, newAccY, newAccZ);
+        data.SetAcceleration(newAccX, newAccY, newAccZ);
     }
 
     /// <summary>
-    /// Sets the target's velocity to new values.
+    /// Sets the target's current velocity to new values.
     /// </summary>
     /// <param name="newVelX">
     /// The new velocity in x.</param>
@@ -103,11 +121,11 @@ public class Target
     /// The new velocity in z.</param>
     public void ChangeVelocity(float newVelX, float newVelY, float newVelZ)
     {
-        velocity.Set(newVelX, newVelY, newVelZ);
+        data.SetVelocity(newVelX, newVelY, newVelZ);
     }
 
     /// <summary>
-    /// Sets the target's position to a new coordinates.
+    /// Sets the target's current position to a new coordinates.
     /// </summary>
     /// <param name="newPosX">
     /// New x coordinate of target.</param>
@@ -117,7 +135,16 @@ public class Target
     /// New z coordinate of target.</param>
     public void ChangePosition(float newPosX, float newPosY, float newPosZ)
     {
-        position.Set(newPosX, newPosY, newPosZ);
+        data.SetPosition(newPosX, newPosY, newPosZ);
+    }
+
+    /// <summary>
+    /// Changes the target's time of detection to the most recent time that it was detected.
+    /// </summary>
+    /// <param name="time">
+    public void ChangeTime(float time)
+    {
+        data.SetTime(time);
     }
 
 }
