@@ -367,7 +367,9 @@ public class Manager : MonoBehaviour
 
             if (difference < 0)
             {
-                difference = float.Parse(data[0, 2]);
+                //USED FOR Start sheet.csv
+                //difference = float.Parse(data[0, 2]);
+                difference = 1.288363298f;
             }
 
             //number of lines in csv file
@@ -385,14 +387,13 @@ public class Manager : MonoBehaviour
                 //COMMENTED OUT THE DEBUG
                 //Debug.Log("The value of position is " + position);
 
-                //COMMENTED OUT THE ORIGINAL DEGREES ROTATION
-                //float degreesRotation = float.Parse(data[6, position]);
-
                 //determining the elevation range to be searched
                 //elevation range is determined from the current line of the CSV file and the next line of the CSV file if there is a next line
-                float degreesElevationCurr = float.Parse(data[7, position]);
-                float degreesElevationNext = float.Parse(data[7, position + 1]);
-                float elevationRange = System.Math.Abs(degreesElevationNext - degreesElevationCurr);
+                //use search sectors.csv as beam input file
+                float startAz = float.Parse(data[4, position]);
+                float stopAz = float.Parse(data[5, position]);
+                float startEl = float.Parse(data[6, position]);
+                float stopEl = float.Parse(data[7, position]);
 
                 if (data[3, position].Equals("1"))
                 {
@@ -423,95 +424,43 @@ public class Manager : MonoBehaviour
                 //nextPos.Scale(scale);
 
                 Vector3 rotation = new Vector3();
-                rotation.x = degreesElevationCurr;
-                //rotation.y = degreesRotation;
+                rotation.x = 0;
                 rotation.y = 0;
                 rotation.z = 0;
 
 
                 beam.transform.transform.localScale = scale;
 
-                //float to see how much of the desired elevation range is still unsearched
-                float elevationUnsearched;
-
                 //elevation of beam is increasing
-                if(degreesElevationCurr < degreesElevationNext)
+                if(startEl < stopEl)
                 {
                     //increments elevation by 1 after radar beam has searched a complete circle around ship
-                    for (int i = 0; i < elevationRange; i++)
+                    while(startEl <= stopEl)
                     {
-                        elevationUnsearched = elevationRange - i;
-
-                        //numRevolutions is used so that elevation can be incremented by a fraction of a degree when needed
-                        int numRevolutions = 1;
-
-                        //numRevolutions is incremented when there is only a fraction of a degree of elevation remaining to be searched in this elevation range
-                        if (elevationUnsearched < 1 && elevationUnsearched > 0)
+                        //search completely around the ship at the current elevation
+                        while(startAz <= stopAz)
                         {
-                            numRevolutions++;
+                            beam.transform.transform.rotation = Quaternion.Euler(45, 45, 0);
+                            Debug.Log("Beam Updated");
+                            startAz = startAz + 1;
                         }
-
-                        //loop only runs once unless elevationUnsearched is a fraction of a degree
-                        while(numRevolutions > 0)
-                        {
-                            //search completely around the ship at the current elevation
-                            for (int azimuth = 0; azimuth < 360; azimuth++)
-                            {
-                                beam.transform.transform.rotation = Quaternion.Euler(degreesElevationCurr, azimuth, 0);
-                            }
-
-                            //increment actual elevation of beam
-                            //
-                            if(numRevolutions == 1)
-                            {
-                                degreesElevationCurr = degreesElevationCurr + 1;
-                            }
-                            else
-                            {
-                                degreesElevationCurr = degreesElevationCurr + elevationUnsearched;
-                            }
-                            numRevolutions--;
-                        }
+                        startEl = startEl + 1;
                     }
                 }
                 //elevation of beam is decreasing
                 else
                 {
                     //increments elevation by 1 after radar beam has searched a complete circle around ship
-                    for (int i = 0; i < elevationRange; i++)
+                    while (startEl >= stopEl)
                     {
-                        elevationUnsearched = elevationRange - i;
-
-                        //numRevolutions is used so that elevation can be incremented by a fraction of a degree when needed
-                        int numRevolutions = 1;
-
-                        //numRevolutions is incremented when there is only a fraction of a degree of elevation remaining to be searched in this elevation range
-                        if (elevationUnsearched < 1 && elevationUnsearched > 0)
+                        //search completely around the ship at the current elevation
+                        while (startAz <= stopAz)
                         {
-                            numRevolutions++;
+                            beam.transform.transform.rotation = Quaternion.Euler(45, 45, 0);
+                            Debug.Log("Beam Updated");
+                            startAz = startAz + 1;
                         }
-
-                        //loop only runs once unless elevationUnsearched is a fraction of a degree
-                        while (numRevolutions > 0)
-                        {
-                            //search completely around the ship at the current elevation
-                            for (int azimuth = 0; azimuth < 360; azimuth++)
-                            {
-                                beam.transform.transform.rotation = Quaternion.Euler(degreesElevationCurr, azimuth, 0);
-                            }
-
-                            //increment actual elevation of beam
-                            //
-                            if (numRevolutions == 1)
-                            {
-                                degreesElevationCurr = degreesElevationCurr - 1;
-                            }
-                            else
-                            {
-                                degreesElevationCurr = degreesElevationCurr - elevationUnsearched;
-                            }
-                            numRevolutions--;
-                        }
+                        startEl = startEl - 1;
                     }
                 }
 

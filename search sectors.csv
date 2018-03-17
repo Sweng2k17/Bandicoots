@@ -1,0 +1,4 @@
+Volume Number,Start Range,Stop Range,Power Level,Start Az,Stop Az,Start El,Stop El,Beam Width,Search Rate
+1,0,60,1,0,359,0,5,3,3
+2,0,200,1,0,359,2,60,3,10
+3,0,200,0,0,359,60,90,3,20
