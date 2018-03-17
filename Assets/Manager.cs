@@ -369,7 +369,7 @@ public class Manager : MonoBehaviour
             {
                 //USED FOR Start sheet.csv
                 //difference = float.Parse(data[0, 2]);
-                difference = 1.288363298f;
+                difference = 0.644181649f;
             }
 
             //number of lines in csv file
