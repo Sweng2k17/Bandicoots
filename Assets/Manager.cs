@@ -375,14 +375,15 @@ public class Manager : MonoBehaviour
             //number of lines in csv file
             maxPosition = data.GetLength(1);
 
-            float distance = float.Parse(data[2, position]);
-
-            //works accross both distances as the speed is light based
-            difference = .0107364f * distance;
             if (position < maxPosition)
             {
+                float distance = float.Parse(data[2, position]);
+
+                //works accross both distances as the speed is light based
+                difference = .0107364f * distance;
+
                 //TODO multiple by 10 time is artificially slowed so that you can see the beam
-                position = (int)(time / 60 / difference * 100);
+                //position = (int)(time / 60 / difference * 100);
 
                 //COMMENTED OUT THE DEBUG
                 //Debug.Log("The value of position is " + position);
@@ -463,7 +464,7 @@ public class Manager : MonoBehaviour
                         startEl = startEl - 1;
                     }
                 }
-
+                position++;
             }
             else
             {
