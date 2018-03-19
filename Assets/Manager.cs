@@ -432,31 +432,37 @@ public class Manager : MonoBehaviour
                 //elevation of beam is increasing
                 if(startEl < stopEl)
                 {
+                    float tempEl = startEl;
                     //increments elevation by 1 after radar beam has searched a complete circle around ship
-                    while(startEl <= stopEl)
+                    while(tempEl <= stopEl)
                     {
+                        float tempAz = startAz;
                         //search completely around the ship at the current elevation
-                        while(startAz <= stopAz)
+                        while(tempAz <= stopAz)
                         {
-                            beam.transform.transform.rotation = Quaternion.Euler(0, startAz, startEl + 90);
-                            startAz = startAz + 1f;
+                            beam.transform.transform.rotation = Quaternion.Euler(0, tempAz, tempEl + 90);
+                            tempAz = tempAz + 1f;
                         }
-                        startEl = startEl + 1f;
+                        tempEl = tempEl + 1f;
+                        Debug.Log(tempEl);
                     }
                 }
                 //elevation of beam is decreasing
                 else
                 {
+                    float tempEl = startEl;
                     //increments elevation by 1 after radar beam has searched a complete circle around ship
-                    while (startEl >= stopEl)
+                    while (tempEl >= stopEl)
                     {
+                        float tempAz = startAz;
                         //search completely around the ship at the current elevation
-                        while (startAz <= stopAz)
+                        while (tempAz <= stopAz)
                         {
-                            beam.transform.transform.rotation = Quaternion.Euler(0, startAz, startEl + 90);
-                            startAz = startAz + 1f;
+                            beam.transform.transform.rotation = Quaternion.Euler(0, tempAz, tempEl + 90);
+                            tempAz = tempAz + 1f;
                         }
-                        startEl = startEl - 1f;
+                        tempEl = tempEl - 1f;
+                        Debug.Log(tempEl);
                     }
                 }
                 position++;
