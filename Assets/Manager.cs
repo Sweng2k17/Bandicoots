@@ -390,8 +390,8 @@ public class Manager : MonoBehaviour
                 //use search sectors.csv as beam input file
                 float startAz = float.Parse(data[4, position]);
                 float stopAz = float.Parse(data[5, position]);
-                float startEl = float.Parse(data[6, position]);
-                float stopEl = float.Parse(data[7, position]);
+                float startEl = float.Parse(data[6, position])*-1;
+                float stopEl = float.Parse(data[7, position])*-1;
 
                 if (data[3, position].Equals("1"))
                 {
@@ -438,11 +438,10 @@ public class Manager : MonoBehaviour
                         //search completely around the ship at the current elevation
                         while(startAz <= stopAz)
                         {
-                            beam.transform.transform.rotation = Quaternion.Euler(45, 45, 0);
-                            Debug.Log("Beam Updated");
-                            startAz = startAz + 1;
+                            beam.transform.transform.rotation = Quaternion.Euler(0, startAz, startEl + 90);
+                            startAz = startAz + 1f;
                         }
-                        startEl = startEl + 1;
+                        startEl = startEl + 1f;
                     }
                 }
                 //elevation of beam is decreasing
@@ -454,11 +453,10 @@ public class Manager : MonoBehaviour
                         //search completely around the ship at the current elevation
                         while (startAz <= stopAz)
                         {
-                            beam.transform.transform.rotation = Quaternion.Euler(45, 45, 0);
-                            Debug.Log("Beam Updated");
-                            startAz = startAz + 1;
+                            beam.transform.transform.rotation = Quaternion.Euler(0, startAz, startEl + 90);
+                            startAz = startAz + 1f;
                         }
-                        startEl = startEl - 1;
+                        startEl = startEl - 1f;
                     }
                 }
                 position++;
