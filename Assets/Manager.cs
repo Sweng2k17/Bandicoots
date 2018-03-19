@@ -362,9 +362,6 @@ public class Manager : MonoBehaviour
     {
         if (data != null)
         {
-
-
-
             if (difference < 0)
             {
                 //USED FOR Start sheet.csv
@@ -373,7 +370,7 @@ public class Manager : MonoBehaviour
             }
 
             //number of lines in csv file
-            maxPosition = data.GetLength(1);
+            maxPosition = data.GetLength(1)-1;
 
             if (position < maxPosition)
             {
