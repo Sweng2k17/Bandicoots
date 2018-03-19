@@ -404,14 +404,8 @@ public class Manager : MonoBehaviour
                     beamMaterial.material.color = Color.cyan;
                 }
 
-
-
-
                 //move slider bar with time
                 //slider.value = (float)position / (float)maxPosition;
-
-
-
 
                 Vector3 scale = new Vector3();
                 scale.x = 2;
@@ -425,7 +419,6 @@ public class Manager : MonoBehaviour
                 rotation.x = 0;
                 rotation.y = 0;
                 rotation.z = 0;
-
 
                 beam.transform.transform.localScale = scale;
 
