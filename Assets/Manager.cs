@@ -370,28 +370,24 @@ public class Manager : MonoBehaviour
             }
 
             //number of lines in csv file
+            //CSVReader reads in empty line at end of csv files so last line is not included
             maxPosition = data.GetLength(1)-1;
 
+            float distance = float.Parse(data[2, position]);
+
+            //works accross both distances as the speed is light based
+            difference = .0107364f * distance;
             if (position < maxPosition)
             {
-                float distance = float.Parse(data[2, position]);
-
-                //works accross both distances as the speed is light based
-                difference = .0107364f * distance;
-
                 //TODO multiple by 10 time is artificially slowed so that you can see the beam
                 //position = (int)(time / 60 / difference * 100);
 
                 //COMMENTED OUT THE DEBUG
                 //Debug.Log("The value of position is " + position);
 
-                //determining the elevation range to be searched
-                //elevation range is determined from the current line of the CSV file and the next line of the CSV file if there is a next line
-                //use search sectors.csv as beam input file
-                float startAz = float.Parse(data[4, position]);
-                float stopAz = float.Parse(data[5, position]);
-                float startEl = float.Parse(data[6, position])*-1;
-                float stopEl = float.Parse(data[7, position])*-1;
+                //unused assignments temporarily
+                float degreesRotation = float.Parse(data[6, position]);
+                float degreesElevation = float.Parse(data[7, position]);
 
                 if (data[3, position].Equals("1"))
                 {
@@ -415,53 +411,18 @@ public class Manager : MonoBehaviour
 
                 //nextPos.Scale(scale);
 
-                Vector3 rotation = new Vector3();
-                rotation.x = 0;
-                rotation.y = 0;
-                rotation.z = 0;
+                //rotation vector, may not need
+                /*Vector3 rotation = new Vector3();
+                rotation.x = degreesElevation;
+                rotation.y = degreesRotation;
+                rotation.z = 0;*/
 
+                beam.transform.transform.rotation = Quaternion.Euler(0, degreesRotation, 0);
                 beam.transform.transform.localScale = scale;
-
-                //elevation of beam is increasing
-                if(startEl < stopEl)
-                {
-                    float tempEl = startEl;
-                    //increments elevation by 1 after radar beam has searched a complete circle around ship
-                    while(tempEl <= stopEl)
-                    {
-                        float tempAz = startAz;
-                        //search completely around the ship at the current elevation
-                        while(tempAz <= stopAz)
-                        {
-                            beam.transform.transform.rotation = Quaternion.Euler(0, tempAz, tempEl + 90);
-                            tempAz = tempAz + 1f;
-                        }
-                        tempEl = tempEl + 1f;
-                    }
-                }
-                //elevation of beam is decreasing
-                else
-                {
-                    float tempEl = startEl;
-                    //increments elevation by 1 after radar beam has searched a complete circle around ship
-                    while (tempEl >= stopEl)
-                    {
-                        float tempAz = startAz;
-                        //search completely around the ship at the current elevation
-                        while (tempAz <= stopAz)
-                        {
-                            beam.transform.transform.rotation = Quaternion.Euler(0, tempAz, tempEl + 90);
-                            tempAz = tempAz + 1f;
-                        }
-                        tempEl = tempEl - 1f;
-                    }
-                }
-                position++;
             }
             else
             {
                 //file is done reading
-
             }
 
             //update postion of beam 8 lines of data per column
@@ -485,10 +446,7 @@ public class Manager : MonoBehaviour
         {
             updateRadarBeam();
             updateTargetData();
-
         }
-
-
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -500,15 +458,12 @@ public class Manager : MonoBehaviour
                 }
             }
             disableObjectInfo();
-
         }
-
 
         //If player presses escape and game is not paused. Pause game. If game is paused and player presses escape, unpause.
         if (Input.GetKeyDown(KeyCode.Escape) && !isPaused)
         {
             Pause();
-
         }
         else
         {
