@@ -418,6 +418,7 @@ public class Manager : MonoBehaviour
                 rotation.y = degreesRotation;
                 rotation.z = 0;*/
 
+                Debug.Log("startEl is " + startEl);
                 beam.transform.transform.rotation = Quaternion.Euler(0, 0 - startAz, 90 - startEl);
                 beam.transform.transform.localScale = scale;
             }
