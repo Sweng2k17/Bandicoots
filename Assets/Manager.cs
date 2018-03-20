@@ -72,6 +72,8 @@ public class Manager : MonoBehaviour
     //This is the number of ingame units per mile or measuremeant used Currently it is set to 20 units per mile
     private int scalingFactor = 2;
 
+    //Writing CSV files
+    public CSVWriter detectionData;
 
     public void resetTime()
     {
@@ -307,6 +309,16 @@ public class Manager : MonoBehaviour
                 // Adjust missile's alpha value:
                 if (missiles[x].enabled == true)
                 {
+		    // Before we dec the alpha, check to see if alpha = 1 because
+                    // the radar beam sets it to 1. So, we should log that detection 
+                    // in detection data.
+                    Color colour = missiles[x].material.color;
+                    if (colour.a == 1)
+                    {
+                        detectionData.appendCSV(x.ToString(), time, (float)targetPosX[x], (float)targetPosY[x], (float)targetPosZ[x]);
+                    }
+		
+		    // Dec Alpha
                     Debug.Log("decAlpha being called");
                     decAlpha(missiles[x]);
                 }
@@ -524,6 +536,9 @@ public class Manager : MonoBehaviour
 
     public void ExitProgram()
     {
+    	// Write detectionData CSV file
+        detectionData.writeFile();
+    
         Application.Quit();
     }
 
