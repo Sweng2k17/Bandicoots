@@ -54,7 +54,9 @@
      <Compile Include="Assets\CameraMovement_script.cs" />
      <Compile Include="Assets\Circle.cs" />
      <Compile Include="Assets\ClickScript.cs" />
+     <Compile Include="Assets\CollisionDetected.cs" />
      <Compile Include="Assets\CSVReader.cs" />
+     <Compile Include="Assets\CSVWriter.cs" />
      <Compile Include="Assets\Manager.cs" />
      <Compile Include="Assets\OldPositionBehavior.cs" />
      <Compile Include="Assets\ReferenceScript.cs" />
