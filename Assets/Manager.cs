@@ -363,7 +363,7 @@ public class Manager : MonoBehaviour
 
     }
 
-    private void updateRadarBeam(float azimuth, float elevation)
+    private void updateRadarBeam()
     {
         if (data != null)
         {
@@ -418,7 +418,7 @@ public class Manager : MonoBehaviour
                 rotation.y = degreesRotation;
                 rotation.z = 0;*/
 
-                beam.transform.transform.rotation = Quaternion.Euler(0, azimuth, 90);
+                beam.transform.transform.rotation = Quaternion.Euler(0, startAz, 0);
                 beam.transform.transform.localScale = scale;
             }
             else
@@ -464,7 +464,7 @@ public class Manager : MonoBehaviour
                         if (startAz <= stopAz)
                         {
                             //beam and targets are updated for every increment in the azimuth
-                            updateRadarBeam(startAz, startEl);
+                            updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
                             if (startAz == stopAz)
@@ -494,7 +494,7 @@ public class Manager : MonoBehaviour
                         else
                         {
                             //beam and targets are updated for every decrement in the azimuth
-                            updateRadarBeam(startAz, startEl);
+                            updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
                             if (startAz == stopAz)
@@ -530,7 +530,7 @@ public class Manager : MonoBehaviour
                         if (startAz <= stopAz)
                         {
                             //beam and targets are updated for every increment in the azimuth
-                            updateRadarBeam(startAz, startEl);
+                            updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be decremented.
                             if (startAz == stopAz)
@@ -560,7 +560,7 @@ public class Manager : MonoBehaviour
                         else
                         {
                             //beam and targets are updated for every decrement in the azimuth
-                            updateRadarBeam(startAz, startEl);
+                            updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be decremented.
                             if (startAz == stopAz)
