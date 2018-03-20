@@ -84,6 +84,10 @@ public class Manager : MonoBehaviour
         position = 1;
         data = readRadarButton.GetComponent<CSVReader>().data;
 
+        //number of lines in csv file
+        //CSVReader reads in empty line at end of csv files so last line is not included
+        maxPosition = data.GetLength(1) - 1;
+
         initializeAngles();
     }
 
@@ -374,10 +378,6 @@ public class Manager : MonoBehaviour
                 difference = 0.644181649f;
             }
 
-            //number of lines in csv file
-            //CSVReader reads in empty line at end of csv files so last line is not included
-            maxPosition = data.GetLength(1)-1;
-
             float distance = float.Parse(data[2, position]);
 
             //works accross both distances as the speed is light based
@@ -418,8 +418,7 @@ public class Manager : MonoBehaviour
                 rotation.y = degreesRotation;
                 rotation.z = 0;*/
 
-                beam.transform.transform.rotation = Quaternion.Euler(0, startAz, 0);
-                Debug.Log("Beam Updating");
+                beam.transform.transform.rotation = Quaternion.Euler(0, 90 - startAz, 90 - startEl);
                 beam.transform.transform.localScale = scale;
             }
             else
@@ -465,7 +464,6 @@ public class Manager : MonoBehaviour
                         if (startAz <= stopAz)
                         {
                             //beam and targets are updated for every increment in the azimuth
-                            Debug.Log("Increasing, Increasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
@@ -496,7 +494,6 @@ public class Manager : MonoBehaviour
                         else
                         {
                             //beam and targets are updated for every decrement in the azimuth
-                            Debug.Log("Increasing, Decreasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
@@ -533,7 +530,6 @@ public class Manager : MonoBehaviour
                         if (startAz <= stopAz)
                         {
                             //beam and targets are updated for every increment in the azimuth
-                            Debug.Log("Decreasing, Increasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be decremented.
@@ -564,7 +560,6 @@ public class Manager : MonoBehaviour
                         else
                         {
                             //beam and targets are updated for every decrement in the azimuth
-                            Debug.Log("Decreasing, Decreasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be decremented.
