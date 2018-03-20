@@ -419,6 +419,7 @@ public class Manager : MonoBehaviour
                 rotation.z = 0;*/
 
                 beam.transform.transform.rotation = Quaternion.Euler(0, startAz, 0);
+                Debug.Log("Beam Updating");
                 beam.transform.transform.localScale = scale;
             }
             else
@@ -464,6 +465,7 @@ public class Manager : MonoBehaviour
                         if (startAz <= stopAz)
                         {
                             //beam and targets are updated for every increment in the azimuth
+                            Debug.Log("Increasing, Increasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
@@ -494,6 +496,7 @@ public class Manager : MonoBehaviour
                         else
                         {
                             //beam and targets are updated for every decrement in the azimuth
+                            Debug.Log("Increasing, Decreasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
@@ -530,6 +533,7 @@ public class Manager : MonoBehaviour
                         if (startAz <= stopAz)
                         {
                             //beam and targets are updated for every increment in the azimuth
+                            Debug.Log("Decreasing, Increasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be decremented.
@@ -560,6 +564,7 @@ public class Manager : MonoBehaviour
                         else
                         {
                             //beam and targets are updated for every decrement in the azimuth
+                            Debug.Log("Decreasing, Decreasing");
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be decremented.
