@@ -437,7 +437,6 @@ public class Manager : MonoBehaviour
                             tempAz = tempAz + 1f;
                         }
                         tempEl = tempEl + 1f;
-                        Debug.Log(tempEl);
                     }
                 }
                 //elevation of beam is decreasing
@@ -455,7 +454,6 @@ public class Manager : MonoBehaviour
                             tempAz = tempAz + 1f;
                         }
                         tempEl = tempEl - 1f;
-                        Debug.Log(tempEl);
                     }
                 }
                 position++;
