@@ -45,9 +45,13 @@ public class Manager : MonoBehaviour
 	Rect windowRect = new Rect(20,20,120,50);
 	Rect newRect;
 	bool showWindow = false;
-    
 
 
+    //declare startAz, stopAz, startEl, and stopEl so they can be accessed throughout the script
+    private float startAz;
+    private float stopAz;
+    private float startEl;
+    private float stopEl;
 
     private double[] accelX;
     private double[] accelY;
@@ -80,6 +84,7 @@ public class Manager : MonoBehaviour
         position = 1;
         data = readRadarButton.GetComponent<CSVReader>().data;
 
+        initializeAngles();
     }
 
     public void initTarget()
@@ -358,7 +363,7 @@ public class Manager : MonoBehaviour
 
     }
 
-    private void updateRadarBeam()
+    private void updateRadarBeam(float azimuth, float elevation)
     {
         if (data != null)
         {
@@ -384,10 +389,6 @@ public class Manager : MonoBehaviour
 
                 //COMMENTED OUT THE DEBUG
                 //Debug.Log("The value of position is " + position);
-
-                //unused assignments temporarily
-                float degreesRotation = float.Parse(data[6, position]);
-                float degreesElevation = float.Parse(data[7, position]);
 
                 if (data[3, position].Equals("1"))
                 {
@@ -417,7 +418,7 @@ public class Manager : MonoBehaviour
                 rotation.y = degreesRotation;
                 rotation.z = 0;*/
 
-                beam.transform.transform.rotation = Quaternion.Euler(0, degreesRotation, 0);
+                beam.transform.transform.rotation = Quaternion.Euler(0, azimuth, 90);
                 beam.transform.transform.localScale = scale;
             }
             else
@@ -444,8 +445,153 @@ public class Manager : MonoBehaviour
 
         if (!isPaused)
         {
-            updateRadarBeam();
-            updateTargetData();
+                //BEAM UPDATING PROCEDURE:
+                //There will be a desired start elevation and stop elevation that the beam will need to search.
+                //The beam starts at the start elevation and performs an enitre revolution around the ship at the elevation.
+                //The beam elevation is then incremented after an entire revolution is performed. This procedure is repeated for each degree
+                //increment in elevation. Each time Update() is executed, the beam should revolve 1 degree around the ship. The degrees of revolution
+                //around the ship are reflected in the azimuth. If the start azimuth equals the stop azimuth, that means an enitre revolution was performed.
+                //The elevation of the beam is then incremented and the azimuth is reset.
+
+                //both radar beam and target data get updated if there are still more unread lines in the beam data file
+                //otherwise just the target data will be updated.
+                if (position < maxPosition)
+                {
+                    //the elevation of the search beam is increasing in the desired search area.
+                    if (startEl <= stopEl)
+                    {
+                        //the azimuth is increasing
+                        if (startAz <= stopAz)
+                        {
+                            //beam and targets are updated for every increment in the azimuth
+                            updateRadarBeam(startAz, startEl);
+                            updateTargetData();
+                            //azimuth has completed a full revolution, so now the elevation can be incremented.
+                            if (startAz == stopAz)
+                            {
+                                //a full revolution has been completed for every increment in elevation
+                                if (startEl == stopEl)
+                                {
+                                    //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
+                                    position++;
+                                    initializeAngles();
+                                }
+                                //a full revolution has been completed and the elevation needs to be incremented
+                                else
+                                {
+                                    startEl = startEl + 1f;
+                                    //the start azimuth needs to be reset so another revolution can be performed
+                                    startAz = float.Parse(data[4, position]);
+                                }
+                            }
+                            else
+                            {
+                                //increment the azimuth 1 degree as a full revolution has not been completed yet
+                                startAz = startAz + 1f;
+                            }
+                        }
+                        //the azimuth is decreasing
+                        else
+                        {
+                            //beam and targets are updated for every decrement in the azimuth
+                            updateRadarBeam(startAz, startEl);
+                            updateTargetData();
+                            //azimuth has completed a full revolution, so now the elevation can be incremented.
+                            if (startAz == stopAz)
+                            {
+                                //a full revolution has been completed for every increment in elevation
+                                if (startEl == stopEl)
+                                {
+                                    //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
+                                    position++;
+                                    initializeAngles();
+                                }
+                                //a full revolution has been completed and the elevation needs to be incremented
+                                else
+                                {
+                                    startEl = startEl + 1f;
+                                    //the start azimuth needs to be reset so another revolution can be performed
+                                    startAz = float.Parse(data[4, position]);
+                                }
+                            }
+                            else
+                            {
+                                //decrement the azimuth 1 degree as a full revolution has not been completed yet
+                                startAz = startAz - 1f;
+                            }
+                        }
+                    }
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //the elevation of the search beam is decreasing in the desired search area.
+                    else
+                    {
+                        //the azimuth is increasing
+                        if (startAz <= stopAz)
+                        {
+                            //beam and targets are updated for every increment in the azimuth
+                            updateRadarBeam(startAz, startEl);
+                            updateTargetData();
+                            //azimuth has completed a full revolution, so now the elevation can be decremented.
+                            if (startAz == stopAz)
+                            {
+                                //a full revolution has been completed for every decrement in elevation
+                                if (startEl == stopEl)
+                                {
+                                    //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
+                                    position++;
+                                    initializeAngles();
+                                }
+                                //a full revolution has been completed and the elevation needs to be decremented
+                                else
+                                {
+                                    startEl = startEl - 1f;
+                                    //the start azimuth needs to be reset so another revolution can be performed
+                                    startAz = float.Parse(data[4, position]);
+                                }
+                            }
+                            else
+                            {
+                                //increment the azimuth 1 degree as a full revolution has not been completed yet
+                                startAz = startAz + 1f;
+                            }
+                        }
+                        //the azimuth is decreasing
+                        else
+                        {
+                            //beam and targets are updated for every decrement in the azimuth
+                            updateRadarBeam(startAz, startEl);
+                            updateTargetData();
+                            //azimuth has completed a full revolution, so now the elevation can be decremented.
+                            if (startAz == stopAz)
+                            {
+                                //a full revolution has been completed for every decrement in elevation
+                                if (startEl == stopEl)
+                                {
+                                    //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
+                                    position++;
+                                    initializeAngles();
+                                }
+                                //a full revolution has been completed and the elevation needs to be decremented
+                                else
+                                {
+                                    startEl = startEl - 1f;
+                                    //the start azimuth needs to be reset so another revolution can be performed
+                                    startAz = float.Parse(data[4, position]);
+                                }
+                            }
+                            else
+                            {
+                                //decrement the azimuth 1 degree as a full revolution has not been completed yet
+                                startAz = startAz - 1f;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    updateTargetData();
+                }
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -582,4 +728,13 @@ public class Manager : MonoBehaviour
 
 		Debug.Log ("show window is: " + showWindow);
 	}
+
+    private void initializeAngles()
+    {
+        //store initial values of startAz, stopAz, startEl, and stopEl so they can be accessed in Update()
+        startAz = float.Parse(data[4, position]);
+        stopAz = float.Parse(data[5, position]);
+        startEl = float.Parse(data[6, position]);
+        stopEl = float.Parse(data[7, position]);
+    }
 }
