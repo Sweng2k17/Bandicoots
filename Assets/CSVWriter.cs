@@ -8,24 +8,38 @@ using UnityEngine;
 
 public class CSVWriter
 {
-    string filepath;
-    StringBuilder csvContent; // this is the csv file
+    private string filepath;
+    private StringBuilder csvContent; // this is the csv file
     
     /// <summary>
-    /// Creates a CSV file with the given filepath. Initializes the StringBuilder object which will
-    /// be utilized to create the CSV file and then appends the first row to delineate the columns.
+    /// Initializes CSVWriter object
     /// </summary>
-    /// <param name="filepath"></param>     File path of the CSV file
-    public CSVWriter(string filepath)
+    public CSVWriter()
     {
-        this.filepath = filepath;
-
-        csvContent = new StringBuilder();
-        // write first row:
-        csvContent.AppendLine("ID,Time,X Position,Y Position,Z Position");
-
+        newCSV();
     }
 
+    /// <summary>
+    /// Sets the filepath of where the CSV file will be written to.
+    /// </summary>
+    /// <param name="filepath"></param>     File path of the CSV file
+    public void setFilePath(string filepath)
+    {
+        this.filepath = filepath;
+    }
+
+    /// <summary>
+    /// Returns the file path
+    /// </summary>
+    /// <returns></returns>
+    public string getFilePath() 
+    {
+        if (filepath != null)
+            return filepath;
+        else
+            throw new NullStringException("File path was not defined.");
+    }    
+    
     /// <summary>
     /// Appends lines to the CSV file with the given fields. 
     /// </summary>
@@ -63,6 +77,29 @@ public class CSVWriter
         }
 
         Debug.Log("File saved");
+        
+        // Overwrite csvContent for continued use.
+        newCSV();
     }
- 
+    
+    /// <summary>
+    /// Initializes the StringBuilder object 
+    /// which will be utilized to create the CSV file and then 
+    /// appends the first row to delineate the columns.
+    /// </summary>
+    private void newCSV()
+    {
+        csvContent = new StringBuilder();
+        // write first row:
+        csvContent.AppendLine("ID,Time,X Position,Y Position,Z Position");
+    }
+}
+
+// When the file path is not defined.
+public class NullStringException: Exception
+{
+    public NullStringException(string message)
+    {
+        Debug.Log(message);
+    }
 }
