@@ -475,7 +475,10 @@ public class Manager : MonoBehaviour
                                 {
                                     //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
                                     position++;
-                                    initializeAngles();
+                                    if(position < maxPosition)
+                                    {
+                                        initializeAngles();
+                                    }
                                 }
                                 //a full revolution has been completed and the elevation needs to be incremented
                                 else
@@ -505,7 +508,10 @@ public class Manager : MonoBehaviour
                                 {
                                     //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
                                     position++;
-                                    initializeAngles();
+                                    if (position < maxPosition)
+                                    {
+                                        initializeAngles();
+                                    }
                                 }
                                 //a full revolution has been completed and the elevation needs to be incremented
                                 else
@@ -541,7 +547,10 @@ public class Manager : MonoBehaviour
                                 {
                                     //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
                                     position++;
-                                    initializeAngles();
+                                    if (position < maxPosition)
+                                    {
+                                        initializeAngles();
+                                    }
                                 }
                                 //a full revolution has been completed and the elevation needs to be decremented
                                 else
@@ -571,7 +580,10 @@ public class Manager : MonoBehaviour
                                 {
                                     //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
                                     position++;
-                                    initializeAngles();
+                                    if (position < maxPosition)
+                                    {
+                                        initializeAngles();
+                                    }
                                 }
                                 //a full revolution has been completed and the elevation needs to be decremented
                                 else
