@@ -34,10 +34,10 @@ public class CSVWriter
     /// <returns></returns>
     public string getFilePath() 
     {
-        if (filepath != null)
+     //   if (filepath != null)
             return filepath;
-        else
-            throw new NullStringException("File path was not defined.");
+     //   else
+     //       throw new NullStringException("File path was not defined.");
     }    
     
     /// <summary>
@@ -96,10 +96,10 @@ public class CSVWriter
 }
 
 // When the file path is not defined.
-public class NullStringException: Exception
-{
-    public NullStringException(string message)
-    {
-        Debug.Log(message);
-    }
-}
+//public class NullStringException: Exception
+//{
+//    public NullStringException(string message)
+//    {
+//        Debug.Log(message);
+//    }
+//}
