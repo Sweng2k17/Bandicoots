@@ -376,7 +376,7 @@ public class Manager : MonoBehaviour
         speed = 1;
         interval = speed;
 		aboutButton.onClick.AddListener (TaskOnClick);
-
+	detectionData = new CSVWriter();
     }
 
     private void updateRadarBeam()
