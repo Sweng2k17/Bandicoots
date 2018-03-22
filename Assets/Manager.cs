@@ -79,6 +79,9 @@ public class Manager : MonoBehaviour
     //Writing CSV files
     public CSVWriter detectionData;
 
+    //used to determine how many degrees the beam needs to search per second for each elevation increment
+    private float angleFactor = 0;
+
     public void resetTime()
     {
         time = 1;
@@ -431,7 +434,10 @@ public class Manager : MonoBehaviour
                 rotation.z = 0;*/
 
                 Debug.Log("startEl is " + startEl);
-                beam.transform.transform.rotation = Quaternion.Euler(0, 0 - startAz, 90 - startEl);
+
+                //rotates around the y-axis of the world at the rate of angleFactor per second
+                //angleFactor is determined based on the constraints for the search area
+                beam.transform.Rotate(Vector3.up, Time.deltaTime * angleFactor, Space.World); //use angleFactor
                 beam.transform.transform.localScale = scale;
             }
             else
@@ -480,7 +486,7 @@ public class Manager : MonoBehaviour
                             updateRadarBeam();
                             updateTargetData();
                             //azimuth has completed a full revolution, so now the elevation can be incremented.
-                            if (startAz == stopAz)
+                            if (startAz <= stopAz)
                             {
                                 //a full revolution has been completed for every increment in elevation
                                 if (startEl == stopEl)
@@ -764,5 +770,22 @@ public class Manager : MonoBehaviour
         stopAz = float.Parse(data[5, position]);
         startEl = float.Parse(data[6, position]);
         stopEl = float.Parse(data[7, position]);
+        beam.transform.transform.rotation = Quaternion.Euler(0, 0 - startAz, 90 - startEl);
+        angleFactor = calculateTimeFactor(float.Parse(data[9, position]));
     }
+
+    //calculates the amount of degrees we need to search per second per degree of elevation
+    private float calculateTimeFactor(float searchTime)
+    {
+        //total amount of elevation we will search
+        float elDiff = stopEl - startEl;
+        //the amount of time the beam needs to search at each angle of elevation
+        float timePerEl = searchTime / elDiff;
+        //the angle we need search at each level
+        float azDiff = stopAz - startAz;
+        //number of degrees we will search per second 
+        float anglePerSec = azDiff / timePerEl;
+        return anglePerSec;
+    }
+
 }
