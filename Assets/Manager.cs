@@ -674,14 +674,16 @@ public class Manager : MonoBehaviour
         startEl = float.Parse(data[6, position]);
         stopEl = float.Parse(data[7, position]);
         //the start azimuth is designated as greater than the stop azimuth
-        //swao the start and stop azimuth values then
+        //swap the start and stop azimuth values
         if (stopAz < startAz)
         {
             float temp = startAz;
             startAz = stopAz;
             stopAz = temp;
         }
+        //reset beam back to start azimuth, but increase elevation
         beam.transform.transform.rotation = Quaternion.Euler(0, 0 - startAz, 90 - startEl);
+        //calculate how fast the beam needs to scan each horizontal plane (angles/sec)
         angleFactor = calculateAngleFactor(float.Parse(data[9, position]));
     }
 
