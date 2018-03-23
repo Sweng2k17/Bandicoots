@@ -444,8 +444,8 @@ public class Manager : MonoBehaviour
 
                 //rotates around the y-axis of the world at the rate of angleFactor per second
                 //angleFactor is determined based on the constraints for the search area
-                beam.transform.Rotate(Vector3.up, Time.deltaTime * angleFactor, Space.World); //angleFactor
-                
+                //beam.transform.Rotate(Vector3.up, Time.deltaTime * angleFactor, Space.World);
+
                 currAz = beam.transform.rotation.eulerAngles.y;
 
                 beam.transform.transform.localScale = scale;
@@ -561,8 +561,14 @@ public class Manager : MonoBehaviour
 
     }
 
-
-
+    //used for updates involving physics objects
+    private void FixedUpdate()
+    {
+        if (!isPaused)
+        {
+            beam.transform.Rotate(Vector3.up, Time.deltaTime * angleFactor, Space.World);
+        }
+    }
 
 
 
@@ -649,11 +655,7 @@ public class Manager : MonoBehaviour
 
 	}
 
-
-
-
-
-	void TaskOnClick()
+    void TaskOnClick()
 	{
 		if (showWindow) {
 			showWindow = false;
@@ -680,11 +682,11 @@ public class Manager : MonoBehaviour
             stopAz = temp;
         }
         beam.transform.transform.rotation = Quaternion.Euler(0, 0 - startAz, 90 - startEl);
-        angleFactor = calculateTimeFactor(float.Parse(data[9, position]));
+        angleFactor = calculateAngleFactor(float.Parse(data[9, position]));
     }
 
     //calculates the amount of degrees we need to search per second per degree of elevation
-    private float calculateTimeFactor(float searchTime)
+    private float calculateAngleFactor(float searchTime)
     {
         //total amount of elevation we will search
         float elDiff = stopEl - startEl;

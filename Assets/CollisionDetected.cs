@@ -17,16 +17,6 @@ public class CollisionDetected : MonoBehaviour
         
     }
 
-    private void OnCollisionStay(Collision collision)
-    {
-
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-
-    }
-
     /**
      *  resetAlpha(MeshRenderer target)
      *  
