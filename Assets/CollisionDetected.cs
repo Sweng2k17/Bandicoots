@@ -7,7 +7,7 @@ public class CollisionDetected : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("BEAM HAS DETECTED A TARGET:" + collision.collider.name);
+        //Debug.Log("BEAM HAS DETECTED A TARGET:" + collision.collider.name);
 
         // enable rendering
         collision.gameObject.GetComponent<MeshRenderer>().enabled = true;
