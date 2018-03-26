@@ -385,7 +385,7 @@ public class Manager : MonoBehaviour
         interval = speed;
 		aboutButton.onClick.AddListener (TaskOnClick);
         detectionData = new CSVWriter();
-        detectionData.setFilePath("C\\Users\\jadtr\\Desltop\\csvFiles");
+        //detectionData.setFilePath("");
 
     }
 
