@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI; //Need this for calling UI scripts
+using System.Text.RegularExpressions;
 
 public class Manager : MonoBehaviour
 {
@@ -485,7 +486,44 @@ public class Manager : MonoBehaviour
         //TODO - add new check to see if any beam or target data is available to use
         if (!isPaused)
         {
-                subscriber.SendMessage();
+                if (subscriber.isConnected())
+                {
+                    string currMessage = subscriber.getMessage();
+                    Debug.Log(currMessage);
+                    if ((currMessage != null) && !currMessage.Equals("End of file."))
+                    {
+                        int numCommas = 0;
+                        foreach(char c in currMessage)
+                        {
+                            if (c == ',')
+                            {
+                                numCommas++;
+                            }
+                        }
+                        if (numCommas == 9)
+                        {
+                            Debug.Log("enqueing beam data");
+                            bDataQueue.Enqueue(currMessage);
+                        }
+                        else
+                        {
+                            Debug.Log("enueing target data");
+                            tDataQueue.Enqueue(currMessage);
+                        }
+                    }
+                    else
+                    {
+                        //Debug.Log("End of files reached.");
+                    }
+                    subscriber.SendMessage();
+                }
+                else
+                {
+                    if (Input.GetKeyDown(KeyCode.C))
+                    {
+                        subscriber.attemptConnection();
+                    }
+                }
 
                 //BEAM UPDATING PROCEDURE:
                 //There will be a desired start elevation and stop elevation that the beam will need to search.

@@ -18,6 +18,9 @@ public class Subscriber
 {
 
     #region private members 	
+    private bool connected;
+
+    private volatile String serverMessage;
 
     private TcpClient socketConnection;
 
@@ -29,8 +32,31 @@ public class Subscriber
 
     public Subscriber()
     {
-        socketConnection = new TcpClient("127.0.0.1", 8888);
-        Debug.Log("Connection successful.");
+        attemptConnection();
+    }
+
+    //returns whether the socket is connected or not
+    public bool isConnected()
+    {
+        return connected;
+    }
+
+    //attempts to connect the socket
+    public void attemptConnection()
+    {
+        //try-catch temporary
+        try
+        {
+            socketConnection = new TcpClient("127.0.0.1", 8888);
+            connected = true;
+            Debug.Log("Connection successful.");
+        }
+        catch (Exception e)
+        {
+            connected = false;
+            Debug.Log("Connection unsuccessful.");
+            Debug.Log(e.ToString());
+        }
     }
 
     /// <summary> 	
@@ -93,10 +119,10 @@ public class Subscriber
                         Array.Copy(bytes, 0, incomingData, 0, length);
 
                         // Convert byte array to string message. 						
+                    
+                        serverMessage = Encoding.ASCII.GetString(incomingData);
 
-                        String serverMessage = Encoding.ASCII.GetString(incomingData);
-
-                        Debug.Log("server message received as: " + serverMessage);
+                        //Debug.Log("server message received as: " + serverMessage);
                     }
 
                 }
@@ -110,6 +136,12 @@ public class Subscriber
         }
     }
 
+    public String getMessage()
+    {
+        return serverMessage;
+    }
+
+
     /// <summary> 	
 
     /// Send message to server using socket connection. 	
@@ -118,7 +150,6 @@ public class Subscriber
 
     public void SendMessage()
     {
-
         if (socketConnection == null)
         {
             Debug.Log("There is no connection established.");
