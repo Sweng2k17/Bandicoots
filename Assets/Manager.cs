@@ -86,8 +86,11 @@ public class Manager : MonoBehaviour
     private float currAz;
     private float prevAz;
 
+    //used for networking portion
     private Subscriber subscriber;
-    private string currentStringTCP;
+    //private string currentStringTCP;
+    private Queue tDataQueue; //buffer for target data
+    private Queue bDataQueue; //buffer for target data
 
 
     public void resetTime()
@@ -392,7 +395,8 @@ public class Manager : MonoBehaviour
         //detectionData.setFilePath("");
         subscriber = new Subscriber();
         subscriber.ConnectToTcpServer();
-
+        tDataQueue = new Queue();
+        bDataQueue = new Queue();
     }
 
     private void updateRadarBeam()
@@ -478,9 +482,13 @@ public class Manager : MonoBehaviour
             time = 0;
         }
 
+        //TODO - add new check to see if any beam or target data is available to use
         if (!isPaused)
         {
-                subscriber.ConnectToTcpServer();
+                //if(Input.GetKeyDown(KeyCode.R))
+                {
+                    subscriber.SendMessage();
+                }
 
                 //BEAM UPDATING PROCEDURE:
                 //There will be a desired start elevation and stop elevation that the beam will need to search.
