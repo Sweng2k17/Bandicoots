@@ -485,10 +485,7 @@ public class Manager : MonoBehaviour
         //TODO - add new check to see if any beam or target data is available to use
         if (!isPaused)
         {
-                //if(Input.GetKeyDown(KeyCode.R))
-                {
-                    subscriber.SendMessage();
-                }
+                subscriber.SendMessage();
 
                 //BEAM UPDATING PROCEDURE:
                 //There will be a desired start elevation and stop elevation that the beam will need to search.
@@ -715,6 +712,13 @@ public class Manager : MonoBehaviour
         //number of degrees we will search per second 
         float anglePerSec = azDiff / timePerEl;
         return anglePerSec;
+    }
+
+    //returns a string array with each index containing a seperate piece of information
+    private string[] splitData(string data)
+    {
+        string[] info = data.Split(',');
+        return info;
     }
 
 }
