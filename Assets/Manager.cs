@@ -86,6 +86,10 @@ public class Manager : MonoBehaviour
     private float currAz;
     private float prevAz;
 
+    private Subscriber subscriber;
+    private string currentStringTCP;
+
+
     public void resetTime()
     {
         time = 1;
@@ -386,6 +390,8 @@ public class Manager : MonoBehaviour
 		aboutButton.onClick.AddListener (TaskOnClick);
         detectionData = new CSVWriter();
         //detectionData.setFilePath("");
+        subscriber = new Subscriber();
+        subscriber.ConnectToTcpServer();
 
     }
 
@@ -474,6 +480,8 @@ public class Manager : MonoBehaviour
 
         if (!isPaused)
         {
+                subscriber.ConnectToTcpServer();
+
                 //BEAM UPDATING PROCEDURE:
                 //There will be a desired start elevation and stop elevation that the beam will need to search.
                 //The beam starts at the start elevation and performs an enitre revolution around the ship at the elevation.
