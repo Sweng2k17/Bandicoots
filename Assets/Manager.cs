@@ -38,7 +38,7 @@ public class Manager : MonoBehaviour
     private double speed;
     double interval;
     private CSVReader instance;
-    private int position = 1;
+    private int position = 0;
     private float difference = -1;
     private int maxPosition;
     private string[,] data;
@@ -89,21 +89,23 @@ public class Manager : MonoBehaviour
 
     //used for networking portion
     private Subscriber subscriber;
-    //private string currentStringTCP;
+    private bool readValues;
     private Queue tDataQueue; //buffer for target data
     private Queue bDataQueue; //buffer for target data
+    private int numBeamData;
+    private int numTargetData;
 
 
     public void resetTime()
     {
         time = 1;
         difference = -1;
-        position = 1;
+        position = 0;
         data = readRadarButton.GetComponent<CSVReader>().data;
 
         //number of lines in csv file
         //CSVReader reads in empty line at end of csv files so last line is not included
-        maxPosition = data.GetLength(1) - 1;
+        //maxPosition = data.GetLength(1) - 1;
 
         initializeAngles();
     }
@@ -398,6 +400,7 @@ public class Manager : MonoBehaviour
         subscriber.ConnectToTcpServer();
         tDataQueue = new Queue();
         bDataQueue = new Queue();
+        readValues = false;
     }
 
     private void updateRadarBeam()
@@ -415,7 +418,7 @@ public class Manager : MonoBehaviour
 
             //works accross both distances as the speed is light based
             difference = .0107364f * distance;
-            if (position < maxPosition)
+            if (position < numBeamData)
             {
                 //TODO multiple by 10 time is artificially slowed so that you can see the beam
                 //position = (int)(time / 60 / difference * 100);
@@ -471,7 +474,7 @@ public class Manager : MonoBehaviour
         }
         else
         {
-            position = 1;
+            position = 0;
         }
     }
 
@@ -488,32 +491,24 @@ public class Manager : MonoBehaviour
         {
                 if (subscriber.isConnected())
                 {
-                    string currMessage = subscriber.getMessage();
-                    Debug.Log(currMessage);
-                    if ((currMessage != null) && !currMessage.Equals("End of file."))
+                    if (!subscriber.getReading())
                     {
-                        int numCommas = 0;
-                        foreach(char c in currMessage)
+                        if (!readValues)
                         {
-                            if (c == ',')
+                            tDataQueue = subscriber.getTData();
+                            numTargetData = tDataQueue.Count;
+                            if (numTargetData != 0)
                             {
-                                numCommas++;
+                                //loadTargetData();
                             }
+                            bDataQueue = subscriber.getBData();
+                            numBeamData = bDataQueue.Count;
+                            if (numBeamData != 0)
+                            {
+                                loadBeamData();
+                            }
+                            readValues = true;
                         }
-                        if (numCommas == 9)
-                        {
-                            Debug.Log("enqueing beam data");
-                            bDataQueue.Enqueue(currMessage);
-                        }
-                        else
-                        {
-                            Debug.Log("enueing target data");
-                            tDataQueue.Enqueue(currMessage);
-                        }
-                    }
-                    else
-                    {
-                        //Debug.Log("End of files reached.");
                     }
                     subscriber.SendMessage();
                 }
@@ -535,11 +530,12 @@ public class Manager : MonoBehaviour
 
                 //both radar beam and target data get updated if there are still more unread lines in the beam data file
                 //otherwise just the target data will be updated.
-                if (position < maxPosition)
+                if (position < numBeamData)
                 {
                     //the elevation of the search beam is increasing in the desired search area.
                     if (startEl <= stopEl)
                     {
+                        Debug.Log("startEl: " + startEl + "   " + "stopEl: " + stopEl);
                         updateTargetData();
                         updateRadarBeam();
                         //completed a full rotation
@@ -553,7 +549,7 @@ public class Manager : MonoBehaviour
                             {
                                 //the position can now be incremented and the azimuths and elevations can be re-initialized based on the incremented position
                                 position++;
-                                if (position < maxPosition)
+                                if (position < numBeamData)
                                 {
                                     initializeAngles();
                                 }
@@ -757,6 +753,31 @@ public class Manager : MonoBehaviour
     {
         string[] info = data.Split(',');
         return info;
+    }
+
+    private void loadTargetData()
+    {
+        //targetData = new string[, tDataQueue.Count];
+        //for (int i = 1; i <= tDataQueue.Count; i++)
+        //{
+            //string[] currLine = splitData((string) tDataQueue.Dequeue());
+            //int 
+            //foreach()
+        //}
+    }
+
+    private void loadBeamData()
+    {
+        data = new string[10, numBeamData];
+        for(int i = 0; i < numBeamData; i++)
+        {
+            string[] currLine = splitData((string) bDataQueue.Dequeue());
+            for(int k = 0; k < currLine.Length; k++)
+            {
+                data[k, i] = currLine[k];
+            }
+        }
+        initializeAngles();
     }
 
 }

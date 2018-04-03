@@ -18,6 +18,13 @@ public class Subscriber
 {
 
     #region private members 	
+
+    private bool reading;
+
+    private volatile Queue tData;
+
+    private volatile Queue bData;
+
     private bool connected;
 
     private volatile String serverMessage;
@@ -33,6 +40,9 @@ public class Subscriber
     public Subscriber()
     {
         attemptConnection();
+        reading = true;
+        bData = new Queue();
+        tData = new Queue();
     }
 
     //returns whether the socket is connected or not
@@ -99,7 +109,7 @@ public class Subscriber
         {
             Byte[] bytes = new Byte[1024];
 
-            while (true)
+            while (reading)
             {
 
                 // Get a stream object for reading 				
@@ -119,12 +129,29 @@ public class Subscriber
                         Array.Copy(bytes, 0, incomingData, 0, length);
 
                         // Convert byte array to string message. 						
-                    
+
                         serverMessage = Encoding.ASCII.GetString(incomingData);
 
-                        //Debug.Log("server message received as: " + serverMessage);
-                    }
+                        if ((serverMessage != null))
+                        {
+                            if (serverMessage.Equals("End of file."))
+                            {
+                                reading = false;
+                                Debug.Log("done reading data - reading value: " + reading);
+                                return;
+                            }
+                            else
+                            {
+                                Debug.Log("data enqueued");
+                                sort(serverMessage);
+                            }
+                        }
+                        //data.Enqueue(serverMessage);
 
+                        //Debug.Log(serverMessage);
+
+                        Debug.Log("server message received as: " + serverMessage);
+                    }
                 }
 
             }
@@ -136,11 +163,25 @@ public class Subscriber
         }
     }
 
+    public bool getReading()
+    {
+        return reading;
+    }
+
+    public Queue getTData()
+    {
+        return tData;
+    }
+
+    public Queue getBData()
+    {
+        return bData;
+    }
+
     public String getMessage()
     {
         return serverMessage;
     }
-
 
     /// <summary> 	
 
@@ -187,6 +228,30 @@ public class Subscriber
             Debug.Log("Socket exception: " + socketException);
         }
 
+    }
+
+    private void sort(string message)
+    {
+        int numCommas = 0;
+        foreach (char c in message)
+        {
+            if (c == ',')
+            {
+                numCommas++;
+            }
+        }
+        if (numCommas == 9)
+        {
+            Debug.Log("enqueing beam data");
+            Debug.Log("beam " + message);
+            bData.Enqueue(message);
+        }
+        else
+        {
+            Debug.Log("enqueing target data");
+            Debug.Log("target " + message);
+            tData.Enqueue(message);
+        }
     }
 
 }
