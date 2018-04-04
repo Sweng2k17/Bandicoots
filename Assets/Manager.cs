@@ -489,6 +489,8 @@ public class Manager : MonoBehaviour
         //TODO - add new check to see if any beam or target data is available to use
         if (!isPaused)
         {
+                updateTargetData();
+
                 if (subscriber.isConnected())
                 {
                     if (!subscriber.getReading())
@@ -533,7 +535,6 @@ public class Manager : MonoBehaviour
                     if (startEl <= stopEl)
                     {
                         //Debug.Log("startEl: " + startEl + "   " + "stopEl: " + stopEl);
-                        updateTargetData();
                         updateRadarBeam();
                         //completed a full rotation
                         //Debug.Log("currAz: " + currAz);
