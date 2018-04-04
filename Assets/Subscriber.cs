@@ -39,8 +39,6 @@ public class Subscriber
 
     public Subscriber()
     {
-        attemptConnection();
-        reading = true;
         bData = new Queue();
         tData = new Queue();
     }
@@ -58,6 +56,8 @@ public class Subscriber
         try
         {
             socketConnection = new TcpClient("127.0.0.1", 8888);
+            ConnectToTcpServer();
+            reading = true;
             connected = true;
             Debug.Log("Connection successful.");
         }

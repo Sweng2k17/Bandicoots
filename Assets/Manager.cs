@@ -512,12 +512,9 @@ public class Manager : MonoBehaviour
                     }
                     subscriber.SendMessage();
                 }
-                else
+                if (Input.GetKeyDown(KeyCode.C))
                 {
-                    if (Input.GetKeyDown(KeyCode.C))
-                    {
-                        subscriber.attemptConnection();
-                    }
+                    subscriber.attemptConnection();
                 }
 
                 //BEAM UPDATING PROCEDURE:
@@ -535,7 +532,7 @@ public class Manager : MonoBehaviour
                     //the elevation of the search beam is increasing in the desired search area.
                     if (startEl <= stopEl)
                     {
-                        Debug.Log("startEl: " + startEl + "   " + "stopEl: " + stopEl);
+                        //Debug.Log("startEl: " + startEl + "   " + "stopEl: " + stopEl);
                         updateTargetData();
                         updateRadarBeam();
                         //completed a full rotation
