@@ -9,7 +9,23 @@ public class Manager : MonoBehaviour
     [SerializeField]
     Transform UIPanel; //Will assign our panel to this variable so we can enable/disable it
 
+    [SerializeField]
+    public RectTransform ReadButton1;
 
+    [SerializeField]
+    public RectTransform CSVText;
+
+    [SerializeField]
+    public RectTransform FileInputText1;
+
+    [SerializeField]
+    public RectTransform ReadButton2;
+
+    [SerializeField]
+    public RectTransform CSVText2;
+
+    [SerializeField]
+    public RectTransform FileInputText2;
 
     [SerializeField]
     Text timeText;
@@ -34,6 +50,7 @@ public class Manager : MonoBehaviour
 
     public GameObject oldCube;
     bool isPaused; //Used to determine paused state
+    bool readingLocally = true; //Used to determine if the data is being read locally. Data is selected to be read locally by default.
     public double time;
     private double speed;
     double interval;
@@ -776,6 +793,19 @@ public class Manager : MonoBehaviour
             }
         }
         initializeAngles();
+    }
+
+    public void ToggleSocket()
+    {
+        Debug.Log("ToggleSocket works");
+        if(readingLocally)
+        {
+            readingLocally = false;
+        }
+        else
+        {
+            readingLocally = true;
+        }
     }
 
 }
