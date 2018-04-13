@@ -1,16 +1,11 @@
-﻿using System;
-
+using System;
 using System.Collections;
-
 using System.Collections.Generic;
-
 using System.Net.Sockets;
-
 using System.Text;
-
 using System.Threading;
-
 using UnityEngine;
+using System.Security.Cryptography;
 
 
 
@@ -18,21 +13,13 @@ public class Subscriber
 {
 
     #region private members 	
-
     private bool reading;
-
     private volatile Queue tData;
-
     private volatile Queue bData;
-
     private bool connected;
-
     private volatile String serverMessage;
-
     private TcpClient socketConnection;
-
     private Thread clientReceiveThread;
-
     #endregion
 
     // Use this for initialization 	
@@ -80,20 +67,13 @@ public class Subscriber
 
         try
         {
-
             clientReceiveThread = new Thread(new ThreadStart(ListenForData));
-
             clientReceiveThread.IsBackground = true;
-
             clientReceiveThread.Start();
-
         }
-
         catch (Exception e)
         {
-
             Debug.Log("On client connect exception " + e);
-
         }
 
     }
@@ -116,20 +96,15 @@ public class Subscriber
 
                 using (NetworkStream stream = socketConnection.GetStream())
                 {
-
                     int length;
 
                     // Read incomming stream into byte array. 					
-
                     while ((length = stream.Read(bytes, 0, bytes.Length)) != 0)
                     {
-
                         var incomingData = new byte[length];
-
                         Array.Copy(bytes, 0, incomingData, 0, length);
 
                         // Convert byte array to string message. 						
-
                         serverMessage = Encoding.ASCII.GetString(incomingData);
 
                         if ((serverMessage != null))
@@ -142,8 +117,15 @@ public class Subscriber
                             }
                             else
                             {
-                                Debug.Log("data enqueued");
-                                sort(serverMessage);
+								if(handleHashing(stream, serverMessage))
+								{
+									Debug.Log("data enqueued");
+									sort(serverMessage);
+								}
+								else
+								{
+									Debug.Log("Data hash does not match. Data ignored...");
+								}
                             }
                         }
                         //data.Enqueue(serverMessage);
@@ -184,41 +166,28 @@ public class Subscriber
     }
 
     /// <summary> 	
-
     /// Send message to server using socket connection. 	
-
     /// </summary> 	
-
-    public void SendMessage()
+    public void SendMessage(string message)
     {
         if (socketConnection == null)
         {
             Debug.Log("There is no connection established.");
             return;
         }
-
         try
         {
-
             // Get a stream object for writing. 			
-
             NetworkStream stream = socketConnection.GetStream();
 
             if (stream.CanWrite)
             {
-
-                string clientMessage = "This is a message from one of your clients.";
-
                 // Convert string message to byte array.                 
-
-                byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
-
+                byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(message);
                 // Write byte array to socketConnection stream.                 
-
                 stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
 
-                Debug.Log("Client sent message - should be received by server");
-
+                Debug.Log("Client hash value sent -- awaiting response from publisher...");
             }
 
         }
@@ -253,5 +222,53 @@ public class Subscriber
             tData.Enqueue(message);
         }
     }
+
+	/// <summary>
+	/// Method for creating SHA-1 Hashes
+	/// </summary>
+	/// <param name="csvLine"></param> CSV line we wish to hash.
+	private string hashSHA1(string csvLine)
+	{
+		SHA1CryptoServiceProvider hashMaker = new SHA1CryptoServiceProvider();
+		hashMaker.ComputeHash(ASCIIEncoding.ASCII.GetBytes(csvLine)); // Creates a hash of our csvLine data
+		byte[] hashBytes = hashMaker.Hash; // move hashed byte values into byte array
+		StringBuilder sb = new StringBuilder();
+
+		foreach (byte b in hashBytes)
+		{
+			sb.Append(b.ToString("X2")); // "X2" converts bytes to a hex format
+		}
+
+		return sb.ToString();
+	}
+	
+	/// <summary>
+	/// Hashes and handles messaging between the Subscriber and Publisher that is needed
+	/// to verify the hash values.
+	/// </summary>
+	/// <param name="nStream"></param>	An open network socket.
+	/// <param name="csvLine"></param>	Current line of a CSV file.
+	/// <returns></returns>
+	public bool handleHashing(NetworkStream nStream, String csvLine)
+	{
+		string csvHash = hashSHA1(csvLine); // hash csv line
+
+		SendMessage(csvHash);
+
+		// ListenForData() updates serverMessage variable. Thus it can be
+		// assumed that we will have the response from the message we sent
+		// in the serverMessage variable if we listen right now.
+		ListenForData();
+		if (serverMessage.Equals("true"))
+		{
+			// Correct data, we can enqueue
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
 
 }
