@@ -78,6 +78,7 @@ public class Subscriber
 
     }
 
+	bool listeningForHash = false;
 
     /// <summary> 	
     /// Runs in background clientReceiveThread; Listens for incoming data. 	
@@ -109,6 +110,8 @@ public class Subscriber
 
                         if ((serverMessage != null))
                         {
+							Debug.Log(serverMessage);
+
                             if (serverMessage.Equals("End of file."))
                             {
                                 reading = false;
@@ -117,28 +120,20 @@ public class Subscriber
                             }
                             else
                             {
-								if(handleHashing(stream, serverMessage))
+								// handleHashing() utilizes this function to recieve a hash value from the publisher.
+								// This check makes sure that handleHashiing() isn't called a million times.
+								// If listeningForHash is true, we will just run through because all we want is the
+								// serverMessage of the hash value.
+								if(!listeningForHash)
 								{
-									Debug.Log("data enqueued");
-									sort(serverMessage);
-								}
-								else
-								{
-									Debug.Log("Data hash does not match. Data ignored...");
+									handleHashing(stream, serverMessage);
 								}
                             }
                         }
-                        //data.Enqueue(serverMessage);
-
-                        //Debug.Log(serverMessage);
-
-                        Debug.Log("server message received as: " + serverMessage);
                     }
                 }
-
             }
         }
-
         catch (SocketException socketException)
         {
             Debug.Log("Socket exception: " + socketException);
@@ -168,7 +163,7 @@ public class Subscriber
     /// <summary> 	
     /// Send message to server using socket connection. 	
     /// </summary> 	
-    public void SendMessage(string message)
+    private void SendMessage(string message)
     {
         if (socketConnection == null)
         {
@@ -249,26 +244,29 @@ public class Subscriber
 	/// <param name="nStream"></param>	An open network socket.
 	/// <param name="csvLine"></param>	Current line of a CSV file.
 	/// <returns></returns>
-	public bool handleHashing(NetworkStream nStream, String csvLine)
+	private void handleHashing(NetworkStream nStream, string csvLine)
 	{
-		string csvHash = hashSHA1(csvLine); // hash csv line
+		listeningForHash = true;
 
-		SendMessage(csvHash);
+		string csvHash = hashSHA1(csvLine); // hash csv line
+		//Debug.Log("Hash value of of data received: " + csvHash);
+		
 
 		// ListenForData() updates serverMessage variable. Thus it can be
 		// assumed that we will have the response from the message we sent
 		// in the serverMessage variable if we listen right now.
 		ListenForData();
-		if (serverMessage.Equals("true"))
+		if (serverMessage.Equals(csvHash))
 		{
 			// Correct data, we can enqueue
-			return true;
+			Debug.Log("Hash values match.");
+			sort(csvLine);
 		}
 		else
 		{
-			return false;
+			Debug.Log("Hash values do not match, data ignored...");
 		}
-		
-	}
 
+		listeningForHash = false;
+	}
 }
