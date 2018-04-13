@@ -11,21 +11,29 @@ public class Manager : MonoBehaviour
 
     [SerializeField]
     public RectTransform ReadButton1;
-
     [SerializeField]
     public RectTransform CSVText;
-
     [SerializeField]
     public RectTransform FileInputText1;
-
     [SerializeField]
     public RectTransform ReadButton2;
-
     [SerializeField]
     public RectTransform CSVText2;
-
     [SerializeField]
     public RectTransform FileInputText2;
+
+    [SerializeField]
+    public RectTransform ReadButtonIP;
+    [SerializeField]
+    public RectTransform IPText;
+    [SerializeField]
+    public RectTransform IPInputText;
+    [SerializeField]
+    public RectTransform ReadButtonPort;
+    [SerializeField]
+    public RectTransform PortText;
+    [SerializeField]
+    public RectTransform PortInputText;
 
     [SerializeField]
     Text timeText;
