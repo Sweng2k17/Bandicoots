@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
@@ -512,7 +512,7 @@ public class Manager : MonoBehaviour
                             readValues = true;
                         }
                     }
-                    subscriber.SendMessage();
+                    //subscriber.SendMessage();
                 }
                 if (Input.GetKeyDown(KeyCode.C))
                 {
@@ -773,7 +773,7 @@ public class Manager : MonoBehaviour
             for(int k = 0; k < currLine.Length; k++)
             {
                 data[k, i] = currLine[k];
-            }
+            } 
         }
         initializeAngles();
     }
