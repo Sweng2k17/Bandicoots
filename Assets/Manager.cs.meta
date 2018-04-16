@@ -1,24 +1,18 @@
 fileFormatVersion: 2
 guid: 1899b3273adba7145a54f0e3ffafadf3
-timeCreated: 1523646193
+timeCreated: 1523858579
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
   - UIPanel: {instanceID: 0}
-  - ReadButton1: {fileID: 224920823456071238, guid: b76b549b74399804089a2ef9a8cdc66b,
-      type: 2}
-  - CSVText: {fileID: 224933658156133904, guid: d785c255c1700ca4298b0bb6eab1381c,
-      type: 2}
-  - FileInputText1: {fileID: 224788154651008338, guid: 7f0bae0c05f1c2d4a8565f7e2d648978,
-      type: 2}
-  - ReadButton2: {fileID: 224138281883415448, guid: 1d1990286180c20449643586b9091e90,
-      type: 2}
-  - CSVText2: {fileID: 224969236947466538, guid: 46e668e0bbbab084281939483cd48d02,
-      type: 2}
-  - FileInputText2: {fileID: 224098569326269986, guid: 41938cbb6aa8d2e4db6d87dcf1e48db6,
-      type: 2}
+  - ReadButton1: {instanceID: 0}
+  - CSVText: {instanceID: 0}
+  - FileInputText1: {instanceID: 0}
+  - ReadButton2: {instanceID: 0}
+  - CSVText2: {instanceID: 0}
+  - FileInputText2: {instanceID: 0}
   - ReadButtonIP: {instanceID: 0}
   - IPText: {instanceID: 0}
   - IPInputText: {instanceID: 0}
