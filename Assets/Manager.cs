@@ -773,7 +773,7 @@ public class Manager : MonoBehaviour
             for(int k = 0; k < currLine.Length; k++)
             {
                 data[k, i] = currLine[k];
-            }
+            } 
         }
         initializeAngles();
     }
