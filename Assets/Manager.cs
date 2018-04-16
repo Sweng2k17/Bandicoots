@@ -10,32 +10,6 @@ public class Manager : MonoBehaviour
     Transform UIPanel; //Will assign our panel to this variable so we can enable/disable it
 
     [SerializeField]
-    public GameObject ReadButton1;
-    [SerializeField]
-    public GameObject CSVText;
-    [SerializeField]
-    public GameObject FileInputText1;
-    [SerializeField]
-    public GameObject ReadButton2;
-    [SerializeField]
-    public GameObject CSVText2;
-    [SerializeField]
-    public GameObject FileInputText2;
-
-    [SerializeField]
-    public RectTransform ReadButtonIP;
-    [SerializeField]
-    public RectTransform IPText;
-    [SerializeField]
-    public RectTransform IPInputText;
-    [SerializeField]
-    public RectTransform ReadButtonPort;
-    [SerializeField]
-    public RectTransform PortText;
-    [SerializeField]
-    public RectTransform PortInputText;
-
-    [SerializeField]
     Text timeText;
     [SerializeField]
     GameObject beam;
@@ -55,6 +29,24 @@ public class Manager : MonoBehaviour
     Transform objectInfo;
 	[SerializeField]
 	Button aboutButton;
+
+    //Fields used to access input fields in scene for receiving data locally
+    //field names exactly match object names in Unity scene
+    public GameObject ReadButton1;
+    public GameObject CSVText;
+    public GameObject FileInputText1;
+    public GameObject ReadButton2;
+    public GameObject CSVText2;
+    public GameObject FileInputText2;
+
+    //Fields used to access input fields in scene for receiving data from a socket connection
+    //field names exactly match object names in Unity scene
+    public GameObject ReadButtonIP;
+    public GameObject IPText;
+    public GameObject IPInputText;
+    public GameObject ReadButtonPort;
+    public GameObject PortText;
+    public GameObject PortInputText;
 
     public GameObject oldCube;
     bool isPaused; //Used to determine paused state
@@ -811,28 +803,60 @@ public class Manager : MonoBehaviour
         initializeAngles();
     }
 
+    /// <summary>
+    /// ToggleSocket() is called when the "Read Data From Socket" checkbox in the Options menu of the simulation is clicked.
+    /// Every time ToggleSocket is called, the boolean value 'readingLocally' is checked. Initially, readingLocally
+    /// is set to true because the default method to read in data is to read in data from the local machine. If the 
+    /// "Read Data From Socket" checkbox is checked, 'readingLocally' is set to false and the input fields and associated
+    /// labels/buttons in the options menu for reading in data from the local machine in the simulation are "turned off", while the input fields
+    /// and associated labels/buttons in the options menu for reading in data from a socket are "turned on".
+    /// 
+    /// ToggleSocket is also called when the "Read Data From Socket" checkbox becomes unchecked. In this case, 'readingLocally' is set back to true
+    /// and the input fields and associated labels/buttons in the options menu for reading in data from a socket in the simulation are 
+    /// "turned off", while the input fields and associated labels/buttons in the options menu for reading in data from the local machine are "turned on".
+    /// </summary>
     public void ToggleSocket()
     {
-        Debug.Log("ToggleSocket works");
+        //Debug.Log("ToggleSocket works");
+        //check if the "Read Data From Socket" checkbox was unchecked before the last click. Then turn off the read data from local machine input fields
+        //and turn on read data from socket input fields.
         if(readingLocally)
         {
             readingLocally = false;
+
             ReadButton1.SetActive(false);
             CSVText.SetActive(false);
             FileInputText1.SetActive(false);
             ReadButton2.SetActive(false);
             CSVText2.SetActive(false);
             FileInputText2.SetActive(false);
-}
+
+            ReadButtonIP.SetActive(true);
+            IPText.SetActive(true);
+            IPInputText.SetActive(true);
+            ReadButtonPort.SetActive(true);
+            PortText.SetActive(true);
+            PortInputText.SetActive(true);
+        }
+        //check if the "Read Data From Socket" checkbox was checked before the last click. Then turn off the read data from socket input fields
+        //and turn on read data from local machine input fields.
         else
         {
             readingLocally = true;
+
             ReadButton1.SetActive(true);
             CSVText.SetActive(true);
             FileInputText1.SetActive(true);
             ReadButton2.SetActive(true);
             CSVText2.SetActive(true);
             FileInputText2.SetActive(true);
+
+            ReadButtonIP.SetActive(false);
+            IPText.SetActive(false);
+            IPInputText.SetActive(false);
+            ReadButtonPort.SetActive(false);
+            PortText.SetActive(false);
+            PortInputText.SetActive(false);
         }
     }
 
