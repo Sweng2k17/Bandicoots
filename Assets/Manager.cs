@@ -30,8 +30,8 @@ public class Manager : MonoBehaviour
 	[SerializeField]
 	Button aboutButton;
 
-    //Fields used to access input fields in scene for receiving data locally
-    //field names exactly match object names in Unity scene
+    //Fields used to access input fields in Radar.unity scene for receiving data locally
+    //field names exactly match object names in Radar.unity scene
     public GameObject ReadButton1;
     public GameObject CSVText;
     public GameObject FileInputText1;
@@ -39,8 +39,8 @@ public class Manager : MonoBehaviour
     public GameObject CSVText2;
     public GameObject FileInputText2;
 
-    //Fields used to access input fields in scene for receiving data from a socket connection
-    //field names exactly match object names in Unity scene
+    //Fields used to access input fields in Radar.unity scene for receiving data from a socket connection
+    //field names exactly match object names in Radar.unity scene
     public GameObject ReadButtonIP;
     public GameObject IPText;
     public GameObject IPInputText;
@@ -400,7 +400,8 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-        //Find Input text fields, associated labels and buttons for utilizing local data in the Unity scene and assign them to fields.
+        //Find Input text fields, associated labels and buttons for utilizing local data in the Radar.unity scene and assign them to fields.
+        //Names in Radar.unity scene exactly match corresponding Manager.cs field names
         ReadButton1 = GameObject.Find("ReadButton1");
         CSVText = GameObject.Find("CSVText");
         FileInputText1 = GameObject.Find("FileInputText1");
@@ -408,10 +409,19 @@ public class Manager : MonoBehaviour
         CSVText2 = GameObject.Find("CSVText2");
         FileInputText2 = GameObject.Find("FileInputText2");
 
-        UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
+        //Find Input text fields, associated labels and buttons for utilizing data read from socket in the Radar.unity scene and assign them to fields.
+        //Names in Radar.unity scene exactly match corresponding Manager.cs field names
+        ReadButtonIP = GameObject.Find("ReadButtonIP");
+        IPText = GameObject.Find("IPText");
+        IPInputText = GameObject.Find("IPInputText");
+        ReadButtonPort = GameObject.Find("ReadButtonPort");
+        PortText = GameObject.Find("PortText");
+        PortInputText = GameObject.Find("PortInputText");
+
+    UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when Radar.unity scene starts
         objectInfo.gameObject.SetActive(false);
 
-        isPaused = false; //make sure isPaused is always false when our scene opens
+        isPaused = false; //make sure isPaused is always false when our Radar.unity scene opens
         time = 0;
         timeText.text = time.ToString();
 
