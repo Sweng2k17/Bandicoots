@@ -2043,11 +2043,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 777843128}
---- !u!1 &842788247 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1465101164589926, guid: b76b549b74399804089a2ef9a8cdc66b,
-    type: 2}
-  m_PrefabInternal: {fileID: 264651}
 --- !u!224 &842788248 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224920823456071238, guid: b76b549b74399804089a2ef9a8cdc66b,
@@ -2370,8 +2365,8 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 842788247}
-        m_MethodName: 
+      - m_Target: {fileID: 681363186}
+        m_MethodName: ToggleSocket
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -10,17 +10,17 @@ public class Manager : MonoBehaviour
     Transform UIPanel; //Will assign our panel to this variable so we can enable/disable it
 
     [SerializeField]
-    public RectTransform ReadButton1;
+    public GameObject ReadButton1;
     [SerializeField]
-    public RectTransform CSVText;
+    public GameObject CSVText;
     [SerializeField]
-    public RectTransform FileInputText1;
+    public GameObject FileInputText1;
     [SerializeField]
-    public RectTransform ReadButton2;
+    public GameObject ReadButton2;
     [SerializeField]
-    public RectTransform CSVText2;
+    public GameObject CSVText2;
     [SerializeField]
-    public RectTransform FileInputText2;
+    public GameObject FileInputText2;
 
     [SerializeField]
     public RectTransform ReadButtonIP;
@@ -408,6 +408,14 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
+        //Find Input text fields, associated labels and buttons for utilizing local data in the Unity scene and assign them to fields.
+        ReadButton1 = GameObject.Find("ReadButton1");
+        CSVText = GameObject.Find("CSVText");
+        FileInputText1 = GameObject.Find("FileInputText1");
+        ReadButton2 = GameObject.Find("ReadButton2");
+        CSVText2 = GameObject.Find("CSVText2");
+        FileInputText2 = GameObject.Find("FileInputText2");
+
         UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
         objectInfo.gameObject.SetActive(false);
 
@@ -809,10 +817,22 @@ public class Manager : MonoBehaviour
         if(readingLocally)
         {
             readingLocally = false;
-        }
+            ReadButton1.SetActive(false);
+            CSVText.SetActive(false);
+            FileInputText1.SetActive(false);
+            ReadButton2.SetActive(false);
+            CSVText2.SetActive(false);
+            FileInputText2.SetActive(false);
+}
         else
         {
             readingLocally = true;
+            ReadButton1.SetActive(true);
+            CSVText.SetActive(true);
+            FileInputText1.SetActive(true);
+            ReadButton2.SetActive(true);
+            CSVText2.SetActive(true);
+            FileInputText2.SetActive(true);
         }
     }
 
