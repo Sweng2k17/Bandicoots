@@ -409,7 +409,7 @@ public class Manager : MonoBehaviour
         CSVText2 = GameObject.Find("CSVText2");
         FileInputText2 = GameObject.Find("FileInputText2");
 
-        //Find Input text fields, associated labels and buttons for utilizing data read from socket in the Radar.unity scene and assign them to fields.
+        //Find input text fields, associated labels and buttons for utilizing data read from socket in the Radar.unity scene and assign them to fields.
         //Names in Radar.unity scene exactly match corresponding Manager.cs field names
         ReadButtonIP = GameObject.Find("ReadButtonIP");
         IPText = GameObject.Find("IPText");
@@ -418,7 +418,16 @@ public class Manager : MonoBehaviour
         PortText = GameObject.Find("PortText");
         PortInputText = GameObject.Find("PortInputText");
 
-    UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when Radar.unity scene starts
+        //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
+        //scene to "off"
+        ReadButtonIP.SetActive(false);
+        IPText.SetActive(false);
+        IPInputText.SetActive(false);
+        ReadButtonPort.SetActive(false);
+        PortText.SetActive(false);
+        PortInputText.SetActive(false);
+
+        UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when Radar.unity scene starts
         objectInfo.gameObject.SetActive(false);
 
         isPaused = false; //make sure isPaused is always false when our Radar.unity scene opens
