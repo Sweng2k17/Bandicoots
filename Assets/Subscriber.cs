@@ -78,7 +78,6 @@ public class Subscriber
 
     }
 
-	bool listeningForHash = false;
 
     /// <summary> 	
     /// Runs in background clientReceiveThread; Listens for incoming data. 	
@@ -110,37 +109,50 @@ public class Subscriber
 
                         if ((serverMessage != null))
                         {
-							Debug.Log(serverMessage);
-
                             if (serverMessage.Equals("End of file."))
                             {
                                 reading = false;
                                 Debug.Log("done reading data - reading value: " + reading);
                                 return;
                             }
-                            else
+                            else if(!serverMessage.Equals(null))
                             {
-								// handleHashing() utilizes this function to recieve a hash value from the publisher.
-								// This check makes sure that handleHashiing() isn't called a million times.
-								// If listeningForHash is true, we will just run through because all we want is the
-								// serverMessage of the hash value.
-								if(!listeningForHash)
-								{
-									handleHashing(stream, serverMessage);
-								}
+								Debug.Log("Server Message: " + serverMessage);
+								
+								handleHashing(stream, serverMessage);
                             }
                         }
                     }
                 }
+
             }
         }
+
         catch (SocketException socketException)
         {
             Debug.Log("Socket exception: " + socketException);
         }
     }
 
-    public bool getReading()
+	/// <summary>
+	/// Receives data from publisher. This function is utilized in handleHashing() 
+	/// mainly because reusing ListenForData() causes issues (I think because of the 
+	/// multi-threading).
+	/// </summary>
+	/// <returns></returns>
+	public string receiveFromPub()
+	{
+			byte[] bytesFromPub = new byte[10025];
+			string dataFromPub = null;
+			NetworkStream nStream = socketConnection.GetStream();
+
+			nStream.Read(bytesFromPub, 0, (int)bytesFromPub.Length); // Bytes from Publisher
+			dataFromPub = System.Text.Encoding.ASCII.GetString(bytesFromPub); // Converts the bytes to ASCII
+			
+			return dataFromPub;
+	}
+
+	public bool getReading()
     {
         return reading;
     }
@@ -163,7 +175,7 @@ public class Subscriber
     /// <summary> 	
     /// Send message to server using socket connection. 	
     /// </summary> 	
-    private void SendMessage(string message)
+    public void SendMessage(string message)
     {
         if (socketConnection == null)
         {
@@ -228,45 +240,45 @@ public class Subscriber
 		hashMaker.ComputeHash(ASCIIEncoding.ASCII.GetBytes(csvLine)); // Creates a hash of our csvLine data
 		byte[] hashBytes = hashMaker.Hash; // move hashed byte values into byte array
 		StringBuilder sb = new StringBuilder();
-
 		foreach (byte b in hashBytes)
 		{
 			sb.Append(b.ToString("X2")); // "X2" converts bytes to a hex format
 		}
-
 		return sb.ToString();
 	}
 	
 	/// <summary>
-	/// Hashes and handles messaging between the Subscriber and Publisher that is needed
-	/// to verify the hash values.
+	/// Handles data verification by hashing the data received and receiving data from
+	/// the publisher.
 	/// </summary>
 	/// <param name="nStream"></param>	An open network socket.
 	/// <param name="csvLine"></param>	Current line of a CSV file.
 	/// <returns></returns>
-	private void handleHashing(NetworkStream nStream, string csvLine)
+	public void handleHashing(NetworkStream nStream, String csvLine)
 	{
-		listeningForHash = true;
-
 		string csvHash = hashSHA1(csvLine); // hash csv line
-		//Debug.Log("Hash value of of data received: " + csvHash);
-		
+		string receivedHash;
 
-		// ListenForData() updates serverMessage variable. Thus it can be
-		// assumed that we will have the response from the message we sent
-		// in the serverMessage variable if we listen right now.
-		ListenForData();
-		if (serverMessage.Equals(csvHash))
+		// receiveFromPub() returns a string. We make a substring of that returned string
+		// because we make a large byte array to recieve just incase a large hash value
+		// is being sent over the network. However, since the hash values must match exactly,
+		// we accomdate for the extra spaces in the byte array by making a substring of that
+		// received hash value with the length of our made hash value.
+		receivedHash = receiveFromPub().Substring(0, csvHash.Length);
+
+		Debug.Log("Created Hash: " + csvHash + ".");
+		Debug.Log("Received Hash: " + receivedHash + ".");
+
+		if (receivedHash.Equals(csvHash))
 		{
+			Debug.Log("Hash matches.");
 			// Correct data, we can enqueue
-			Debug.Log("Hash values match.");
-			sort(csvLine);
+			sort(csvLine);		
 		}
 		else
 		{
-			Debug.Log("Hash values do not match, data ignored...");
+			Debug.Log("Hash is different.");
 		}
-
-		listeningForHash = false;
+		
 	}
 }
