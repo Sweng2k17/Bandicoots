@@ -130,6 +130,7 @@ public class Manager : MonoBehaviour
     public void WriteCSVFileToPath()
     {
         detectionData.setFilePath(CSVWritePath.textComponent.text);
+	detectionData.writeFile();
         Debug.Log(detectionData.getFilePath());
     }
 
