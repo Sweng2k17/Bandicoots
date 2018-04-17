@@ -49,6 +49,10 @@ public class Manager : MonoBehaviour
     public GameObject PortInputText;
     public GameObject ConnectToSocketButton;
 
+    //GameObject for accessing Input Field for CSVWriter file path
+    //field name exactly matches object name in Radar.unity
+    public GameObject CSVWritePathInputText;
+
     public GameObject oldCube;
     bool isPaused; //Used to determine paused state
     bool readingLocally = true; //Used to determine if the data is being read locally. Data is selected to be read locally by default.
@@ -113,16 +117,33 @@ public class Manager : MonoBehaviour
     private int numBeamData;
     private int numTargetData;
 
+    InputField CSVWritePath;
+
     InputField IPAddress;
     string IP;
     InputField portNumber;
     int port = -1;
 
+    /// <summary>
+    /// Executed when the "Write CSV File" button is clicked
+    /// </summary>
+    public void readCSVWriterFilePath()
+    {
+        detectionData.setFilePath(CSVWritePath.textComponent.text);
+        Debug.Log(detectionData.getFilePath());
+    }
+
+    /// <summary>
+    /// Executed when the "Read IP Address" button is clicked
+    /// </summary>
     public void readIP()
     {
         IP = IPAddress.textComponent.text;
     }
 
+    /// <summary>
+    /// Executed when the "Read Port Number" button is clicked
+    /// </summary>
     public void readPort()
     {
         port = int.Parse(portNumber.textComponent.text);
@@ -475,6 +496,9 @@ public class Manager : MonoBehaviour
         PortInputText = GameObject.Find("PortInputText");
         ConnectToSocketButton = GameObject.Find("ConnectToSocketButton");
 
+        CSVWritePathInputText = GameObject.Find("CSVWritePathInputText");
+        CSVWritePath = CSVWritePathInputText.GetComponent<InputField>();
+
         //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
         //scene to "off"
         ReadButtonIP.SetActive(false);
@@ -500,7 +524,6 @@ public class Manager : MonoBehaviour
         interval = speed;
 		aboutButton.onClick.AddListener (TaskOnClick);
         detectionData = new CSVWriter();
-        //detectionData.setFilePath("");
         subscriber = new Subscriber();
         subscriber.ConnectToTcpServer();
         tDataQueue = new Queue();
