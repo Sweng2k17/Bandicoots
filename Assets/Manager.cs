@@ -127,7 +127,7 @@ public class Manager : MonoBehaviour
     /// <summary>
     /// Executed when the "Write CSV File" button is clicked
     /// </summary>
-    public void readCSVWriterFilePath()
+    public void WriteCSVFileToPath()
     {
         detectionData.setFilePath(CSVWritePath.textComponent.text);
         Debug.Log(detectionData.getFilePath());
