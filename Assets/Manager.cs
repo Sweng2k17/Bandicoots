@@ -47,6 +47,7 @@ public class Manager : MonoBehaviour
     public GameObject ReadButtonPort;
     public GameObject PortText;
     public GameObject PortInputText;
+    public GameObject ConnectToSocketButton;
 
     public GameObject oldCube;
     bool isPaused; //Used to determine paused state
@@ -472,6 +473,7 @@ public class Manager : MonoBehaviour
         ReadButtonPort = GameObject.Find("ReadButtonPort");
         PortText = GameObject.Find("PortText");
         PortInputText = GameObject.Find("PortInputText");
+        ConnectToSocketButton = GameObject.Find("ConnectToSocketButton");
 
         //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
         //scene to "off"
@@ -481,6 +483,7 @@ public class Manager : MonoBehaviour
         ReadButtonPort.SetActive(false);
         PortText.SetActive(false);
         PortInputText.SetActive(false);
+        ConnectToSocketButton.SetActive(false);
 
         IPAddress = IPInputText.GetComponent<InputField>();
         portNumber = PortInputText.GetComponent<InputField>();
@@ -891,6 +894,7 @@ public class Manager : MonoBehaviour
             ReadButtonPort.SetActive(true);
             PortText.SetActive(true);
             PortInputText.SetActive(true);
+            ConnectToSocketButton.SetActive(true);
         }
         //check if the "Read Data From Socket" checkbox was checked before the last click. Then turn off the read data from socket input fields
         //and turn on read data from local machine input fields.
@@ -911,6 +915,7 @@ public class Manager : MonoBehaviour
             ReadButtonPort.SetActive(false);
             PortText.SetActive(false);
             PortInputText.SetActive(false);
+            ConnectToSocketButton.SetActive(false);
         }
     }
 
