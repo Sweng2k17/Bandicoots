@@ -112,6 +112,61 @@ public class Manager : MonoBehaviour
     private int numBeamData;
     private int numTargetData;
 
+    InputField IPAddress;
+    string IP;
+    InputField portNumber;
+    int port = -1;
+
+    public void readIP()
+    {
+        IP = IPAddress.textComponent.text;
+    }
+
+    public void readPort()
+    {
+        port = int.Parse(portNumber.textComponent.text);
+    }
+
+    /// <summary>
+    /// Attempt a socket connection if there was both an IP Address and a port number entered by the user and the "Connect To Socket" button
+    /// in the options menu in the Radar.unity scene was clicked.
+    /// </summary>
+    public void instantiateSocketReading()
+    {
+        if (IP != null && port >= 0)
+        {
+            subscriber.attemptConnection(IP, port);
+            Debug.Log("Attempting Socket Connection");
+        }
+        Debug.Log("Socket Connection Was Not Attempted");
+    }
+
+    /// <summary>
+    /// reading the data from the socket if there is a connection present
+    /// </summary>
+    public void ReadingSocketData()
+    {
+        if (!subscriber.getReading())
+        {
+            if (!readValues)
+            {
+                tDataQueue = subscriber.getTData();
+                numTargetData = tDataQueue.Count;
+                if (numTargetData != 0)
+                {
+                    //loadTargetData();
+                }
+                bDataQueue = subscriber.getBData();
+                numBeamData = bDataQueue.Count;
+                if (numBeamData != 0)
+                {
+                    loadBeamData();
+                }
+                readValues = true;
+            }
+        }
+        //subscriber.SendMessage();
+    }
 
     public void resetTime()
     {
@@ -427,6 +482,9 @@ public class Manager : MonoBehaviour
         PortText.SetActive(false);
         PortInputText.SetActive(false);
 
+        IPAddress = IPInputText.GetComponent<InputField>();
+        portNumber = PortInputText.GetComponent<InputField>();
+
         UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when Radar.unity scene starts
         objectInfo.gameObject.SetActive(false);
 
@@ -537,30 +595,7 @@ public class Manager : MonoBehaviour
 
                 if (subscriber.isConnected())
                 {
-                    if (!subscriber.getReading())
-                    {
-                        if (!readValues)
-                        {
-                            tDataQueue = subscriber.getTData();
-                            numTargetData = tDataQueue.Count;
-                            if (numTargetData != 0)
-                            {
-                                //loadTargetData();
-                            }
-                            bDataQueue = subscriber.getBData();
-                            numBeamData = bDataQueue.Count;
-                            if (numBeamData != 0)
-                            {
-                                loadBeamData();
-                            }
-                            readValues = true;
-                        }
-                    }
-                    //subscriber.SendMessage();
-                }
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    subscriber.attemptConnection();
+                    ReadingSocketData();
                 }
 
                 //BEAM UPDATING PROCEDURE:
