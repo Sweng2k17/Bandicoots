@@ -1,11 +1,35 @@
 fileFormatVersion: 2
 guid: 1899b3273adba7145a54f0e3ffafadf3
-timeCreated: 1508106762
+timeCreated: 1523858579
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - UIPanel: {instanceID: 0}
+  - ReadButton1: {instanceID: 0}
+  - CSVText: {instanceID: 0}
+  - FileInputText1: {instanceID: 0}
+  - ReadButton2: {instanceID: 0}
+  - CSVText2: {instanceID: 0}
+  - FileInputText2: {instanceID: 0}
+  - ReadButtonIP: {instanceID: 0}
+  - IPText: {instanceID: 0}
+  - IPInputText: {instanceID: 0}
+  - ReadButtonPort: {instanceID: 0}
+  - PortText: {instanceID: 0}
+  - PortInputText: {instanceID: 0}
+  - timeText: {instanceID: 0}
+  - beam: {instanceID: 0}
+  - beamMaterial: {instanceID: 0}
+  - readRadarButton: {instanceID: 0}
+  - slider: {instanceID: 0}
+  - camera: {instanceID: 0}
+  - missle: {instanceID: 0}
+  - readTargetButton: {instanceID: 0}
+  - objectInfo: {instanceID: 0}
+  - aboutButton: {instanceID: 0}
+  - oldCube: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

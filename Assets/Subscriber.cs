@@ -22,7 +22,7 @@ public class Subscriber
     private Thread clientReceiveThread;
     #endregion
 
-    // Use this for initialization 	
+    // Use this for initialization 
 
     public Subscriber()
     {
@@ -37,12 +37,14 @@ public class Subscriber
     }
 
     //attempts to connect the socket
-    public void attemptConnection()
+    public void attemptConnection(string IPAddress, int portNumber)
     {
+        Debug.Log("IP Address is " + IPAddress + " & portNumber is " + portNumber);
         //try-catch temporary
         try
         {
-            socketConnection = new TcpClient("127.0.0.1", 8888);
+            //socketConnection = new TcpClient("127.0.0.1", 8888);
+            socketConnection = new TcpClient(IPAddress, portNumber);
             ConnectToTcpServer();
             reading = true;
             connected = true;

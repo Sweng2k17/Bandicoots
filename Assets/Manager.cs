@@ -9,8 +9,6 @@ public class Manager : MonoBehaviour
     [SerializeField]
     Transform UIPanel; //Will assign our panel to this variable so we can enable/disable it
 
-
-
     [SerializeField]
     Text timeText;
     [SerializeField]
@@ -32,8 +30,27 @@ public class Manager : MonoBehaviour
 	[SerializeField]
 	Button aboutButton;
 
+    //Fields used to access input fields in Radar.unity scene for receiving data locally
+    //field names exactly match object names in Radar.unity scene
+    public GameObject ReadButton1;
+    public GameObject CSVText;
+    public GameObject FileInputText1;
+    public GameObject ReadButton2;
+    public GameObject CSVText2;
+    public GameObject FileInputText2;
+
+    //Fields used to access input fields in Radar.unity scene for receiving data from a socket connection
+    //field names exactly match object names in Radar.unity scene
+    public GameObject ReadButtonIP;
+    public GameObject IPText;
+    public GameObject IPInputText;
+    public GameObject ReadButtonPort;
+    public GameObject PortText;
+    public GameObject PortInputText;
+
     public GameObject oldCube;
     bool isPaused; //Used to determine paused state
+    bool readingLocally = true; //Used to determine if the data is being read locally. Data is selected to be read locally by default.
     public double time;
     private double speed;
     double interval;
@@ -95,6 +112,61 @@ public class Manager : MonoBehaviour
     private int numBeamData;
     private int numTargetData;
 
+    InputField IPAddress;
+    string IP;
+    InputField portNumber;
+    int port = -1;
+
+    public void readIP()
+    {
+        IP = IPAddress.textComponent.text;
+    }
+
+    public void readPort()
+    {
+        port = int.Parse(portNumber.textComponent.text);
+    }
+
+    /// <summary>
+    /// Attempt a socket connection if there was both an IP Address and a port number entered by the user and the "Connect To Socket" button
+    /// in the options menu in the Radar.unity scene was clicked.
+    /// </summary>
+    public void instantiateSocketReading()
+    {
+        if (IP != null && port >= 0)
+        {
+            subscriber.attemptConnection(IP, port);
+            Debug.Log("Attempting Socket Connection");
+        }
+        Debug.Log("Socket Connection Was Not Attempted");
+    }
+
+    /// <summary>
+    /// reading the data from the socket if there is a connection present
+    /// </summary>
+    public void ReadingSocketData()
+    {
+        if (!subscriber.getReading())
+        {
+            if (!readValues)
+            {
+                tDataQueue = subscriber.getTData();
+                numTargetData = tDataQueue.Count;
+                if (numTargetData != 0)
+                {
+                    //loadTargetData();
+                }
+                bDataQueue = subscriber.getBData();
+                numBeamData = bDataQueue.Count;
+                if (numBeamData != 0)
+                {
+                    loadBeamData();
+                }
+                readValues = true;
+            }
+        }
+        //subscriber.SendMessage();
+    }
 
     public void resetTime()
     {
@@ -383,10 +455,40 @@ public class Manager : MonoBehaviour
 
     void Start()
     {
-        UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when scene starts
+        //Find Input text fields, associated labels and buttons for utilizing local data in the Radar.unity scene and assign them to fields.
+        //Names in Radar.unity scene exactly match corresponding Manager.cs field names
+        ReadButton1 = GameObject.Find("ReadButton1");
+        CSVText = GameObject.Find("CSVText");
+        FileInputText1 = GameObject.Find("FileInputText1");
+        ReadButton2 = GameObject.Find("ReadButton2");
+        CSVText2 = GameObject.Find("CSVText2");
+        FileInputText2 = GameObject.Find("FileInputText2");
+
+        //Find input text fields, associated labels and buttons for utilizing data read from socket in the Radar.unity scene and assign them to fields.
+        //Names in Radar.unity scene exactly match corresponding Manager.cs field names
+        ReadButtonIP = GameObject.Find("ReadButtonIP");
+        IPText = GameObject.Find("IPText");
+        IPInputText = GameObject.Find("IPInputText");
+        ReadButtonPort = GameObject.Find("ReadButtonPort");
+        PortText = GameObject.Find("PortText");
+        PortInputText = GameObject.Find("PortInputText");
+
+        //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
+        //scene to "off"
+        ReadButtonIP.SetActive(false);
+        IPText.SetActive(false);
+        IPInputText.SetActive(false);
+        ReadButtonPort.SetActive(false);
+        PortText.SetActive(false);
+        PortInputText.SetActive(false);
+
+        IPAddress = IPInputText.GetComponent<InputField>();
+        portNumber = PortInputText.GetComponent<InputField>();
+
+        UIPanel.gameObject.SetActive(false); //make sure our pause menu is disabled when Radar.unity scene starts
         objectInfo.gameObject.SetActive(false);
 
-        isPaused = false; //make sure isPaused is always false when our scene opens
+        isPaused = false; //make sure isPaused is always false when our Radar.unity scene opens
         time = 0;
         timeText.text = time.ToString();
 
@@ -493,30 +595,7 @@ public class Manager : MonoBehaviour
 
                 if (subscriber.isConnected())
                 {
-                    if (!subscriber.getReading())
-                    {
-                        if (!readValues)
-                        {
-                            tDataQueue = subscriber.getTData();
-                            numTargetData = tDataQueue.Count;
-                            if (numTargetData != 0)
-                            {
-                                //loadTargetData();
-                            }
-                            bDataQueue = subscriber.getBData();
-                            numBeamData = bDataQueue.Count;
-                            if (numBeamData != 0)
-                            {
-                                loadBeamData();
-                            }
-                            readValues = true;
-                        }
-                    }
-                    //subscriber.SendMessage();
-                }
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    subscriber.attemptConnection();
+                    ReadingSocketData();
                 }
 
                 //BEAM UPDATING PROCEDURE:
@@ -776,6 +855,63 @@ public class Manager : MonoBehaviour
             } 
         }
         initializeAngles();
+    }
+
+    /// <summary>
+    /// ToggleSocket() is called when the "Read Data From Socket" checkbox in the Options menu of the simulation is clicked.
+    /// Every time ToggleSocket is called, the boolean value 'readingLocally' is checked. Initially, readingLocally
+    /// is set to true because the default method to read in data is to read in data from the local machine. If the 
+    /// "Read Data From Socket" checkbox is checked, 'readingLocally' is set to false and the input fields and associated
+    /// labels/buttons in the options menu for reading in data from the local machine in the simulation are "turned off", while the input fields
+    /// and associated labels/buttons in the options menu for reading in data from a socket are "turned on".
+    /// 
+    /// ToggleSocket is also called when the "Read Data From Socket" checkbox becomes unchecked. In this case, 'readingLocally' is set back to true
+    /// and the input fields and associated labels/buttons in the options menu for reading in data from a socket in the simulation are 
+    /// "turned off", while the input fields and associated labels/buttons in the options menu for reading in data from the local machine are "turned on".
+    /// </summary>
+    public void ToggleSocket()
+    {
+        //Debug.Log("ToggleSocket works");
+        //check if the "Read Data From Socket" checkbox was unchecked before the last click. Then turn off the read data from local machine input fields
+        //and turn on read data from socket input fields.
+        if(readingLocally)
+        {
+            readingLocally = false;
+
+            ReadButton1.SetActive(false);
+            CSVText.SetActive(false);
+            FileInputText1.SetActive(false);
+            ReadButton2.SetActive(false);
+            CSVText2.SetActive(false);
+            FileInputText2.SetActive(false);
+
+            ReadButtonIP.SetActive(true);
+            IPText.SetActive(true);
+            IPInputText.SetActive(true);
+            ReadButtonPort.SetActive(true);
+            PortText.SetActive(true);
+            PortInputText.SetActive(true);
+        }
+        //check if the "Read Data From Socket" checkbox was checked before the last click. Then turn off the read data from socket input fields
+        //and turn on read data from local machine input fields.
+        else
+        {
+            readingLocally = true;
+
+            ReadButton1.SetActive(true);
+            CSVText.SetActive(true);
+            FileInputText1.SetActive(true);
+            ReadButton2.SetActive(true);
+            CSVText2.SetActive(true);
+            FileInputText2.SetActive(true);
+
+            ReadButtonIP.SetActive(false);
+            IPText.SetActive(false);
+            IPInputText.SetActive(false);
+            ReadButtonPort.SetActive(false);
+            PortText.SetActive(false);
+            PortInputText.SetActive(false);
+        }
     }
 
 }
