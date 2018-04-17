@@ -159,6 +159,10 @@ public class Manager : MonoBehaviour
         {
             subscriber.attemptConnection(IP, port);
             Debug.Log("Attempting Socket Connection");
+            if (subscriber.isConnected())
+            {
+                position = 0;
+            }
         }
         Debug.Log("Socket Connection Was Not Attempted");
     }
@@ -194,12 +198,14 @@ public class Manager : MonoBehaviour
     {
         time = 1;
         difference = -1;
-        position = 0;
+        position = 1;
         data = readRadarButton.GetComponent<CSVReader>().data;
 
         //number of lines in csv file
         //CSVReader reads in empty line at end of csv files so last line is not included
-        //maxPosition = data.GetLength(1) - 1;
+        maxPosition = data.GetLength(1) - 1;
+        numBeamData = maxPosition;
+        Debug.Log(maxPosition);
 
         initializeAngles();
     }
