@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.IO;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
 
@@ -130,8 +131,15 @@ public class Manager : MonoBehaviour
     public void WriteCSVFileToPath()
     {
         detectionData.setFilePath(CSVWritePath.textComponent.text);
-	detectionData.writeFile();
-        Debug.Log(detectionData.getFilePath());
+        if (Directory.Exists(detectionData.getFilePath()))
+        {
+            Debug.Log("" + detectionData.getFilePath() + " exists");
+            detectionData.writeFile();
+        }
+        else
+        {
+            Debug.Log("Invalid file path. Enter a valid file path before writing a csv file.");
+        }
     }
 
     /// <summary>
