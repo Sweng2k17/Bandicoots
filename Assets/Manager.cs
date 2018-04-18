@@ -164,7 +164,7 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void instantiateSocketReading()
     {
-        if (IP != null && port >= 0)
+        if (IP != null && port >= 0 && port <= 65535)
         {
             subscriber.attemptConnection(IP, port);
             Debug.Log("Attempting Socket Connection");
