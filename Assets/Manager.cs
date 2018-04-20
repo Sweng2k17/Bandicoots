@@ -124,6 +124,7 @@ public class Manager : MonoBehaviour
     string IP;
     InputField portNumber;
     int port = -1;
+    bool portIsNumeric;
 
     /// <summary>
     /// Executed when the "Write CSV File" button is clicked
@@ -155,7 +156,15 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void readPort()
     {
-        port = int.Parse(portNumber.textComponent.text);
+        portIsNumeric = int.TryParse(portNumber.textComponent.text, out port);
+        if(portIsNumeric)
+        {
+            Debug.Log("Port number is numeric. Sick");
+        }
+        else
+        {
+            Debug.Log("Port number is not numeric.");
+        }
     }
 
     /// <summary>
@@ -164,7 +173,7 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void instantiateSocketReading()
     {
-        if (IP != null && port >= 0 && port <= 65535)
+        if (IP != null && portIsNumeric && port >= 0 && port <= 65535)
         {
             subscriber.attemptConnection(IP, port);
             Debug.Log("Attempting Socket Connection");
