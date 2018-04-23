@@ -119,7 +119,7 @@ public class Subscriber
 
                         if ((serverMessage != null))
                         {
-                            if (serverMessage.Equals("End of file."))
+                            if (serverMessage.Contains("End of file."))
                             {
                                 reading = false;
                                 Debug.Log("done reading data - reading value: " + reading);
