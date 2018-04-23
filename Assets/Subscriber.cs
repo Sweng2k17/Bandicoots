@@ -55,6 +55,14 @@ public class Subscriber
             connected = false;
             Debug.Log("Connection unsuccessful.");
             Debug.Log(e.ToString());
+            if(e.ToString().Contains("No such host is known."))
+            {
+                Manager.validIP = false;
+            }
+            else if(e.ToString().Contains("Parameter name: Invalid port"))
+            {
+                Manager.validPort = false;
+            }
         }
     }
 

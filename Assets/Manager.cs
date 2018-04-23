@@ -58,6 +58,9 @@ public class Manager : MonoBehaviour
     public GameObject RedAsteriskPort;
     public GameObject RedAsteriskWriter;
 
+    public static bool validIP;
+    public static bool validPort;
+
     //GameObject for accessing Input Field for CSVWriter file path
     //field name exactly matches object name in Radar.unity
     public GameObject CSVWritePathInputText;
@@ -169,10 +172,12 @@ public class Manager : MonoBehaviour
         portIsNumeric = int.TryParse(portNumber.textComponent.text, out port);
         if(portIsNumeric)
         {
+            RedAsteriskPort.SetActive(false);
             Debug.Log("Port number is numeric. Sick");
         }
         else
         {
+            RedAsteriskPort.SetActive(true);
             Debug.Log("Port number is not numeric.");
         }
     }
@@ -183,21 +188,50 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void instantiateSocketReading()
     {
-        if (IP != null && portIsNumeric && port >= 0 && port <= 65535)
+        validIP = true;
+        validPort = true;
+        if (IP != null && portIsNumeric)
         {
             subscriber.attemptConnection(IP, port);
             Debug.Log("Attempting Socket Connection");
             if (subscriber.isConnected())
             {
                 position = 0;
+                RedAsteriskIP.SetActive(false);
+                RedAsteriskPort.SetActive(false);
             }
             else
             {
+                if (!validIP)
+                {
+                    RedAsteriskIP.SetActive(true);
+                }
+                else
+                {
+                    RedAsteriskIP.SetActive(false);
+                }
+
+                if(!validPort)
+                {
+                    RedAsteriskPort.SetActive(true);
+                }
+                else
+                {
+                    RedAsteriskPort.SetActive(false);
+                }
                 Debug.Log("Socket Connection Was Not Attempted");
             }
         }
         else
         {
+            if (!portIsNumeric)
+            {
+                RedAsteriskPort.SetActive(true);
+            }
+            if(IP == null)
+            {
+                RedAsteriskIP.SetActive(true);
+            }
             Debug.Log("Socket Connection Was Not Attempted");
         }
     }
