@@ -534,7 +534,17 @@ public class Manager : MonoBehaviour
         CSVWritePath = CSVWritePathInputText.GetComponent<InputField>();
 
         //Find Red Asterisk objects in Radar.unity scene
+        RedAsteriskBeam = GameObject.Find("RedAsteriskBeam");
+        RedAsteriskTarget = GameObject.Find("RedAsteriskTarget");
+        RedAsteriskIP = GameObject.Find("RedAsteriskIP");
+        RedAsteriskPort = GameObject.Find("RedAsteriskPort");
         RedAsteriskWriter = GameObject.Find("RedAsteriskWriter");
+
+        //Initially Set all Red Asterisk objects to inactive
+        RedAsteriskBeam.SetActive(false);
+        RedAsteriskTarget.SetActive(false);
+        RedAsteriskIP.SetActive(false);
+        RedAsteriskPort.SetActive(false);
         RedAsteriskWriter.SetActive(false);
 
         //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
