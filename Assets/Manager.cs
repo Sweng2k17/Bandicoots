@@ -52,6 +52,10 @@ public class Manager : MonoBehaviour
 
     //Fields used to access red asterisks in the options menu in Radar.unity
     //The red asterisks appear when an invalid entry is typed in a text field in the options menu of Radar.unity
+    public GameObject RedAsteriskBeam;
+    public GameObject RedAsteriskTarget;
+    public GameObject RedAsteriskIP;
+    public GameObject RedAsteriskPort;
     public GameObject RedAsteriskWriter;
 
     //GameObject for accessing Input Field for CSVWriter file path
