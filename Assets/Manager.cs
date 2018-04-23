@@ -191,8 +191,15 @@ public class Manager : MonoBehaviour
             {
                 position = 0;
             }
+            else
+            {
+                Debug.Log("Socket Connection Was Not Attempted");
+            }
         }
-        Debug.Log("Socket Connection Was Not Attempted");
+        else
+        {
+            Debug.Log("Socket Connection Was Not Attempted");
+        }
     }
 
     /// <summary>
