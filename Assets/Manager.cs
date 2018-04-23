@@ -50,6 +50,10 @@ public class Manager : MonoBehaviour
     public GameObject PortInputText;
     public GameObject ConnectToSocketButton;
 
+    //Fields used to access red asterisks in the options menu in Radar.unity
+    //The red asterisks appear when an invalid entry is typed in a text field in the options menu of Radar.unity
+    public GameObject RedAsteriskWriter;
+
     //GameObject for accessing Input Field for CSVWriter file path
     //field name exactly matches object name in Radar.unity
     public GameObject CSVWritePathInputText;
@@ -136,9 +140,11 @@ public class Manager : MonoBehaviour
         {
             Debug.Log("" + detectionData.getFilePath() + " exists");
             detectionData.writeFile();
+            RedAsteriskWriter.SetActive(false);
         }
         else
         {
+            RedAsteriskWriter.SetActive(true);
             Debug.Log("Invalid file path. Enter a valid file path before writing a csv file.");
         }
     }
@@ -522,6 +528,10 @@ public class Manager : MonoBehaviour
 
         CSVWritePathInputText = GameObject.Find("CSVWritePathInputText");
         CSVWritePath = CSVWritePathInputText.GetComponent<InputField>();
+
+        //Find Red Asterisk objects in Radar.unity scene
+        RedAsteriskWriter = GameObject.Find("RedAsteriskWriter");
+        RedAsteriskWriter.SetActive(false);
 
         //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
         //scene to "off"
