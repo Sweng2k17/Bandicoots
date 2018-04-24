@@ -170,6 +170,8 @@ public class Manager : MonoBehaviour
             Debug.Log("Attempting Socket Connection");
             if (subscriber.isConnected())
             {
+                time = 1;
+                readValues = false;
                 position = 0;
             }
         }
