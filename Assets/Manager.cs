@@ -268,15 +268,25 @@ public class Manager : MonoBehaviour
         time = 1;
         difference = -1;
         position = 1;
-        data = readRadarButton.GetComponent<CSVReader>().data;
 
-        //number of lines in csv file
-        //CSVReader reads in empty line at end of csv files so last line is not included
-        maxPosition = data.GetLength(1) - 1;
-        numBeamData = maxPosition;
-        Debug.Log(maxPosition);
+        if (readRadarButton.GetComponent<CSVReader>().data != null)
+        {
+            data = readRadarButton.GetComponent<CSVReader>().data;
 
-        initializeAngles();
+            //number of lines in csv file
+            //CSVReader reads in empty line at end of csv files so last line is not included
+            maxPosition = data.GetLength(1) - 1;
+            numBeamData = maxPosition;
+            Debug.Log(maxPosition);
+
+            initializeAngles();
+
+            RedAsteriskBeam.SetActive(false);
+        }
+        else
+        {
+            RedAsteriskBeam.SetActive(true);
+        }
     }
 
     public void initTarget()
@@ -369,9 +379,11 @@ public class Manager : MonoBehaviour
                 missiles[x].transform.position = newPos;
 
             }
-
-
-
+            RedAsteriskTarget.SetActive(false);
+        }
+        else
+        {
+            RedAsteriskTarget.SetActive(true);
         }
         Debug.Log("Init Done");
     }
