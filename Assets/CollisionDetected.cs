@@ -16,6 +16,9 @@ public class CollisionDetected : MonoBehaviour
         resetAlpha(collision.gameObject.GetComponent<MeshRenderer>());
 
         ContactPoint contact = collision.contacts[0];
+        Debug.Log("----------------------------");
+        Debug.Log("Call in CollisionDetected:");
+        Manager.currCollPoint.Set(contact.point.x, contact.point.y, contact.point.z);
         Debug.Log("x: " + contact.point.x + "  " + "y: " + contact.point.y + "  " + "z: " + contact.point.z);
         
     }
