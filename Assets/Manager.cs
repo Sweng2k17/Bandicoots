@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
+using UnityEditor;
 
 public class Manager : MonoBehaviour
 {
@@ -504,6 +505,9 @@ public class Manager : MonoBehaviour
         return percentDiff;
     }
 
+    /// <summary>
+    /// Checks if the detected target's position and the point of collison are within 3% accepted range.
+    /// </summary>
     private void checkGoodDetection() {
         float percentDiff = checkDifference(currCollPoint, targetCoor);
         if (percentDiff < 3)
@@ -515,7 +519,10 @@ public class Manager : MonoBehaviour
         {
             Debug.Log("Target is NOT within 3% difference!");
             Debug.Log("Percent difference: " + percentDiff);
-            //throw up alert menu
+            pauseTime();
+            EditorUtility.DisplayDialog("WARNING!",
+                 "Potential invalid target!\n\nThe target detected is not within the acceptable 3% range.\nThe percent difference is: " + percentDiff + "%", "Okay");
+            play();
         }
         needToCheck = false;
     }
