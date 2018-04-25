@@ -231,12 +231,19 @@ public class Manager : MonoBehaviour
     public void initTarget()
     {
 
-        if(missileObjects != null)
+        if (missileObjects != null)
         {
-            for(int x = 0; x<missileObjects.Length; x++)
+            GameObject[] all = GameObject.FindObjectsOfType<GameObject>();
+            foreach (GameObject go in all)
             {
-                DestroyObject(missileObjects[x]);
-                Destroy(missiles[x]);
+                if (go.name.Equals("missileTemplate(Clone)"))
+                {
+                    Destroy(go);
+                }
+            }
+            for (int x = 0; x < missileObjects.Length - 1; x++)
+            {
+                Destroy(missileObjects[x]);
             }
         }
 
@@ -257,11 +264,12 @@ public class Manager : MonoBehaviour
 
             for (int x = 0; x < fileLength - 1; x++)
             {
+                //may need to change stuff here
                 missileObjects[x].AddComponent<MeshRenderer>();
                 missileObjects[x].AddComponent<MeshCollider>();
                 missileObjects[x].AddComponent<ClickScript>();
                 missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
-                missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
+                missiles[x] = Instantiate(missle);
                 missiles[x].GetComponent<ClickScript>().setNumber(x);
 
                 //changes here
