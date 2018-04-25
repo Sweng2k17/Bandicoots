@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
+using UnityEditor;
 
 public class Manager : MonoBehaviour
 {
@@ -81,6 +82,12 @@ public class Manager : MonoBehaviour
 	Rect newRect;
 	bool showWindow = false;
 
+    //used for saving value of current collsion point
+    public static Vector3 currCollPoint = new Vector3();
+    //used for storing value of current detected target
+    private Vector3 targetCoor = new Vector3();
+    //used to make sure target is only being checked when first detected
+    private bool needToCheck = false;
 
     //declare startAz, stopAz, startEl, and stopEl so they can be accessed throughout the script
     private float startAz;
@@ -294,12 +301,19 @@ public class Manager : MonoBehaviour
     public void initTarget()
     {
 
-        if(missileObjects != null)
+        if (missileObjects != null)
         {
-            for(int x = 0; x<missileObjects.Length; x++)
+            GameObject[] all = GameObject.FindObjectsOfType<GameObject>();
+            foreach (GameObject go in all)
             {
-                DestroyObject(missileObjects[x]);
-                Destroy(missiles[x]);
+                if (go.name.Equals("missileTemplate(Clone)"))
+                {
+                    Destroy(go);
+                }
+            }
+            for (int x = 0; x < missileObjects.Length - 1; x++)
+            {
+                Destroy(missileObjects[x]);
             }
         }
 
@@ -320,11 +334,12 @@ public class Manager : MonoBehaviour
 
             for (int x = 0; x < fileLength - 1; x++)
             {
+                //may need to change stuff here
                 missileObjects[x].AddComponent<MeshRenderer>();
                 missileObjects[x].AddComponent<MeshCollider>();
                 missileObjects[x].AddComponent<ClickScript>();
                 missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
-                missiles[x] = Instantiate(missle.GetComponent<MeshRenderer>());
+                missiles[x] = Instantiate(missle);
                 missiles[x].GetComponent<ClickScript>().setNumber(x);
 
                 //changes here
@@ -524,8 +539,13 @@ public class Manager : MonoBehaviour
                     Color colour = missiles[x].material.color;
                     if (colour.a == 1)
                     {
-                        detectionData.appendCSV(x.ToString(), time, (float)targetPosX[x], (float)targetPosY[x], (float)targetPosZ[x]);
+                        needToCheck = true;
+                        targetCoor.Set((float)targetPosX[x], (float)targetPosY[x], (float)targetPosZ[x]);
+                        detectionData.appendCSV(x.ToString(), time, targetCoor.x, targetCoor.y, targetCoor.z);
                         Debug.Log("missile #: " + x.ToString());
+                        Debug.Log("Call in Manager:");
+                        Debug.Log("x: " + targetCoor.x + "  " + "y: " + targetCoor.y + "  " + "z: " + targetCoor.z);
+                        Debug.Log("----------------------------");
                     }
 		
 		    // Dec Alpha
@@ -536,6 +556,55 @@ public class Manager : MonoBehaviour
 
             }
         }
+    }
+
+    /// <summary>
+    /// Caluclates the distance from the origin to a coordinate in x,y,z space.
+    /// </summary>
+    /// <param name="currCoor"></param> the position in x,y,z space represented by a Vector3 Object
+    /// <returns>the distance from the origin</returns>
+    private float calcDistanceFromOrigin(Vector3 currCoor)
+    {
+        float distance = 0;
+        distance = Mathf.Sqrt(Mathf.Pow(currCoor.x, 2) + Mathf.Pow(currCoor.y, 2) + Mathf.Pow(currCoor.z, 2));
+        return distance;
+    }
+
+    /// <summary>
+    /// Calculates the percent difference between the two points and then returns that value.
+    /// </summary>
+    /// <param name="collisionCoor">The x,y,z coordinates of where the collision occured</param>
+    /// <param name="targCoor">The x,y,z coordinates of the target that was detected</param>
+    /// <returns>the percent difference between the two coordiantes</returns>
+    private float checkDifference(Vector3 collisionCoor, Vector3 targCoor)
+    {
+        float collDistance = calcDistanceFromOrigin(collisionCoor);
+        float targDistance = calcDistanceFromOrigin(targCoor);
+        float difference = Mathf.Abs(collDistance - targDistance);
+        float percentDiff = (difference)/((collDistance + targDistance)/2)*100;
+        return percentDiff;
+    }
+
+    /// <summary>
+    /// Checks if the detected target's position and the point of collison are within 3% accepted range.
+    /// </summary>
+    private void checkGoodDetection() {
+        float percentDiff = checkDifference(currCollPoint, targetCoor);
+        if (percentDiff < 3)
+        {
+            Debug.Log("Target is within 3% difference!");
+            Debug.Log("Percent difference: " + percentDiff);
+        }
+        else
+        {
+            Debug.Log("Target is NOT within 3% difference!");
+            Debug.Log("Percent difference: " + percentDiff);
+            pauseTime();
+            EditorUtility.DisplayDialog("WARNING!",
+                 "Potential invalid target!\n\nThe target detected is not within the acceptable 3% range.\nThe percent difference is: " + percentDiff + "%", "Okay");
+            play();
+        }
+        needToCheck = false;
     }
 
     /**
@@ -721,6 +790,10 @@ public class Manager : MonoBehaviour
         if (!isPaused)
         {
                 updateTargetData();
+                if (needToCheck)
+                {
+                    checkGoodDetection();
+                }
 
                 if (subscriber.isConnected())
                 {
