@@ -452,8 +452,9 @@ public class Manager : MonoBehaviour
                     Color colour = missiles[x].material.color;
                     if (colour.a == 1)
                     {
-                        detectionData.appendCSV(x.ToString(), time, (float)targetPosX[x], (float)targetPosY[x], (float)targetPosZ[x]);
+                        detectionData.appendCSV(x.ToString(), time, (float)targetPosX[x], (float)targetPosX[x], (float)targetPosX[x]);
                         Debug.Log("missile #: " + x.ToString());
+                        Debug.Log("x: " + (float)targetPosX[x] + "  " + "y: " + (float)targetPosX[x] + "  " + "z: " + (float)targetPosX[x]);
                     }
 		
 		    // Dec Alpha
