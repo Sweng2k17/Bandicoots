@@ -52,6 +52,17 @@ public class Manager : MonoBehaviour
     public GameObject PortInputText;
     public GameObject ConnectToSocketButton;
 
+    //Fields used to access red asterisks in the options menu in Radar.unity
+    //The red asterisks appear when an invalid entry is typed in a text field in the options menu of Radar.unity
+    public GameObject RedAsteriskBeam;
+    public GameObject RedAsteriskTarget;
+    public GameObject RedAsteriskIP;
+    public GameObject RedAsteriskPort;
+    public GameObject RedAsteriskWriter;
+
+    public static bool validIP;
+    public static bool validPort;
+
     //GameObject for accessing Input Field for CSVWriter file path
     //field name exactly matches object name in Radar.unity
     public GameObject CSVWritePathInputText;
@@ -132,6 +143,7 @@ public class Manager : MonoBehaviour
     string IP;
     InputField portNumber;
     int port = -1;
+    bool portIsNumeric;
 
     /// <summary>
     /// Executed when the "Write CSV File" button is clicked
@@ -143,9 +155,11 @@ public class Manager : MonoBehaviour
         {
             Debug.Log("" + detectionData.getFilePath() + " exists");
             detectionData.writeFile();
+            RedAsteriskWriter.SetActive(false);
         }
         else
         {
+            RedAsteriskWriter.SetActive(true);
             Debug.Log("Invalid file path. Enter a valid file path before writing a csv file.");
         }
     }
@@ -163,7 +177,17 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void readPort()
     {
-        port = int.Parse(portNumber.textComponent.text);
+        portIsNumeric = int.TryParse(portNumber.textComponent.text, out port);
+        if(portIsNumeric)
+        {
+            RedAsteriskPort.SetActive(false);
+            Debug.Log("Port number is numeric. Sick");
+        }
+        else
+        {
+            RedAsteriskPort.SetActive(true);
+            Debug.Log("Port number is not numeric.");
+        }
     }
 
     /// <summary>
@@ -172,7 +196,9 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void instantiateSocketReading()
     {
-        if (IP != null && port >= 0)
+        validIP = true;
+        validPort = true;
+        if (IP != null && portIsNumeric)
         {
             subscriber.attemptConnection(IP, port);
             Debug.Log("Attempting Socket Connection");
@@ -181,9 +207,43 @@ public class Manager : MonoBehaviour
                 time = 1;
                 readValues = false;
                 position = 0;
+                RedAsteriskIP.SetActive(false);
+                RedAsteriskPort.SetActive(false);
+            }
+            else
+            {
+                if (!validIP)
+                {
+                    RedAsteriskIP.SetActive(true);
+                }
+                else
+                {
+                    RedAsteriskIP.SetActive(false);
+                }
+
+                if(!validPort)
+                {
+                    RedAsteriskPort.SetActive(true);
+                }
+                else
+                {
+                    RedAsteriskPort.SetActive(false);
+                }
+                Debug.Log("Socket Connection Was Not Attempted");
             }
         }
-        Debug.Log("Socket Connection Was Not Attempted");
+        else
+        {
+            if (!portIsNumeric)
+            {
+                RedAsteriskPort.SetActive(true);
+            }
+            if(IP == null)
+            {
+                RedAsteriskIP.SetActive(true);
+            }
+            Debug.Log("Socket Connection Was Not Attempted");
+        }
     }
 
     /// <summary>
@@ -215,18 +275,31 @@ public class Manager : MonoBehaviour
 
     public void resetTime()
     {
+        data = null;
+
         time = 1;
         difference = -1;
-        position = 1;
-        data = readRadarButton.GetComponent<CSVReader>().data;
 
-        //number of lines in csv file
-        //CSVReader reads in empty line at end of csv files so last line is not included
-        maxPosition = data.GetLength(1) - 1;
-        numBeamData = maxPosition;
-        Debug.Log(maxPosition);
+        if (readRadarButton.GetComponent<CSVReader>().data != null)
+        {
+            position = 1;
+            data = readRadarButton.GetComponent<CSVReader>().data;
 
-        initializeAngles();
+            //number of lines in csv file
+            //CSVReader reads in empty line at end of csv files so last line is not included
+            maxPosition = data.GetLength(1) - 1;
+            numBeamData = maxPosition;
+            Debug.Log(maxPosition);
+
+            initializeAngles();
+
+            RedAsteriskBeam.SetActive(false);
+        }
+        else
+        {
+            beam.transform.transform.rotation = Quaternion.Euler(0, 0, 0);
+            RedAsteriskBeam.SetActive(true);
+        }
     }
 
     private void DestroyOldTargets()
@@ -255,6 +328,7 @@ public class Manager : MonoBehaviour
     /// </summary>
     public void initTarget()
     {
+        targetData = null;
         time = 1;
         Debug.Log("Button pressed");
 		if (readTargetButton.GetComponent<CSVReader>().data != null)
@@ -349,9 +423,15 @@ public class Manager : MonoBehaviour
 			newPos.z = (float)targetPosZ[x];
 
 			missiles[x].transform.position = newPos;
-
-		}
-	}
+            }
+            RedAsteriskTarget.SetActive(false);
+        }
+        else
+        {
+            RedAsteriskTarget.SetActive(true);
+        }
+        Debug.Log("Init Done");
+    }
 
     public Vector3 getPosition(int number)
     {
@@ -602,6 +682,20 @@ public class Manager : MonoBehaviour
         CSVWritePathInputText = GameObject.Find("CSVWritePathInputText");
         CSVWritePath = CSVWritePathInputText.GetComponent<InputField>();
 
+        //Find Red Asterisk objects in Radar.unity scene
+        RedAsteriskBeam = GameObject.Find("RedAsteriskBeam");
+        RedAsteriskTarget = GameObject.Find("RedAsteriskTarget");
+        RedAsteriskIP = GameObject.Find("RedAsteriskIP");
+        RedAsteriskPort = GameObject.Find("RedAsteriskPort");
+        RedAsteriskWriter = GameObject.Find("RedAsteriskWriter");
+
+        //Initially Set all Red Asterisk objects to inactive
+        RedAsteriskBeam.SetActive(false);
+        RedAsteriskTarget.SetActive(false);
+        RedAsteriskIP.SetActive(false);
+        RedAsteriskPort.SetActive(false);
+        RedAsteriskWriter.SetActive(false);
+
         //Initially set all input text fields and associated labels/buttons for reading data from a socket in the Radar.unity 
         //scene to "off"
         ReadButtonIP.SetActive(false);
@@ -741,7 +835,7 @@ public class Manager : MonoBehaviour
 
                 //both radar beam and target data get updated if there are still more unread lines in the beam data file
                 //otherwise just the target data will be updated.
-                if (position < numBeamData)
+                if (data != null && position < numBeamData)
                 {
                     //the elevation of the search beam is increasing in the desired search area.
                     if (startEl <= stopEl)

@@ -98,8 +98,7 @@ public class CSVReader : MonoBehaviour
         string path = filePath.text;
         string fileText = "";
 
-
-        
+        data = null;
 
         try
         {
