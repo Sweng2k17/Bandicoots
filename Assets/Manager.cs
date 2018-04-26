@@ -1005,7 +1005,7 @@ public class Manager : MonoBehaviour
 
 
 	void DoMyWindow(int windowID) {
-		if (GUI.Button (new Rect (10, 20, 180, 20), "Version: 0.1"))
+		if (GUI.Button (new Rect (10, 20, 180, 20), "Version: 2.0"))
         {
             showWindow = false;
         }
