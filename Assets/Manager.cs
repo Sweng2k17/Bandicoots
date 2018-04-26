@@ -228,15 +228,9 @@ public class Manager : MonoBehaviour
 
         initializeAngles();
     }
-	
-	/// <summary>
-	/// Clears out missile objects that are left over, handles reading files locally,
-	/// and sets up the array of targets with the received date (either locally or 
-	/// over the network).
-	/// </summary>
-    public void initTarget()
-    {
 
+    private void DestroyOldTargets()
+    {
         if (missileObjects != null)
         {
             GameObject[] all = GameObject.FindObjectsOfType<GameObject>();
@@ -252,7 +246,15 @@ public class Manager : MonoBehaviour
                 Destroy(missileObjects[x]);
             }
         }
+    }
 
+    /// <summary>
+    /// Clears out missile objects that are left over, handles reading files locally,
+    /// and sets up the array of targets with the received date (either locally or 
+    /// over the network).
+    /// </summary>
+    public void initTarget()
+    {
         time = 1;
         Debug.Log("Button pressed");
 		if (readTargetButton.GetComponent<CSVReader>().data != null)
@@ -275,13 +277,14 @@ public class Manager : MonoBehaviour
 	/// </summary>
 	public void setupTargets()
 	{
+        DestroyOldTargets();
 		missileObjects = new GameObject[fileLength];
 		missiles = new MeshRenderer[fileLength];
 		for (int x = 0; x < missileObjects.Length - 1; x++)
 		{
 			missileObjects[x] = new GameObject();
 		}
-
+        Debug.Log("FILELENGTH IN SETUP TARGETS: " + fileLength);
 		for (int x = 0; x < fileLength - 1; x++)
 		{
 			//may need to change stuff here
@@ -295,7 +298,7 @@ public class Manager : MonoBehaviour
 			//changes here
 			//changes here
 			//changes here
-			missiles[x].enabled = false;
+			missiles[x].enabled = true;
 
 			Vector3 scale = new Vector3();
 			scale.x = .1f;
@@ -977,6 +980,8 @@ public class Manager : MonoBehaviour
 				csvLineElemSize++;
 			}
 		}
+        //need to increment afterwards as well to make sure all elements are accounted for
+        csvLineElemSize++;
 
 		Debug.Log("There are " + csvLineElemSize + " elements in the target data.");
 
@@ -990,7 +995,7 @@ public class Manager : MonoBehaviour
 		for (int i = 0; i < tQueueElemSize; i++)
 		{
 			Debug.Log("i = " + i);
-			string currLineString = tDataQueue.Dequeue().ToString(); // Current CSV line string.
+			string currLineString = (string) tDataQueue.Dequeue(); // Current CSV line string.
 			Debug.Log("Current Line being input: " + currLineString);
 			string[] currLine = splitData(currLineString); 
 			for (int k = 0; k < csvLineElemSize; k++)
@@ -1001,7 +1006,8 @@ public class Manager : MonoBehaviour
 			Debug.Log("Target data line " + (i + 1) + " of " + tQueueElemSize + " inserted successfully.");
 		}
 
-
+        //incrementing filelength so targets can be initialized correctly
+        fileLength++;
 
 		setupTargets();
 		Debug.Log("Target Init Over Network Done");
