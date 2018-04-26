@@ -1168,6 +1168,8 @@ public class Manager : MonoBehaviour
             ReadButton2.SetActive(false);
             CSVText2.SetActive(false);
             FileInputText2.SetActive(false);
+            RedAsteriskBeam.SetActive(false);
+            RedAsteriskTarget.SetActive(false);
 
             ReadButtonIP.SetActive(true);
             IPText.SetActive(true);
@@ -1197,6 +1199,8 @@ public class Manager : MonoBehaviour
             PortText.SetActive(false);
             PortInputText.SetActive(false);
             ConnectToSocketButton.SetActive(false);
+            RedAsteriskIP.SetActive(false);
+            RedAsteriskPort.SetActive(false);
         }
     }
 
