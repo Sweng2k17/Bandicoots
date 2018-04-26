@@ -812,6 +812,7 @@ public class Manager : MonoBehaviour
         catch(System.IndexOutOfRangeException e)
         {
             Debug.Log("Error in data file");
+            Debug.Log(e.StackTrace);
         }
 
     }
@@ -986,13 +987,15 @@ public class Manager : MonoBehaviour
 		Debug.Log("There are " + csvLineElemSize + " elements in the target data.");
 
 		fileLength = tQueueElemSize;
-		Debug.Log("fileLength = " + fileLength);
+        //incrementing filelength so targets can be initialized correctly
+        fileLength++;
+        Debug.Log("fileLength = " + fileLength);
 
 		//targetData = new string[tQueueElemSize, csvLineElemSize];
-		targetData = new string[csvLineElemSize, tQueueElemSize];
+		targetData = new string[csvLineElemSize, fileLength];
 		Debug.Log("Before for loop.");
 		Debug.Log("Number of Target CSV lines " + tQueueElemSize);
-		for (int i = 0; i < tQueueElemSize; i++)
+		for (int i = 1; i <= tQueueElemSize; i++)
 		{
 			Debug.Log("i = " + i);
 			string currLineString = (string) tDataQueue.Dequeue(); // Current CSV line string.
@@ -1005,9 +1008,6 @@ public class Manager : MonoBehaviour
 			}
 			Debug.Log("Target data line " + (i + 1) + " of " + tQueueElemSize + " inserted successfully.");
 		}
-
-        //incrementing filelength so targets can be initialized correctly
-        fileLength++;
 
 		setupTargets();
 		Debug.Log("Target Init Over Network Done");
