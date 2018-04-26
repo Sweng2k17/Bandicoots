@@ -198,7 +198,7 @@ public class Manager : MonoBehaviour
                 numTargetData = tDataQueue.Count;
                 if (numTargetData != 0)
                 {
-                    //loadTargetData();
+                    loadTargetData();
                 }
                 bDataQueue = subscriber.getBData();
                 numBeamData = bDataQueue.Count;
@@ -259,11 +259,14 @@ public class Manager : MonoBehaviour
 			Debug.Log("Read target csv reader not null");
 			targetData = readTargetButton.GetComponent<CSVReader>().data;
 			fileLength = targetData.GetLength(1) - 1;
+			setupTargets();
+			Debug.Log("Init Done");
 		}
-
-		setupTargets();
         
-        Debug.Log("Init Done");
+        else
+		{
+			Debug.Log("No data was read in...");
+		}
     }
 
 	/// <summary>
@@ -392,9 +395,6 @@ public class Manager : MonoBehaviour
         objectInfo.gameObject.SetActive(true);
 
     }
-
-
-
 
 
 
@@ -996,7 +996,8 @@ public class Manager : MonoBehaviour
 			Debug.Log("Target data line " + (i + 1) + " of " + tQueueElemSize + " inserted successfully.");
 		}
 
-		initTarget();
+		setupTargets();
+		Debug.Log("Target Init Over Network Done");
 	}
 
 	private void loadBeamData()
