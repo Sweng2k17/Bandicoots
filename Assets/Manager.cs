@@ -337,12 +337,14 @@ public class Manager : MonoBehaviour
 			targetData = readTargetButton.GetComponent<CSVReader>().data;
 			fileLength = targetData.GetLength(1) - 1;
 			setupTargets();
-			Debug.Log("Init Done");
+            RedAsteriskTarget.SetActive(false);
+            Debug.Log("Init Done");
 		}
         
         else
 		{
-			Debug.Log("No data was read in...");
+            RedAsteriskTarget.SetActive(true);
+            Debug.Log("No data was read in...");
 		}
     }
 
@@ -423,14 +425,7 @@ public class Manager : MonoBehaviour
 			newPos.z = (float)targetPosZ[x];
 
 			missiles[x].transform.position = newPos;
-            }
-            RedAsteriskTarget.SetActive(false);
         }
-        else
-        {
-            RedAsteriskTarget.SetActive(true);
-        }
-        Debug.Log("Init Done");
     }
 
     public Vector3 getPosition(int number)
