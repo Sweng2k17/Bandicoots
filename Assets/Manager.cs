@@ -331,7 +331,8 @@ public class Manager : MonoBehaviour
         targetData = null;
         time = 1;
         Debug.Log("Button pressed");
-		if (readTargetButton.GetComponent<CSVReader>().data != null)
+        DestroyOldTargets();
+        if (readTargetButton.GetComponent<CSVReader>().data != null)
 		{
 			Debug.Log("Read target csv reader not null");
 			targetData = readTargetButton.GetComponent<CSVReader>().data;
@@ -355,7 +356,6 @@ public class Manager : MonoBehaviour
 	{
         needToCheck = false;
         currCollPoint = new Vector3();
-        DestroyOldTargets();
 		missileObjects = new GameObject[fileLength];
 		missiles = new MeshRenderer[fileLength];
 		for (int x = 0; x < missileObjects.Length - 1; x++)
@@ -483,11 +483,12 @@ public class Manager : MonoBehaviour
     {
         //if (readTargetButton.GetComponent<CSVReader>().data != null)
         //{
-            //targetData = readTargetButton.GetComponent<CSVReader>().data;
-            //Debug.Log("The target data has been run");
+        //targetData = readTargetButton.GetComponent<CSVReader>().data;
+        //Debug.Log("The target data has been run");
 
 
-			
+        if (targetData != null)
+        {
             for (int x = 0; x < fileLength - 1; x++)
             {
 
@@ -498,62 +499,62 @@ public class Manager : MonoBehaviour
                     {
                         targetLegPosition[x] += 4;
                         targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]) + targetLeg[x];
-                       // Debug.Log("Target Number " + x + " Leg Possition Increased to " + targetLegPosition[x]);
+                        // Debug.Log("Target Number " + x + " Leg Possition Increased to " + targetLegPosition[x]);
 
                     }
-               
-               
-
-
-                //TODO convert mph to seconds
-                accelX[x] = double.Parse(targetData[(targetLegPosition[x] - 3), x + 1]) * scalingFactor / 60;
-                accelY[x] = double.Parse(targetData[(targetLegPosition[x] - 2), x + 1]) * scalingFactor / 60;
-                accelZ[x] = double.Parse(targetData[(targetLegPosition[x] - 1), x + 1]) * scalingFactor / 60;
-                // Debug.Log("Target Leg Position " + targetLegPosition[x] + "  x " + x);
-
-                //update position data on targets
-
-                //time = 1/60 of a second
-
-
-                //update velocity = previous velocity + accel * time
-                targetVelocityX[x] = targetVelocityX[x] + accelX[x] / 60;
-                targetVelocityY[x] = targetVelocityY[x] + accelY[x] / 60;
-                targetVelocityZ[x] = targetVelocityZ[x] + accelZ[x] / 60;
-
-
-                //distance = intial velocity *t + 1/2 * accel * time * time
-                targetPosX[x] += targetVelocityX[x] / 60 + accelX[x] / 60 / 60 / 2;
-                targetPosY[x] += targetVelocityY[x] / 60 + accelY[x] / 60 / 60 / 2;
-                targetPosZ[x] += targetVelocityY[x] / 60 + accelZ[x] / 60 / 60 / 2;
-                // Debug.Log("Target change in position " + targetPosX[x] + "  " + targetPosY[x] + "    " + targetPosZ[x]);
 
 
 
-                Vector3 newPos = new Vector3();
-                newPos.x = (float)targetPosX[x];
-                newPos.y = (float)targetPosY[x];
-                newPos.z = (float)targetPosZ[x];
+
+                    //TODO convert mph to seconds
+                    accelX[x] = double.Parse(targetData[(targetLegPosition[x] - 3), x + 1]) * scalingFactor / 60;
+                    accelY[x] = double.Parse(targetData[(targetLegPosition[x] - 2), x + 1]) * scalingFactor / 60;
+                    accelZ[x] = double.Parse(targetData[(targetLegPosition[x] - 1), x + 1]) * scalingFactor / 60;
+                    // Debug.Log("Target Leg Position " + targetLegPosition[x] + "  x " + x);
+
+                    //update position data on targets
+
+                    //time = 1/60 of a second
+
+
+                    //update velocity = previous velocity + accel * time
+                    targetVelocityX[x] = targetVelocityX[x] + accelX[x] / 60;
+                    targetVelocityY[x] = targetVelocityY[x] + accelY[x] / 60;
+                    targetVelocityZ[x] = targetVelocityZ[x] + accelZ[x] / 60;
+
+
+                    //distance = intial velocity *t + 1/2 * accel * time * time
+                    targetPosX[x] += targetVelocityX[x] / 60 + accelX[x] / 60 / 60 / 2;
+                    targetPosY[x] += targetVelocityY[x] / 60 + accelY[x] / 60 / 60 / 2;
+                    targetPosZ[x] += targetVelocityY[x] / 60 + accelZ[x] / 60 / 60 / 2;
+                    // Debug.Log("Target change in position " + targetPosX[x] + "  " + targetPosY[x] + "    " + targetPosZ[x]);
 
 
 
-                //Debug.Log("Target " + x + " Vel " + targetVelocityX[x] + " Y " + targetVelocityY[x] + "  Z " + targetVelocityZ[x] + " Accel " + accelX[x] + "  " + accelY[x] + "   " + accelZ[x] + "   position" +
-                //   newPos.ToString());
-                missiles[x].transform.position = newPos;
+                    Vector3 newPos = new Vector3();
+                    newPos.x = (float)targetPosX[x];
+                    newPos.y = (float)targetPosY[x];
+                    newPos.z = (float)targetPosZ[x];
+
+
+
+                    //Debug.Log("Target " + x + " Vel " + targetVelocityX[x] + " Y " + targetVelocityY[x] + "  Z " + targetVelocityZ[x] + " Accel " + accelX[x] + "  " + accelY[x] + "   " + accelZ[x] + "   position" +
+                    //   newPos.ToString());
+                    missiles[x].transform.position = newPos;
 
                     //missle.transform.position = newPos;                   
-                    
+
                 }
                 catch (System.Exception e)
                 {
-            //COMMENTED OUT THIS DEBUG
-	 		//Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
-		        }
+                    //COMMENTED OUT THIS DEBUG
+                    //Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
+                }
 
                 // Adjust missile's alpha value:
                 if (missiles[x].enabled == true)
                 {
-		    // Before we dec the alpha, check to see if alpha = 1 because
+                    // Before we dec the alpha, check to see if alpha = 1 because
                     // the radar beam sets it to 1. So, we should log that detection 
                     // in detection data.
                     Color colour = missiles[x].material.color;
@@ -567,14 +568,15 @@ public class Manager : MonoBehaviour
                         Debug.Log("x: " + targetCoor.x + "  " + "y: " + targetCoor.y + "  " + "z: " + targetCoor.z);
                         Debug.Log("----------------------------");
                     }
-		
-		    // Dec Alpha
+
+                    // Dec Alpha
                     //Debug.Log("decAlpha being called");
-                   decAlpha(missiles[x]);
+                    decAlpha(missiles[x]);
                 }
                 //if((time % 400) == 0) { resetAlpha(missiles[x]); }
 
             }
+        }
         //}
     }
 
