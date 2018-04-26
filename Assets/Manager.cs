@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
 using UnityEditor;
+using System.Text;
 
 public class Manager : MonoBehaviour
 {
@@ -258,7 +259,7 @@ public class Manager : MonoBehaviour
                 numTargetData = tDataQueue.Count;
                 if (numTargetData != 0)
                 {
-                    //loadTargetData();
+                    loadTargetData();
                 }
                 bDataQueue = subscriber.getBData();
                 numBeamData = bDataQueue.Count;
@@ -301,10 +302,8 @@ public class Manager : MonoBehaviour
         }
     }
 
-    public void initTarget()
+    private void DestroyOldTargets()
     {
-        targetData = null;
-
         if (missileObjects != null)
         {
             GameObject[] all = GameObject.FindObjectsOfType<GameObject>();
@@ -320,85 +319,110 @@ public class Manager : MonoBehaviour
                 Destroy(missileObjects[x]);
             }
         }
+    }
 
+    /// <summary>
+    /// Clears out missile objects that are left over, handles reading files locally,
+    /// and sets up the array of targets with the received date (either locally or 
+    /// over the network).
+    /// </summary>
+    public void initTarget()
+    {
+        targetData = null;
         time = 1;
         Debug.Log("Button pressed");
-        if (readTargetButton.GetComponent<CSVReader>().data != null)
-        {
-            Debug.Log("Read target csv reader not null");
-            targetData = readTargetButton.GetComponent<CSVReader>().data;
-            fileLength = targetData.GetLength(1) - 1;
+		if (readTargetButton.GetComponent<CSVReader>().data != null)
+		{
+			Debug.Log("Read target csv reader not null");
+			targetData = readTargetButton.GetComponent<CSVReader>().data;
+			fileLength = targetData.GetLength(1) - 1;
+			setupTargets();
+			Debug.Log("Init Done");
+		}
+        
+        else
+		{
+			Debug.Log("No data was read in...");
+		}
+    }
 
-            missileObjects = new GameObject[fileLength];
-            missiles = new MeshRenderer[fileLength];
-            for (int x = 0; x < missileObjects.Length - 1; x++)
-            {
-                missileObjects[x] = new GameObject();
-            }
+	/// <summary>
+	/// Initalizes all arrays for the targets.
+	/// </summary>
+	public void setupTargets()
+	{
+        needToCheck = false;
+        currCollPoint = new Vector3();
+        DestroyOldTargets();
+		missileObjects = new GameObject[fileLength];
+		missiles = new MeshRenderer[fileLength];
+		for (int x = 0; x < missileObjects.Length - 1; x++)
+		{
+			missileObjects[x] = new GameObject();
+		}
+        Debug.Log("FILELENGTH IN SETUP TARGETS: " + fileLength);
+		for (int x = 0; x < fileLength - 1; x++)
+		{
+			//may need to change stuff here
+			missileObjects[x].AddComponent<MeshRenderer>();
+			missileObjects[x].AddComponent<MeshCollider>();
+			missileObjects[x].AddComponent<ClickScript>();
+			missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
+			missiles[x] = Instantiate(missle);
+			missiles[x].GetComponent<ClickScript>().setNumber(x);
 
-            for (int x = 0; x < fileLength - 1; x++)
-            {
-                //may need to change stuff here
-                missileObjects[x].AddComponent<MeshRenderer>();
-                missileObjects[x].AddComponent<MeshCollider>();
-                missileObjects[x].AddComponent<ClickScript>();
-                missiles[x] = missileObjects[x].GetComponent<MeshRenderer>();
-                missiles[x] = Instantiate(missle);
-                missiles[x].GetComponent<ClickScript>().setNumber(x);
+			//changes here
+			//changes here
+			//changes here
+			missiles[x].enabled = false;
 
-                //changes here
-                //changes here
-                //changes here
-                missiles[x].enabled = false;
+			Vector3 scale = new Vector3();
+			scale.x = .1f;
+			scale.y = .1f;
+			scale.z = .1f;
+			missiles[x].transform.localScale = scale;
+		}
 
-                Vector3 scale = new Vector3();
-                scale.x = .1f;
-                scale.y = .1f;
-                scale.z = .1f;
-                missiles[x].transform.localScale = scale;
-            }
+		//can tasks be marked as X percent complete
+		Debug.Log("Target data init file length " + fileLength);
 
-            //can tasks be marked as X percent complete
-            Debug.Log("Target data init file length " + fileLength);
+		fileLength--;
+		targetPosX = new double[fileLength];
+		targetPosY = new double[fileLength];
+		targetPosZ = new double[fileLength];
+		targetVelocityX = new double[fileLength];
+		targetVelocityY = new double[fileLength];
+		targetVelocityZ = new double[fileLength];
+		targetLeg = new int[targetData.GetLength(0)];
+		accelX = new double[fileLength];
+		accelY = new double[fileLength];
+		accelZ = new double[fileLength];
 
-            fileLength--;
-            targetPosX = new double[fileLength];
-            targetPosY = new double[fileLength];
-            targetPosZ = new double[fileLength];
-            targetVelocityX = new double[fileLength];
-            targetVelocityY = new double[fileLength];
-            targetVelocityZ = new double[fileLength];
-            targetLeg = new int[targetData.GetLength(0)];
-            accelX = new double[fileLength];
-            accelY = new double[fileLength];
-            accelZ = new double[fileLength];
+		targetLegPosition = new int[fileLength];
+		fileLength++;
 
-            targetLegPosition = new int[fileLength];
-            fileLength++;
+		//init all targets ignore descriptons line
+		for (int x = 0; x < fileLength - 1; x++)
+		{
+			targetPosX[x] = double.Parse(targetData[0, x + 1]) * scalingFactor;
+			targetPosY[x] = double.Parse(targetData[1, x + 1]) * scalingFactor;
+			targetPosZ[x] = double.Parse(targetData[2, x + 1]) * scalingFactor;
+			targetLegPosition[x] = 6;
+			targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]);
 
-            //init all targets ignore descriptons line
-            for (int x = 0; x < fileLength - 1; x++)
-            {
-                targetPosX[x] = double.Parse(targetData[0, x + 1]) * scalingFactor;
-                targetPosY[x] = double.Parse(targetData[1, x + 1]) * scalingFactor;
-                targetPosZ[x] = double.Parse(targetData[2, x + 1]) * scalingFactor;
-                targetLegPosition[x] = 6;
-                targetLeg[x] = int.Parse(targetData[targetLegPosition[x], x + 1]);
-
-                //Debug.Log("Target Position Init " + targetPosX[x] / 20 + " " + targetPosY[x] / 20 + "  " + targetPosZ[x] / 20 + " X = " + x);
+			//Debug.Log("Target Position Init " + targetPosX[x] / 20 + " " + targetPosY[x] / 20 + "  " + targetPosZ[x] / 20 + " X = " + x);
 
 
-                targetVelocityX[x] = 0;
-                targetVelocityY[x] = 0;
-                targetVelocityZ[x] = 0;
+			targetVelocityX[x] = 0;
+			targetVelocityY[x] = 0;
+			targetVelocityZ[x] = 0;
 
-                Vector3 newPos = new Vector3();
-                newPos.x = (float)targetPosX[x];
-                newPos.y = (float)targetPosY[x];
-                newPos.z = (float)targetPosZ[x];
+			Vector3 newPos = new Vector3();
+			newPos.x = (float)targetPosX[x];
+			newPos.y = (float)targetPosY[x];
+			newPos.z = (float)targetPosZ[x];
 
-                missiles[x].transform.position = newPos;
-
+			missiles[x].transform.position = newPos;
             }
             RedAsteriskTarget.SetActive(false);
         }
@@ -460,18 +484,15 @@ public class Manager : MonoBehaviour
 
 
 
-
-
-
     private void updateTargetData()
     {
-        if (readTargetButton.GetComponent<CSVReader>().data != null)
-        {
+        //if (readTargetButton.GetComponent<CSVReader>().data != null)
+        //{
             //targetData = readTargetButton.GetComponent<CSVReader>().data;
             //Debug.Log("The target data has been run");
 
 
-
+			
             for (int x = 0; x < fileLength - 1; x++)
             {
 
@@ -545,7 +566,7 @@ public class Manager : MonoBehaviour
                     {
                         needToCheck = true;
                         targetCoor.Set((float)targetPosX[x], (float)targetPosY[x], (float)targetPosZ[x]);
-                        detectionData.appendCSV(x.ToString(), time, targetCoor.x, targetCoor.y, targetCoor.z);
+                        detectionData.appendCSV(x.ToString(), time, currCollPoint.x, currCollPoint.y, currCollPoint.z);
                         Debug.Log("missile #: " + x.ToString());
                         Debug.Log("Call in Manager:");
                         Debug.Log("x: " + targetCoor.x + "  " + "y: " + targetCoor.y + "  " + "z: " + targetCoor.z);
@@ -559,7 +580,7 @@ public class Manager : MonoBehaviour
                 //if((time % 400) == 0) { resetAlpha(missiles[x]); }
 
             }
-        }
+        //}
     }
 
     /// <summary>
@@ -877,7 +898,11 @@ public class Manager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
             {
-                UnPause();
+                    //if the subscriber is still reading in data, the user cannot unpause the program
+                    if (!subscriber.getReading())
+                    {
+                        UnPause();
+                    }
             }
         }
         time += interval;
@@ -887,6 +912,7 @@ public class Manager : MonoBehaviour
         catch(System.IndexOutOfRangeException e)
         {
             Debug.Log("Error in data file");
+            Debug.Log(e.StackTrace);
         }
 
     }
@@ -1038,18 +1064,73 @@ public class Manager : MonoBehaviour
         return info;
     }
 
-    private void loadTargetData()
-    {
-        //targetData = new string[, tDataQueue.Count];
-        //for (int i = 1; i <= tDataQueue.Count; i++)
-        //{
-            //string[] currLine = splitData((string) tDataQueue.Dequeue());
-            //int 
-            //foreach()
-        //}
-    }
+	/// <summary>
+	/// Converts the tDataQueue queue into the targetData array.
+	/// </summary>
+	private void loadTargetData()
+	{
 
-    private void loadBeamData()
+		Debug.Log("Stepping into loadTargetData()...");
+		int csvLineElemSize = 0;
+		int tQueueElemSize = tDataQueue.Count;  // The current size of the target data recieved over the network
+		string sampleTData = (string)tDataQueue.Peek();
+		foreach (char c in sampleTData) // Finds how much data is in each line of the CSV.
+		{                               // It is assumed that all of the lines of the csv 
+			if (c == ',')               // are the same size and format.
+			{
+				csvLineElemSize++;
+			}
+		}
+        //need to increment afterwards as well to make sure all elements are accounted for
+        csvLineElemSize++;
+
+		Debug.Log("There are " + csvLineElemSize + " elements in the target data.");
+
+		fileLength = tQueueElemSize;
+        //incrementing filelength so targets can be initialized correctly
+        fileLength++;
+        Debug.Log("fileLength = " + fileLength);
+
+		//targetData = new string[tQueueElemSize, csvLineElemSize];
+		targetData = new string[csvLineElemSize, fileLength];
+		Debug.Log("Before for loop.");
+		Debug.Log("Number of Target CSV lines " + tQueueElemSize);
+		for (int i = 1; i <= tQueueElemSize; i++)
+		{
+			Debug.Log("i = " + i);
+			string currLineString = (string) tDataQueue.Dequeue(); // Current CSV line string.
+			Debug.Log("Current Line being input: " + currLineString);
+			string[] currLine = splitData(currLineString); 
+			for (int k = 0; k < csvLineElemSize; k++)
+			{
+				Debug.Log("k = " + k);
+				targetData[k, i] = currLine[k];
+			}
+			Debug.Log("Target data line " + (i + 1) + " of " + tQueueElemSize + " inserted successfully.");
+		}
+
+		setupTargets();
+		Debug.Log("Target Init Over Network Done");
+
+		checkTargetData();
+	}
+
+	private void checkTargetData()
+	{
+		StringBuilder str = new StringBuilder(); // Builds strings to test if data had actually gotten initialized...
+
+		for (int i = 0; i < targetData.GetLength(1); i++)
+		{
+			for (int k = 0; k < targetData.GetLength(0); k++)
+			{
+				str.Append(targetData[k, i] + ", ");
+			}
+			Debug.Log(str);
+			str = new StringBuilder();
+		}
+	}
+
+	private void loadBeamData()
     {
         data = new string[10, numBeamData];
         for(int i = 0; i < numBeamData; i++)
