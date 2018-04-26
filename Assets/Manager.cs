@@ -3,7 +3,9 @@ using System.Collections;
 using System.IO;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Text;
 
 public class Manager : MonoBehaviour
@@ -181,7 +183,7 @@ public class Manager : MonoBehaviour
         if(portIsNumeric)
         {
             RedAsteriskPort.SetActive(false);
-            Debug.Log("Port number is numeric. Sick");
+            Debug.Log("Port number is numeric.");
         }
         else
         {
@@ -549,6 +551,7 @@ public class Manager : MonoBehaviour
                 {
                     //COMMENTED OUT THIS DEBUG
                     //Debug.Log("Error in target data, not enough data please enter empty data set for target legs");
+                    Debug.Log(e.StackTrace);
                 }
 
                 // Adjust missile's alpha value:
@@ -622,8 +625,10 @@ public class Manager : MonoBehaviour
             Debug.Log("Target is NOT within 3% difference!");
             Debug.Log("Percent difference: " + percentDiff);
             pauseTime();
+            #if UNITY_EDITOR
             EditorUtility.DisplayDialog("WARNING!",
                  "Potential invalid target!\n\nThe target detected is not within the acceptable 3% range.\nThe percent difference is: " + percentDiff + "%", "Okay");
+            #endif
             play();
         }
         needToCheck = false;
