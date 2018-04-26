@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine.UI; //Need this for calling UI scripts
 using System.Text.RegularExpressions;
 using UnityEditor;
+using System.Text;
 
 public class Manager : MonoBehaviour
 {
@@ -400,13 +401,13 @@ public class Manager : MonoBehaviour
 
     private void updateTargetData()
     {
-        if (readTargetButton.GetComponent<CSVReader>().data != null)
-        {
+        //if (readTargetButton.GetComponent<CSVReader>().data != null)
+        //{
             //targetData = readTargetButton.GetComponent<CSVReader>().data;
             //Debug.Log("The target data has been run");
 
 
-
+			
             for (int x = 0; x < fileLength - 1; x++)
             {
 
@@ -494,7 +495,7 @@ public class Manager : MonoBehaviour
                 //if((time % 400) == 0) { resetAlpha(missiles[x]); }
 
             }
-        }
+        //}
     }
 
     /// <summary>
@@ -988,16 +989,39 @@ public class Manager : MonoBehaviour
 		Debug.Log("Number of Target CSV lines " + tQueueElemSize);
 		for (int i = 0; i < tQueueElemSize; i++)
 		{
-			string[] currLine = splitData(tDataQueue.Dequeue().ToString()); // Current CSV line string.
+			Debug.Log("i = " + i);
+			string currLineString = tDataQueue.Dequeue().ToString(); // Current CSV line string.
+			Debug.Log("Current Line being input: " + currLineString);
+			string[] currLine = splitData(currLineString); 
 			for (int k = 0; k < csvLineElemSize; k++)
 			{
+				Debug.Log("k = " + k);
 				targetData[k, i] = currLine[k];
 			}
 			Debug.Log("Target data line " + (i + 1) + " of " + tQueueElemSize + " inserted successfully.");
 		}
 
+
+
 		setupTargets();
 		Debug.Log("Target Init Over Network Done");
+
+		checkTargetData();
+	}
+
+	private void checkTargetData()
+	{
+		StringBuilder str = new StringBuilder(); // Builds strings to test if data had actually gotten initialized...
+
+		for (int i = 0; i < targetData.GetLength(1); i++)
+		{
+			for (int k = 0; k < targetData.GetLength(0); k++)
+			{
+				str.Append(targetData[k, i] + ", ");
+			}
+			Debug.Log(str);
+			str = new StringBuilder();
+		}
 	}
 
 	private void loadBeamData()
