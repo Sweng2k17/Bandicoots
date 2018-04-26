@@ -1106,8 +1106,8 @@ public class Manager : MonoBehaviour
 			Debug.Log("Target data line " + (i + 1) + " of " + tQueueElemSize + " inserted successfully.");
 		}
 
-		setupTargets();
         DestroyOldTargets();
+        setupTargets();
         Debug.Log("Target Init Over Network Done");
 
 		checkTargetData();
