@@ -278,6 +278,7 @@ public class Manager : MonoBehaviour
 	public void setupTargets()
 	{
         needToCheck = false;
+        currCollPoint = new Vector3();
         DestroyOldTargets();
 		missileObjects = new GameObject[fileLength];
 		missiles = new MeshRenderer[fileLength];
@@ -485,7 +486,7 @@ public class Manager : MonoBehaviour
                     {
                         needToCheck = true;
                         targetCoor.Set((float)targetPosX[x], (float)targetPosY[x], (float)targetPosZ[x]);
-                        detectionData.appendCSV(x.ToString(), time, targetCoor.x, targetCoor.y, targetCoor.z);
+                        detectionData.appendCSV(x.ToString(), time, currCollPoint.x, currCollPoint.y, currCollPoint.z);
                         Debug.Log("missile #: " + x.ToString());
                         Debug.Log("Call in Manager:");
                         Debug.Log("x: " + targetCoor.x + "  " + "y: " + targetCoor.y + "  " + "z: " + targetCoor.z);
