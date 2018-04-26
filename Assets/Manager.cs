@@ -1107,7 +1107,8 @@ public class Manager : MonoBehaviour
 		}
 
 		setupTargets();
-		Debug.Log("Target Init Over Network Done");
+        DestroyOldTargets();
+        Debug.Log("Target Init Over Network Done");
 
 		checkTargetData();
 	}
