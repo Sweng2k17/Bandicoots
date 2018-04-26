@@ -277,6 +277,7 @@ public class Manager : MonoBehaviour
 	/// </summary>
 	public void setupTargets()
 	{
+        needToCheck = false;
         DestroyOldTargets();
 		missileObjects = new GameObject[fileLength];
 		missiles = new MeshRenderer[fileLength];
@@ -298,7 +299,7 @@ public class Manager : MonoBehaviour
 			//changes here
 			//changes here
 			//changes here
-			missiles[x].enabled = true;
+			missiles[x].enabled = false;
 
 			Vector3 scale = new Vector3();
 			scale.x = .1f;
@@ -802,7 +803,11 @@ public class Manager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
             {
-                UnPause();
+                    //if the subscriber is still reading in data, the user cannot unpause the program
+                    if (!subscriber.getReading())
+                    {
+                        UnPause();
+                    }
             }
         }
         time += interval;
