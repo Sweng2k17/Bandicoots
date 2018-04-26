@@ -274,12 +274,14 @@ public class Manager : MonoBehaviour
 
     public void resetTime()
     {
+        data = null;
+
         time = 1;
         difference = -1;
-        position = 1;
 
         if (readRadarButton.GetComponent<CSVReader>().data != null)
         {
+            position = 1;
             data = readRadarButton.GetComponent<CSVReader>().data;
 
             //number of lines in csv file
@@ -294,12 +296,14 @@ public class Manager : MonoBehaviour
         }
         else
         {
+            beam.transform.transform.rotation = Quaternion.Euler(0, 0, 0);
             RedAsteriskBeam.SetActive(true);
         }
     }
 
     public void initTarget()
     {
+        targetData = null;
 
         if (missileObjects != null)
         {
@@ -810,7 +814,7 @@ public class Manager : MonoBehaviour
 
                 //both radar beam and target data get updated if there are still more unread lines in the beam data file
                 //otherwise just the target data will be updated.
-                if (position < numBeamData)
+                if (data != null && position < numBeamData)
                 {
                     //the elevation of the search beam is increasing in the desired search area.
                     if (startEl <= stopEl)
